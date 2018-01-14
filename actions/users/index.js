@@ -2,6 +2,7 @@ const {firebase} = require('../../services/firebase/index')
 const create = require('./create')
 const login = require('./login')
 const resetPassword = require('./resetPassword')
+const obtain = require('./obtain')
 
 module.exports = config => {
   if (config == null) {
@@ -11,6 +12,7 @@ module.exports = config => {
   return {
     create,
     login,
-    resetPassword
+    resetPassword,
+    obtain
   }
 }

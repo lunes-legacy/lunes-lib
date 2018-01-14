@@ -23,6 +23,6 @@ module.exports = async userData => {
     const res = await axios.post(endpoint, {email, password, fullname, timezone})
     return res.data
   } catch (err) {
-    throw new Error(err)
+    throw err.response ?err.response.data : new Error(err)
   }
 }
