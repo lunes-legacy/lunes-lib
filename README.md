@@ -75,6 +75,12 @@ Get the personal info from current logged user.
 
 Returns user's personal info object.
 
+#### .users.createPin({pin},acessToken)
+
+Create a new PIN to current logged user.
+
+Returns a confirmation and a new accessToken.
+
 ### Coins
 
 #### Bitcoin
