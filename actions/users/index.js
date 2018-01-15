@@ -3,6 +3,7 @@ const create = require('./create')
 const login = require('./login')
 const resetPassword = require('./resetPassword')
 const obtain = require('./obtain')
+const createPin = require('./createPin')
 
 module.exports = config => {
   if (config == null) {
@@ -13,6 +14,7 @@ module.exports = config => {
     create,
     login,
     resetPassword,
-    obtain
+    obtain,
+    createPin
   }
 }
