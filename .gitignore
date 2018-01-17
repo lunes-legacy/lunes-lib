@@ -3,5 +3,5 @@ node_modules
 .idea
 .vs
 .njsproj
-testapp.js
+appTest.js
 .history

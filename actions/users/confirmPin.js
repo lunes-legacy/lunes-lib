@@ -1,19 +1,18 @@
-const axios = require('axios')
-
 const validator = require('../../services/validators/validator')
+
+const axios = require('axios')
 
 const BASE_URL = require('../../constants/api')
 
-const endpoint = `${BASE_URL}/users/security-check/create-pin`
+const endpoint = `${BASE_URL}/users/confirm-pin`
 
 module.exports = async (data, accessToken) => {
-  const headers = {'Authorization': `Bearer ${accessToken}`}
   const {pin} = data
+  const headers = {'Authorization': `Bearer ${accessToken}`}
 
-  if (!validator.isPIN(pin)) {
-    throw new Error('Insira um PIN válido (4 números).')
+  if (!pin || !validator.isPIN(pin)) {
+    throw new Error('The PIN code is invalid.')
   }
-
   try {
     const res = await axios.post(endpoint, {pin}, {headers})
     return res.data
