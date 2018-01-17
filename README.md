@@ -4,7 +4,7 @@ Official and agnostic library to wrap Lunes API.
 
 **Table of Contents**
 
-## V 0.0.17
+## V 0.0.19
 - Create user and login
 - Mock coins and its operations
 
@@ -21,29 +21,15 @@ Using Yarn
 ```sh
 $ yarn add lunes-core
 ```
-### Configurations
-1.  Ensure you have firebase credentials and insert it into a .env file as follows. This is file **is not versioned**.
-
-```
-API_ENDPOINT=[SOME API ADDRESS]
-LUNES_SERVER_ENDPOINT=[LUNES SERVER API ADDRESS]
-
-FIREBASE_API_KEY=[FB API KEY]
-FIREBASE_AUTH_DOMAIN=[FB AUTH DOMAIN]
-FIREBASE_DATABASE_URL=[FB DATABASE]
-FIREBASE_PROJECT_ID=[FB PROJECT]
-FIREBASE_STORAGE_BUCKET=[FBSTORAGE BUCKET]
-FIREBASE_MESSAGING_SENDER_ID=[FB SENDER ID]
-```
-
-2. Call the Lunes Core module
+### Importing
 
 ```javascript
 //CommonJS's require
 const LunesCore = require('lunes-core')
+const {users, coins} = LunesCore
 
 //Webpack/es6
-import LunesCore from 'lunes-core'
+import {users, coins} from 'lunes-core'
 ```
 
 ## API
@@ -80,6 +66,12 @@ Returns user's personal info object.
 Create a new PIN to current logged user.
 
 Returns a confirmation and a new accessToken.
+
+#### .users.confirmPin({pin},acessToken)
+
+Confirm the PIN code before some operation that it is asked.
+
+Returns a confirmation.
 
 ### Coins
 
