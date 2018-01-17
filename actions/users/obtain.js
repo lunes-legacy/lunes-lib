@@ -1,6 +1,8 @@
 const axios = require('axios')
 
-const endpoint = `${process.env.LUNES_SERVER_ENDPOINT}/api/users/`
+const BASE_URL = require('../../constants/api')
+
+const endpoint = `${BASE_URL}/users/`
 
 module.exports = async (id, accessToken) => {
   const headers = {'Authorization': `Bearer ${accessToken}`}
@@ -10,6 +12,6 @@ module.exports = async (id, accessToken) => {
     const res = await axios.get(url, {headers})
     return res.data
   } catch (err) {
-    throw err.response ?err.response.data : new Error(err)
+    throw err.response ? err.response.data : new Error(err)
   }
-};
+}
