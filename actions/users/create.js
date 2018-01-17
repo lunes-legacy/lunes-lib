@@ -2,7 +2,9 @@ const validator = require('../../services/validators/validator')
 
 const axios = require('axios')
 
-const endpoint = `${process.env.LUNES_SERVER_ENDPOINT}/api/users/create`
+const BASE_URL = require('../../constants/api')
+
+const endpoint = `${BASE_URL}/users/create`
 
 module.exports = async userData => {
   const {email, password, fullname} = userData
@@ -23,6 +25,6 @@ module.exports = async userData => {
     const res = await axios.post(endpoint, {email, password, fullname, timezone})
     return res.data
   } catch (err) {
-    throw err.response ?err.response.data : new Error(err)
+    throw err.response ? err.response.data : new Error(err)
   }
 }

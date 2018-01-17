@@ -22,8 +22,6 @@
   "dependencies": {
     "axios": "^0.17.1",
     "bluebird": "^3.5.1",
-    "dotenv": "^4.0.0",
-    "firebase": "^4.8.1",
     "lodash": "^4.17.4",
     "validator": "^9.2.0"
   }

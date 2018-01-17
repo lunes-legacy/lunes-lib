@@ -1,1 +1,3 @@
-let test = "test";
+const {users} = require('./index')
+
+return users
