@@ -4,6 +4,7 @@ const resetPassword = require('./resetPassword')
 const obtain = require('./obtain')
 const createPin = require('./createPin')
 const confirmPin = require('./confirmPin')
+const confirmPhone = require('./confirmPhone')
 
 module.exports = {
   create,
@@ -11,5 +12,6 @@ module.exports = {
   resetPassword,
   obtain,
   createPin,
-  confirmPin
+  confirmPin,
+  confirmPhone
 }
