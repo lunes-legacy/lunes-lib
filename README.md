@@ -2,9 +2,9 @@
 
 Official and agnostic library to wrap Lunes API.
 
-## V 0.0.31
-- Confirm Phone number fix
-- Logout operation
+## V 0.0.32
+- Coins: Balance, history and backup wallet.
+- Users: Create wallet on signup.
 
 ### Prerequisites
 - [NodeJS](http://nodejs.org) - 8.x LTS
@@ -81,18 +81,14 @@ Returns a confirmation and phoneIsVerified = true.
 
 #### Bitcoin
 
-##### .coins.bitcoin.createWallet()
+##### .coins.bitcoin.getBalance({address}, accessToken)
+Read address, request Lunes API and returns balance.
 
-Creates new BTC wallet. Returns the created wallet (private, public, address and wif).
+##### .coins.bitcoin.getHistory({address}, accessToken)
+Read address, request Lunes API and returns transaction history.
 
-##### .coins.bitcoin.getBalance(address)
-Read address, request Lunes API and return balance.
-
-##### .coins.bitcoin.getTransactionHistory(address)
-Read address, request Lunes API and return transaction history.
-
-##### .coins.bitcoin.createTransaction(senderPrivateKey, receivingAddress, transactionAmount)
-Create a raw tx and broadcast it to the Lunes API. Return txid.
+##### .coins.bitcoin.backupWallet({email}, accessToken)
+Returns the user's wallet seed.
 
 ## Tests
 
