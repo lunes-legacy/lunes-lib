@@ -8,9 +8,8 @@ const endpoint = `${BASE_URL}/users/create`
 
 module.exports = async userData => {
   const {email, password, fullname} = userData
-  const timezone = userData.timezone || 'America/Sao_Paulo'
 
-  if (!validator.areNotEmpty([email, password, fullname, timezone])) {
+  if (!validator.areNotEmpty([email, password, fullname])) {
     throw new Error('Email, password and fullname are required fields.')
   }
 
@@ -22,7 +21,7 @@ module.exports = async userData => {
     throw new Error('Password must contain only letters and numbers, at least 8 chars.')
   }
   try {
-    const res = await axios.post(endpoint, {email, password, fullname, timezone})
+    const res = await axios.post(endpoint, {email, password, fullname})
     return res.data
   } catch (err) {
     throw err.response ? err.response.data : new Error(err)
