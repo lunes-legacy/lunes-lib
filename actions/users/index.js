@@ -5,6 +5,7 @@ const obtain = require('./obtain')
 const createPin = require('./createPin')
 const confirmPin = require('./confirmPin')
 const confirmPhone = require('./confirmPhone')
+const logout = require('./logout')
 
 module.exports = {
   create,
@@ -13,5 +14,6 @@ module.exports = {
   obtain,
   createPin,
   confirmPin,
-  confirmPhone
+  confirmPhone,
+  logout
 }
