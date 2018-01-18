@@ -2,11 +2,9 @@
 
 Official and agnostic library to wrap Lunes API.
 
-**Table of Contents**
-
-## V 0.0.19
-- Create user and login
-- Mock coins and its operations
+## V 0.0.31
+- Confirm Phone number fix
+- Logout operation
 
 ### Prerequisites
 - [NodeJS](http://nodejs.org) - 8.x LTS
@@ -65,13 +63,19 @@ Returns user's personal info object.
 
 Create a new PIN to current logged user.
 
-Returns a confirmation and a new accessToken.
+Returns a confirmation and pinIsVerified = true.
 
 #### .users.confirmPin({pin},acessToken)
 
 Confirm the PIN code before some operation that it is asked.
 
 Returns a confirmation.
+
+#### .users.confirmPhone({phoneNumber},acessToken)
+
+Confirm the phone number.
+
+Returns a confirmation and phoneIsVerified = true.
 
 ### Coins
 

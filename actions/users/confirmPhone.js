@@ -1,10 +1,8 @@
-const validator = require('../../services/validators/validator')
-
 const axios = require('axios')
 
 const BASE_URL = require('../../constants/api')
 
-const endpoint = `${BASE_URL}/users/confirm-phone`
+const endpoint = `${BASE_URL}/users/security-check/confirm-phone`
 
 module.exports = async (data, accessToken) => {
   const { phoneNumber } = data
