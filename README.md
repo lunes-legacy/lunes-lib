@@ -2,13 +2,12 @@
 
 Official and agnostic library to wrap Lunes API.
 
-## V 0.0.31
-- Confirm Phone number fix
-- Logout operation
+## V 0.0.32
+- Coins: Balance, history and backup wallet.
+- Users: Create wallet on signup.
 
 ### Prerequisites
 - [NodeJS](http://nodejs.org) - 8.x LTS
-- Firebase credentials (see below)
 
 ### Instalation
 Using NPM
@@ -34,12 +33,10 @@ import {users, coins} from 'lunes-core'
 
 ### Users
 
-#### .users.create({email,password,fullname,timezone})
-Creates a new user into Firebase authentication and into realtime database. This user **must** to contain a valid email, password, full name and timezone (Default is America/Sao_Paulo).
+#### .users.create({email,password,fullname})
+Creates a new user into Firebase authentication and into realtime database. This user **must** to contain a valid email, password and fullname.
 
 Returns an access token for current user.
-
-For timezone formats, see [the list of timezones and its time offsets.](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List "the list of timezones and its time offsets.")
 
 #### .users.login({email,password})
 
@@ -81,18 +78,14 @@ Returns a confirmation and phoneIsVerified = true.
 
 #### Bitcoin
 
-##### .coins.bitcoin.createWallet()
+##### .coins.bitcoin.getBalance({address}, accessToken)
+Read address, request Lunes API and returns balance.
 
-Creates new BTC wallet. Returns the created wallet (private, public, address and wif).
+##### .coins.bitcoin.getHistory({address}, accessToken)
+Read address, request Lunes API and returns transaction history.
 
-##### .coins.bitcoin.getBalance(address)
-Read address, request Lunes API and return balance.
-
-##### .coins.bitcoin.getTransactionHistory(address)
-Read address, request Lunes API and return transaction history.
-
-##### .coins.bitcoin.createTransaction(senderPrivateKey, receivingAddress, transactionAmount)
-Create a raw tx and broadcast it to the Lunes API. Return txid.
+##### .coins.bitcoin.backupWallet({email}, accessToken)
+Returns the user's wallet seed.
 
 ## Tests
 
