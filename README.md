@@ -2,7 +2,7 @@
 
 Official and agnostic library to wrap Lunes API.
 
-## V 0.0.32
+## V 0.0.34
 - Coins: Balance, history and backup wallet.
 - Users: Create wallet on signup.
 
