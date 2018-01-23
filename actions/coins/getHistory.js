@@ -13,11 +13,11 @@ module.exports = async (params) => {
     throw new Error('The chart interval must be defined.')
   }
   const hourDiff = calendar.diff(toDate, fromDate, 'hours')
-  const historyType = hourDiff < 1 ? '/histominute?' : hourDiff >= 24 ? '/histoday?' : '/histohour?'
+  const historyType = hourDiff >= 24 ? '/histoday?' : '/histohour?'
   const query = [
     'fsym=FROM_SYMBOL',
     'tsym=TO_SYMBOL',
-    exchange && validator.isEmpty(exchange) ? `e=${exchange}` : ''
+    exchange && !validator.isEmpty(exchange) ? `e=${exchange}` : ''
   ]
   const queryString = query
     .reduce((q1, q2) => query.length > 0 ? q1 + '&' + q2 : q1)
@@ -33,7 +33,7 @@ module.exports = async (params) => {
       delete d.open
       delete d.volumefrom
       delete d.volumeto
-      d.day = calendar.getCompleteDate(d.time)
+      d.day = calendar.getCompleteDate(d.time, hourDiff < 24 ? 'DD/MM/YY HH:mm:ss' : 'DD/MM/YY')
       delete d.time
       return d
     })
