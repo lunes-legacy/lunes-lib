@@ -1,10 +1,9 @@
-# Lunes Core
+# Lunes Lib
 
 Official and agnostic library to wrap Lunes API.
 
-## V 0.0.34
-- Coins: Balance, history and backup wallet.
-- Users: Create wallet on signup.
+## V 0.0.2
+- Coins: Get coins prices, history
 
 ### Prerequisites
 - [NodeJS](http://nodejs.org) - 8.x LTS
@@ -76,6 +75,22 @@ Returns a confirmation and phoneIsVerified = true.
 
 ### Coins
 
+#### .getPrice({fromSymbol,toSymbom,exchange})
+
+Obtain the realtime price of one or more currencies.
+
+fromSymbol => e.g. one of BTC, USD, BRL
+toSymbol => a comma separated list e.g. BTC,ETC,USD,EUR,BRL
+exchange => Exchange's name, default is CCCAGG
+
+Returns an object containg the asked currency prices.
+
+e.g 
+
+```javascript
+{"BTC":0.009878,"USD":10.79,"EUR":10.37}
+```
+
 #### Bitcoin
 
 ##### .coins.bitcoin.getBalance({address}, accessToken)
@@ -87,7 +102,7 @@ Read address, request Lunes API and returns transaction history.
 ##### .coins.bitcoin.backupWallet({email}, accessToken)
 Returns the user's wallet seed.
 
-## Tests
+## Tests (not tottaly covered)
 
 ```sh
 $ npm test
@@ -95,4 +110,4 @@ $ npm test
 
 ## License
 
-This is a private project by Lunes Team.
+MIT.
