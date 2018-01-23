@@ -2,7 +2,7 @@
 
 Official and agnostic library to wrap Lunes API.
 
-## V 0.0.2
+## V 0.0.3
 - Coins: Get coins prices, history
 
 ### Prerequisites
@@ -75,7 +75,7 @@ Returns a confirmation and phoneIsVerified = true.
 
 ### Coins
 
-#### .getPrice({fromSymbol,toSymbom,exchange})
+#### .coins.getPrice({fromSymbol,toSymbom,exchange})
 
 Obtain the realtime price of one or more currencies.
 
@@ -91,7 +91,50 @@ e.g
 {"BTC":0.009878,"USD":10.79,"EUR":10.37}
 ```
 
+#### .coins.getHistory({fromDate, toDate, fromSymbol,toSymbom, exchange})
+
+Obtain an history of some currency (fromSymbol) and its conversion to another (toSymbol) in a period from "fromDate" to "toDate".
+
+If the period is smaller than 1 day, the history is by hour. Otherwise, it will by daily.
+
+fromSymbol => e.g. one of BTC, USD, BRL
+toSymbol => e.g. one of BTC, USD, BRL
+fromDate => Date formatted as DD/MM/YY, e.g. 25/10/2017
+toDate => Date formatted as DD/MM/YY, e.g. 25/01/2018
+exchange => Exchange's name, default is CCCAGG
+
+Return an object containing history metadata and an array containing the low, high values and date.
+
+```javascript
+{
+  "success": true,
+  "status": 200,
+  "message": "Historical chart - BTC to USD",
+  "period": "21/01/18 to 23/01/18",
+  "data": [
+    {
+      "high": 12787.35,
+      "low": 11101.73,
+      "day": "21/01/18"
+    },
+    {
+      "high": 11913.74,
+      "low": 10067.76,
+      "day": "22/01/18"
+    },
+    {
+      "high": 11388.52,
+      "low": 9980.5,
+      "day": "23/01/18"
+    }
+  ]
+}
+```
+ 
+
 #### Bitcoin
+
+The following functions are specific when the currency is Bitcoin (BTC).
 
 ##### .coins.bitcoin.getBalance({address}, accessToken)
 Read address, request Lunes API and returns balance.

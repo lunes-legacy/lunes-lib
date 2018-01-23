@@ -1,6 +1,6 @@
 {
   "name": "lunes-lib",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "The official Lunes API Wrapper.",
   "main": "index.js",
   "scripts": {
@@ -23,6 +23,8 @@
     "axios": "^0.17.1",
     "bluebird": "^3.5.1",
     "lodash": "^4.17.4",
+    "moment": "^2.20.1",
+    "moment-timezone": "^0.5.14",
     "validator": "^9.2.0"
   }
 }

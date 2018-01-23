@@ -1,1 +1,1 @@
-module.exports = require('./LunesCore')
+module.exports = require('./LunesLib')
