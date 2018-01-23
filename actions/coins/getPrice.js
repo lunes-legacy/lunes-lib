@@ -1,5 +1,5 @@
 const axios = require('axios')
-const validator = require('../../services/validators')
+const validator = require('../../services/validators/validator')
 
 const endpoint = `${require('../../constants/Cryptocompare')}/price`
 
