@@ -21,10 +21,13 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "bip39": "^2.5.0",
+    "bitcoinjs-lib": "^3.3.2",
     "bluebird": "^3.5.1",
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
+    "simple-crypto-js": "^1.1.1",
     "validator": "^9.2.0"
   }
 }

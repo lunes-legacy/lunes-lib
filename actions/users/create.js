@@ -4,10 +4,12 @@ const axios = require('axios')
 
 const BASE_URL = require('../../constants/api')
 
+const { createWallet } = require('../coins')
+
 const endpoint = `${BASE_URL}/users/create`
 
 module.exports = async userData => {
-  const {email, password, fullname} = userData
+  const { email, password, fullname } = userData
 
   if (!validator.areNotEmpty([email, password, fullname])) {
     throw new Error('Email, password and fullname are required fields.')
@@ -18,10 +20,20 @@ module.exports = async userData => {
   }
 
   if (!validator.isValidPassword(password)) {
-    throw new Error('Password must contain only letters and numbers, at least 8 chars.')
+    throw new Error(
+      'Password must contain only letters and numbers, at least 8 chars.'
+    )
   }
+
+  const walletData = createWallet(password)
+
   try {
-    const res = await axios.post(endpoint, {email, password, fullname})
+    const res = await axios.post(endpoint, {
+      email,
+      password,
+      fullname,
+      walletData
+    })
     return res.data
   } catch (err) {
     throw err.response ? err.response.data : new Error(err)
