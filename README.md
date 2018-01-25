@@ -55,6 +55,12 @@ Get the personal info from current logged user.
 
 Returns user's personal info object.
 
+#### .users.update(id, {fullname,small,birthDate,city,state,country,homeAddress}, accessToken)
+
+Update user's profile. 
+
+Returns the updated user profile.
+
 #### .users.createPin({pin},acessToken)
 
 Create a new PIN to current logged user.
