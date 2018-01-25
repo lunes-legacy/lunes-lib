@@ -6,6 +6,7 @@ const createPin = require('./createPin')
 const confirmPin = require('./confirmPin')
 const confirmPhone = require('./confirmPhone')
 const logout = require('./logout')
+const update = require('./update')
 
 module.exports = {
   create,
@@ -15,5 +16,6 @@ module.exports = {
   createPin,
   confirmPin,
   confirmPhone,
-  logout
+  logout,
+  update
 }
