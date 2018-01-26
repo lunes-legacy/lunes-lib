@@ -16,5 +16,5 @@ module.exports = {
   decryptMnemonic,
   generateMnemonic: () => bip39.generateMnemonic(),
   validateMnemonic: mnemonic => bip39.validateMnemonic(mnemonic),
-  mnemonictoSeedHex: mnemonic => bip39.mnemonicToSeedHex(mnemonic)
+  mnemonicToSeedHex: mnemonic => bip39.mnemonicToSeedHex(mnemonic)
 }

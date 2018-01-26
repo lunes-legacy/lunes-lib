@@ -55,6 +55,12 @@ Get the personal info from current logged user.
 
 Returns user's personal info object.
 
+#### .users.update(id, {fullname,small,birthDate,city,state,country,homeAddress}, accessToken)
+
+Update user's profile. 
+
+Returns the updated user profile.
+
 #### .users.createPin({pin},acessToken)
 
 Create a new PIN to current logged user.
@@ -99,9 +105,7 @@ If the period is smaller than 1 day, the history is by hour. Otherwise, it will 
 
 fromSymbol => e.g. one of BTC, USD, BRL
 toSymbol => e.g. one of BTC, USD, BRL
-fromDate => Date formatted as DD/MM/YY, e.g. 25/10/2017
-toDate => Date formatted as DD/MM/YY, e.g. 25/01/2018
-exchange => Exchange's name, default is CCCAGG
+range => e.g. one of [RANGE_1D, RANGE_1W, RANGE_1M, RANGE_3M, RANGE_6M, RANGE_1Y, RANGE_MAX]
 
 Return an object containing history metadata and an array containing the low, high values and date.
 
@@ -110,27 +114,24 @@ Return an object containing history metadata and an array containing the low, hi
   "success": true,
   "status": 200,
   "message": "Historical chart - BTC to USD",
-  "period": "21/01/18 to 23/01/18",
+  "range": "RANGE_1D",
   "data": [
     {
-      "high": 12787.35,
-      "low": 11101.73,
-      "day": "21/01/18"
+      "close": 12787.35,
+      "time": 1516903200
     },
     {
-      "high": 11913.74,
-      "low": 10067.76,
-      "day": "22/01/18"
+      "close": 11913.74,
+      "time": 1516906800
     },
     {
-      "high": 11388.52,
-      "low": 9980.5,
-      "day": "23/01/18"
+      "close": 11388.52,
+      "time": "1516914000
     }
   ]
 }
 ```
- 
+
 
 #### Bitcoin
 
