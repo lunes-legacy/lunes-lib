@@ -1,4 +1,4 @@
-let bitcoin = require('bitcoinjs-lib')
+let bitcoin = require('react-native-bitcoinjs-lib')
 let _ = require('lodash')
 
 const Mnemonic = require('../../services/crypto/mnemonic')

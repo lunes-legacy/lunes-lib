@@ -1,6 +1,6 @@
 {
   "name": "lunes-lib",
-  "version": "0.0.3",
+  "version": "0.0.8",
   "description": "The official Lunes API Wrapper.",
   "main": "index.js",
   "scripts": {
@@ -21,13 +21,13 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
-    "bip39": "^2.5.0",
-    "bitcoinjs-lib": "^3.3.2",
     "bluebird": "^3.5.1",
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
-    "simple-crypto-js": "^1.1.1",
+    "react-native-bip39": "^2.3.0",
+    "react-native-bitcoinjs-lib": "^2.3.9",
+    "react-native-simple-encryption": "^1.2.1",
     "validator": "^9.2.0"
   }
 }

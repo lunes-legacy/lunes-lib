@@ -1,16 +1,14 @@
-let SimpleCryptoJS = require('simple-crypto-js').default
-let bip39 = require('bip39')
+let SimpleCryptoJS = require('react-native-simple-encryption')
+let bip39 = require('react-native-bip39')
 
 const encryptMnemonic = (mnemonic, passphrase) => {
-  const simpleCrypto = new SimpleCryptoJS(passphrase)
-  const cipherText = simpleCrypto.encrypt(mnemonic)
-  return cipherText
+  // const simpleCrypto = new SimpleCryptoJS(passphrase)
+  return SimpleCryptoJS.encrypt(passphrase, mnemonic)
 }
 
 const decryptMnemonic = (cipherText, passphrase) => {
-  const simpleCrypto = new SimpleCryptoJS(passphrase)
-  const decipherText = simpleCrypto.decrypt(cipherText)
-  return decipherText
+  // const simpleCrypto = new SimpleCryptoJS(passphrase)
+  return SimpleCryptoJS.decrypt(passphrase, cipherText)
 }
 
 module.exports = {
