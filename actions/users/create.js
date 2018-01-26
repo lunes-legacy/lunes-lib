@@ -1,4 +1,5 @@
 const validator = require('../../services/validators/validator')
+const { obtainWallet } = require('../coins/obtainWallet.js')
 
 const axios = require('axios')
 
@@ -9,7 +10,7 @@ const { createWallet } = require('../coins')
 const endpoint = `${BASE_URL}/users/create`
 
 module.exports = async userData => {
-  const { email, password, fullname } = userData
+  const { email, password, fullname, testnet } = userData
 
   if (!validator.areNotEmpty([email, password, fullname])) {
     throw new Error('Email, password and fullname are required fields.')
@@ -25,7 +26,7 @@ module.exports = async userData => {
     )
   }
 
-  const walletData = createWallet(password)
+  const walletData = createWallet(password, testnet)
 
   try {
     const res = await axios.post(endpoint, {
@@ -34,6 +35,9 @@ module.exports = async userData => {
       fullname,
       walletData
     })
+    if (res.data.wallet) {
+      res.data.wallet.hash = obtainWallet(res.data.wallet.hash, password)
+    }
     return res.data
   } catch (err) {
     throw err.response ? err.response.data : new Error(err)
