@@ -1,9 +1,10 @@
 let bitcoin = require('bitcoinjs-lib')
 let _ = require('lodash')
+const validator = require('../../services/validators/validator')
 
 const Mnemonic = require('../../services/crypto/mnemonic')
 
-module.exports = password => {
+module.exports = (password, testnet) => {
   try {
     // 1. generate mnemonic
     const mnemonic = Mnemonic.generateMnemonic()
@@ -26,8 +27,14 @@ module.exports = password => {
     // 5. mnemonic words to seed hex
     const seedHex = Mnemonic.mnemonicToSeedHex(decryptedWallet)
 
+    // check network
+    testnet = validator.isTestnet(testnet)
+    const network = testnet
+      ? bitcoin.networks.testnet
+      : bitcoin.networks.bitcoin
+
     // 6. create a Bitcoinjs HD Wallet
-    const hdNode = bitcoin.HDNode.fromSeedHex(seedHex)
+    const hdNode = bitcoin.HDNode.fromSeedHex(seedHex, network)
 
     // 7. create an address
     const path = 'm/0\'/0/0' // m/0'/0/0
