@@ -1,51 +1,82 @@
 const axios = require('axios')
 const Promise = require('bluebird')
 
-const validator = require('../../services/validators/validator')
-const calendar = require('../../services/calendar')
+const apiUrl = `${require('../../constants/Cryptocompare')}`
 
-const endpoint = `${require('../../constants/Cryptocompare')}`
+module.exports = async params => {
+  const { fromSymbol, toSymbol, range } = params
 
-module.exports = async (params) => {
-  const {fromDate, toDate, fromSymbol, toSymbol, exchange} = params
-
-  if (!fromDate || !toDate) {
-    throw new Error('The chart interval must be defined.')
-  }
-  const hourDiff = calendar.diff(toDate, fromDate, 'hours')
-  const historyType = hourDiff >= 24 ? '/histoday?' : '/histohour?'
-  const query = [
-    'fsym=FROM_SYMBOL',
-    'tsym=TO_SYMBOL',
-    exchange && !validator.isEmpty(exchange) ? `e=${exchange}` : ''
-  ]
-  const queryString = query
-    .reduce((q1, q2) => query.length > 0 ? q1 + '&' + q2 : q1)
-    .concat(`${calendar.getTimestamp(toDate)}`)
-    .replace('FROM_SYMBOL', fromSymbol || 'BTC')
-    .replace('TO_SYMBOL', toSymbol || 'USD')
-
-  const url = `${endpoint}${historyType}${queryString}`
   try {
-    const res = await axios.get(url)
-    const mappedRes = await Promise.map(res.data.Data, d => {
-      delete d.close
+    const url = buildAPIQuery(fromSymbol, toSymbol, range)
+
+    const result = await axios.get(url).catch(error => {
+      return error
+    })
+
+    const data = await Promise.map(result.data.Data, d => {
       delete d.open
+      delete d.high
+      delete d.low
       delete d.volumefrom
       delete d.volumeto
-      d.day = calendar.getCompleteDate(d.time, hourDiff < 24 ? 'DD/MM/YY HH:mm:ss' : 'DD/MM/YY')
-      delete d.time
       return d
     })
-    const data = await Promise.filter(mappedRes, r => !calendar.isBefore(r.day, fromDate))
+
     return {
-      success: res.data.Response === 'Success',
-      status: res.status,
-      message: `Historical chart - ${fromSymbol || 'BTC'} to ${toSymbol || 'USD'}`,
-      period: `${fromDate} to ${toDate}`,
+      success: result.data.Response === 'Success',
+      status: result.status,
+      message: `Historical chart - ${fromSymbol || 'BTC'} to ${toSymbol ||
+        'USD'}`,
+      range: range,
       data
     }
   } catch (err) {
     throw err.response ? err.response.data : new Error(err)
   }
+}
+
+const buildAPIQuery = (fromSymbol, toSymbol, range) => {
+  let endpoint = 'histohour'
+  let aggregate = 1
+  let limit = 24
+
+  switch (range) {
+  case 'RANGE_1D':
+    endpoint = 'histohour'
+    aggregate = 1
+    limit = 24
+    break
+  case 'RANGE_1W':
+    endpoint = 'histoday'
+    aggregate = 1
+    limit = 7
+    break
+  case 'RANGE_1M':
+    endpoint = 'histoday'
+    aggregate = 1
+    limit = 30
+    break
+  case 'RANGE_3M':
+    endpoint = 'histoday'
+    aggregate = 3
+    limit = 30
+    break
+  case 'RANGE_6M':
+    endpoint = 'histoday'
+    aggregate = 6
+    limit = 30
+    break
+  case 'RANGE_1Y':
+    endpoint = 'histoday'
+    aggregate = 12
+    limit = 30
+    break
+  case 'RANGE_MAX':
+    endpoint = 'histoday'
+    aggregate = 200
+    limit = 2000 // maximum allowed limit
+    break
+  }
+
+  return `${apiUrl}/${endpoint}?fsym=${fromSymbol}&tsym=${toSymbol}&aggregate=${aggregate}&limit=${limit}`
 }
