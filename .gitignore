@@ -5,3 +5,5 @@ node_modules
 .njsproj
 appTest.js
 .history
+.yarn.lock
+package-lock.json
