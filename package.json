@@ -1,23 +1,45 @@
 {
-  "name": "lunes-lib",
-  "version": "0.0.9",
-  "description": "The official Lunes API Wrapper.",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest"
+  "_args": [
+    [
+      {
+        "raw": "lunes-lib@0.0.9",
+        "scope": null,
+        "escapedName": "lunes-lib",
+        "name": "lunes-lib",
+        "rawSpec": "0.0.9",
+        "spec": "0.0.9",
+        "type": "version"
+      },
+      "C:\\LunesWallet"
+    ]
+  ],
+  "_from": "lunes-lib@0.0.9",
+  "_id": "lunes-lib@0.0.9",
+  "_inCache": true,
+  "_location": "/lunes-lib",
+  "_nodeVersion": "7.8.0",
+  "_npmUser": {},
+  "_npmVersion": "4.2.0",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "lunes-lib@0.0.9",
+    "scope": null,
+    "escapedName": "lunes-lib",
+    "name": "lunes-lib",
+    "rawSpec": "0.0.9",
+    "spec": "0.0.9",
+    "type": "version"
   },
-  "keywords": [],
-  "author": "Lunes Team",
-  "license": "MIT",
-  "devDependencies": {
-    "chance": "^1.0.12",
-    "eslint": "^4.13.1",
-    "eslint-config-standard": "^11.0.0-beta.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-node": "^5.2.1",
-    "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "jest": "^22.0.4"
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "http://localhost:4873/lunes-lib/-/lunes-lib-0.0.9.tgz",
+  "_shasum": "b0cca0528ef052232560c7baf501bd4d35e260d1",
+  "_shrinkwrap": null,
+  "_spec": "lunes-lib@0.0.9",
+  "_where": "C:\\LunesWallet",
+  "author": {
+    "name": "Lunes Team"
   },
   "dependencies": {
     "axios": "^0.17.1",
@@ -29,5 +51,32 @@
     "react-native-bitcoinjs-lib": "^2.3.9",
     "react-native-simple-encryption": "^1.2.1",
     "validator": "^9.2.0"
-  }
+  },
+  "description": "The official Lunes API Wrapper.",
+  "devDependencies": {
+    "chance": "^1.0.12",
+    "eslint": "^4.13.1",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "jest": "^22.0.4"
+  },
+  "dist": {
+    "shasum": "b0cca0528ef052232560c7baf501bd4d35e260d1",
+    "tarball": "http://localhost:4873/lunes-lib/-/lunes-lib-0.0.9.tgz"
+  },
+  "gitHead": "e89588b7995501956a63f409aa7953320ade9d83",
+  "keywords": [],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "lunes-lib",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "readmeFilename": "README.md",
+  "scripts": {
+    "test": "jest"
+  },
+  "version": "0.0.9"
 }
