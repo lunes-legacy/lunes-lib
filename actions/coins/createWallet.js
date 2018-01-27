@@ -4,10 +4,10 @@ const validator = require('../../services/validators/validator')
 
 const Mnemonic = require('../../services/crypto/mnemonic')
 
-module.exports = (password, testnet) => {
+module.exports = async (password, testnet) => {
   try {
     // 1. generate mnemonic
-    const mnemonic = Mnemonic.generateMnemonic()
+    const mnemonic = await Mnemonic.generateMnemonic()
 
     // 2. validate mnemonic
     if (!Mnemonic.validateMnemonic(mnemonic)) {
