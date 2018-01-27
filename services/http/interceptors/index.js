@@ -1,4 +1,3 @@
-
 const intercepRequest = config => {
   // do something BEFORE the request is sent
   // IE: add a token to the header
@@ -6,7 +5,7 @@ const intercepRequest = config => {
   return config
 }
 
-const intercepRequestError = (error) => {
+const intercepRequestError = error => {
   // do something and then:
   Promise.reject(error)
 }
@@ -27,5 +26,5 @@ module.exports = {
   intercepRequest,
   intercepRequestError,
   intercepResponse,
-  intercepResponseError,
+  intercepResponseError
 }
