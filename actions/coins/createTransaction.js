@@ -1,6 +1,6 @@
 const axios = require('axios')
-let bitcoin = require('bitcoinjs-lib')
-let bip39 = require('bip39')
+let bitcoin = require('react-native-bitcoinjs-lib')
+let bip39 = require('react-native-bip39')
 const _ = require('lodash')
 const validator = require('../../services/validators/validator')
 

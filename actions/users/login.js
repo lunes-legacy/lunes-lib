@@ -1,5 +1,5 @@
 const validator = require('../../services/validators/validator')
-const { obtainWallet } = require('../coins/obtainWallet.js')
+const obtainWallet = require('../coins/obtainWallet.js')
 
 const axios = require('axios')
 

@@ -1,5 +1,5 @@
 const validator = require('../../services/validators/validator')
-const { obtainWallet } = require('../coins/obtainWallet.js')
+const obtainWallet = require('../coins/obtainWallet')
 
 const axios = require('axios')
 
@@ -26,9 +26,10 @@ module.exports = async userData => {
     )
   }
 
-  const walletData = createWallet(password, testnet)
+  const walletData = await createWallet(password, testnet)
 
   try {
+    console.log('')
     const res = await axios.post(endpoint, {
       email,
       password,

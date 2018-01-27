@@ -1,34 +1,20 @@
 {
     "env": {
-        "browser": true,
-        "commonjs": true,
-        "es6": true,
-        "jest": true
+      "browser": true,
+      "commonjs": true,
+      "es6": true,
+      "jest": true
     },
     "extends": "standard",
     "parserOptions": {
-        "sourceType": "module"
+      "sourceType": "module"
     },
     "rules": {
-        "indent": [
-            "error",
-            2
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-            "error",
-            "never"
-        ],
-        // allow paren-less arrow functions
-        "arrow-parens": 0,
-        // allow async-await
-        "generator-star-spacing": 0
+      "indent": ["error", 2],
+      "linebreak-style": ["error", "unix"],
+      "quotes": ["error", "single"],
+      "semi": ["error", "never"],
+      "arrow-parens": 0,
+      "generator-star-spacing": 0
     }
-}
+  }

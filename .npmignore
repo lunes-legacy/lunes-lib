@@ -1,0 +1,9 @@
+node_modules
+.env
+.idea
+.vs
+.njsproj
+appTest.js
+.history
+.yarn.lock
+package-lock.json

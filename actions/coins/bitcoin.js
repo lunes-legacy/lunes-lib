@@ -7,7 +7,10 @@ const getBalance = async (params, accessToken) => {
   const url = `${endpoint}/balance/btc/${params.address}`
   try {
     const res = await axios.get(url, { headers })
-    return res.data
+    if (res) {
+      return res.data
+    }
+    return 0
   } catch (err) {
     throw err.response ? err.response.data : new Error(err)
   }
