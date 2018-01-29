@@ -1,11 +1,8 @@
 const validator = require('../../services/validators/validator')
-const obtainWallet = require('../coins/obtainWallet')
 
 const axios = require('axios')
 
 const BASE_URL = require('../../constants/api')
-
-const { createWallet } = require('../coins')
 
 const endpoint = `${BASE_URL}/users/create`
 
@@ -26,19 +23,13 @@ module.exports = async userData => {
     )
   }
 
-  const walletData = await createWallet(password, testnet)
-
   try {
-    console.log('')
     const res = await axios.post(endpoint, {
       email,
       password,
       fullname,
-      walletData
+      testnet
     })
-    if (res.data.wallet) {
-      res.data.wallet.hash = obtainWallet(res.data.wallet.hash, password)
-    }
     return res.data
   } catch (err) {
     throw err.response ? err.response.data : new Error(err)

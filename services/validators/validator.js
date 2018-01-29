@@ -1,10 +1,16 @@
 const Validator = require('validator')
-const {PASSWORD_LENGTH, MAX_PIN_VALUE} = require('../../constants/defaultLengths')
+const {
+  PASSWORD_LENGTH,
+  MAX_PIN_VALUE
+} = require('../../constants/defaultLengths')
 
-const isTestnet = testnetValue => {
+const isTestnet = testnetParam => {
+  if (typeof testnetParam === typeof true) {
+    return testnetParam
+  }
   let testnet = false
-  if (testnetValue) {
-    testnet = String(testnetValue.toLowerCase()) === 'true'
+  if (testnetParam) {
+    testnet = String(testnetParam.toLowerCase()) === 'true'
   }
   return testnet
 }
