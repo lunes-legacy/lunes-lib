@@ -2,30 +2,37 @@
 
 Official and agnostic library to wrap Lunes API.
 
-## V 0.0.3
-- Coins: Get coins prices, history
+## V 0.0.13
+
+* Coins: Get coins prices, history
 
 ### Prerequisites
-- [NodeJS](http://nodejs.org) - 8.x LTS
+
+* [NodeJS](http://nodejs.org) - 8.x LTS
 
 ### Instalation
+
 Using NPM
+
 ```sh
 $ npm i --save lunes-core
 ```
+
 Using Yarn
+
 ```sh
 $ yarn add lunes-core
 ```
+
 ### Importing
 
 ```javascript
 //CommonJS's require
-const LunesCore = require('lunes-core')
-const {users, coins} = LunesCore
+const LunesCore = require("lunes-core");
+const { users, coins } = LunesCore;
 
 //Webpack/es6
-import {users, coins} from 'lunes-core'
+import { users, coins } from "lunes-core";
 ```
 
 ## API
@@ -33,13 +40,14 @@ import {users, coins} from 'lunes-core'
 ### Users
 
 #### .users.create({email,password,fullname})
+
 Creates a new user into Firebase authentication and into realtime database. This user **must** to contain a valid email, password and fullname.
 
 Returns an access token for current user.
 
 #### .users.login({email,password})
 
-User login into Lunes API, using email and password credentials. 
+User login into Lunes API, using email and password credentials.
 
 Returns an access token for current user.
 
@@ -57,7 +65,7 @@ Returns user's personal info object.
 
 #### .users.update(id, {fullname,small,birthDate,city,state,country,homeAddress}, accessToken)
 
-Update user's profile. 
+Update user's profile.
 
 Returns the updated user profile.
 
@@ -91,7 +99,7 @@ exchange => Exchange's name, default is CCCAGG
 
 Returns an object containg the asked currency prices.
 
-e.g 
+e.g
 
 ```javascript
 {"BTC":0.009878,"USD":10.79,"EUR":10.37}
@@ -132,18 +140,20 @@ Return an object containing history metadata and an array containing the low, hi
 }
 ```
 
-
 #### Bitcoin
 
 The following functions are specific when the currency is Bitcoin (BTC).
 
 ##### .coins.bitcoin.getBalance({address}, accessToken)
+
 Read address, request Lunes API and returns balance.
 
 ##### .coins.bitcoin.getHistory({address}, accessToken)
+
 Read address, request Lunes API and returns transaction history.
 
 ##### .coins.bitcoin.backupWallet({email}, accessToken)
+
 Returns the user's wallet seed.
 
 ## Tests (not tottaly covered)
