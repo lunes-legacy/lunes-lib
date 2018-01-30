@@ -4,13 +4,9 @@ const endpoint = `${require('../../../constants/api')}/coins/balance`
 
 module.exports = async (params, accessToken) => {
   const headers = { Authorization: `Bearer ${accessToken}` }
-  const url = `${endpoint}/btc/${params.address}`
+  let url = `${endpoint}/btc/${params.address}?testnet=${params.testnet}`
   try {
-    const res = await axios.get(
-      url,
-      { params: { testnet: params.testnet } },
-      { headers }
-    )
+    const res = await axios.get(url, { headers })
     if (res) {
       return res.data
     }
