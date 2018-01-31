@@ -15,13 +15,13 @@ Official and agnostic library to wrap Lunes API.
 Using NPM
 
 ```sh
-$ npm i --save lunes-core
+$ npm i --save lunes-lib
 ```
 
 Using Yarn
 
 ```sh
-$ yarn add lunes-core
+$ yarn add lunes-lib
 ```
 
 ### Importing
