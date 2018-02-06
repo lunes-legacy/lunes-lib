@@ -15,24 +15,24 @@ Official and agnostic library to wrap Lunes API.
 Using NPM
 
 ```sh
-$ npm i --save lunes-core
+$ npm i --save lunes-lib
 ```
 
 Using Yarn
 
 ```sh
-$ yarn add lunes-core
+$ yarn add lunes-lib
 ```
 
 ### Importing
 
 ```javascript
 //CommonJS's require
-const LunesCore = require("lunes-core");
+const LunesCore = require("lunes-lib");
 const { users, coins } = LunesCore;
 
 //Webpack/es6
-import { users, coins } from "lunes-core";
+import { users, coins } from "lunes-lib";
 ```
 
 ## API
