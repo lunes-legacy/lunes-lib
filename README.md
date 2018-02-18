@@ -1,6 +1,6 @@
 # Lunes Lib
 
-Official and agnostic library to wrap Lunes API.
+The Official and agnostic library to wrap Lunes API.
 
 ## V 0.0.13
 
@@ -161,6 +161,9 @@ Returns the user's wallet seed.
 ```sh
 $ npm test
 ```
+## Pull requests
+
+Always at branch "develop".
 
 ## License
 
