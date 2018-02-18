@@ -7,7 +7,9 @@ const BASE_URL = require('../../constants/api')
 const endpoint = `${BASE_URL}/users/login`
 
 module.exports = async userData => {
+  
   const { email, password } = userData
+
   if (!validator.isEmail(email)) {
     throw new Error(`${email} is not a valid email.`)
   }
