@@ -1,5 +1,5 @@
 
-module.exports = async (coinDestination, bonusRate, coinAmount, exchangeRate, unitPrice, coupon) => {
+module.exports = async (bonusRate, coinAmount, exchangeRate, unitPrice, coupon) => {
   if (coupon && coupon !== '') {
     bonusRate += 0.01
   }

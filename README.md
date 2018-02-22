@@ -28,11 +28,11 @@ $ yarn add lunes-lib
 
 ```javascript
 //CommonJS's require
-const LunesCore = require("lunes-core");
+const LunesCore = require("lunes-lib");
 const { users, coins } = LunesCore;
 
 //Webpack/es6
-import { users, coins } from "lunes-core";
+import { users, coins } from "lunes-lib";
 ```
 
 ## API
