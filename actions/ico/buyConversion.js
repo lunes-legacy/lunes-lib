@@ -16,8 +16,8 @@ const toLNS = (bonusRate, inputAmount, exchangeRate, unitPrice, coupon) => {
   exchangeRate = Number(exchangeRate)
   unitPrice = Number(unitPrice)
 
-  let exchangeUnitPrice = unitPrice / exchangeRate
-  let buyAmount = inputAmount / exchangeUnitPrice
+  let exchangeUnitPrice = exchangeRate * inputAmount
+  let buyAmount = exchangeUnitPrice / unitPrice
   let bonusAmount = buyAmount * bonusRate
   let totalAmount = buyAmount + bonusAmount
 
