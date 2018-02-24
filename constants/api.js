@@ -1,1 +1,1 @@
-module.exports = 'http://localhost:6001/api'
+module.exports = 'https://api.lunes.io/api'
