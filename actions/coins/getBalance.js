@@ -1,6 +1,6 @@
 const axios = require('axios')
 
-const endpoint = `${require('../../../constants/api')}/coins/balance`
+const endpoint = `${require('../../constants/api')}/coins/balance`
 
 module.exports = async (params, accessToken) => {
   const headers = { Authorization: `Bearer ${accessToken}` }
