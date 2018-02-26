@@ -99,11 +99,14 @@ exchange => Exchange's name, default is CCCAGG
 
 Returns an object containg the asked currency prices.
 
-e.g
 
-```javascript
-{"BTC":0.009878,"USD":10.79,"EUR":10.37}
-```
+### ICO
+
+#### .ico.buyBalance({email,sale_phase_id})
+
+Get the buy balance in cryptocurrency and lunes for the user 
+
+
 
 #### .coins.getHistory({fromDate, toDate, fromSymbol,toSymbom, exchange})
 
