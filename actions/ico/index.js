@@ -1,5 +1,6 @@
 const buyCoin = require('./buyCoin')
 const buyConversion = require('./buyConversion')
+const buyBalance = require('./buyBalance')
 const buyHistory = require('./buyHistory')
 const coinAmount = require('./coinAmount')
 const confirmTerm = require('./confirmTerm')
@@ -11,5 +12,6 @@ module.exports = {
   buyHistory,
   coinAmount,
   confirmTerm,
-  obtainPhase
+  obtainPhase,
+  buyBalance
 }
