@@ -2,7 +2,7 @@
 
 The Official and agnostic library to wrap Lunes API.
 
-## V 0.0.23
+## V 0.0.26
 
 * Coins: Get coins prices, history
 
@@ -99,14 +99,11 @@ exchange => Exchange's name, default is CCCAGG
 
 Returns an object containg the asked currency prices.
 
-
 ### ICO
 
 #### .ico.buyBalance({email,sale_phase_id})
 
-Get the buy balance in cryptocurrency and lunes for the user 
-
-
+Get the buy balance in cryptocurrency and lunes for the user
 
 #### .coins.getHistory({fromDate, toDate, fromSymbol,toSymbom, exchange})
 
@@ -164,6 +161,7 @@ Returns the user's wallet seed.
 ```sh
 $ npm test
 ```
+
 ## Pull requests
 
 Always at branch "develop".
