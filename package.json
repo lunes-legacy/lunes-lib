@@ -1,4 +1,41 @@
 {
+  "_args": [
+    [
+      {
+        "raw": "lunes-lib@https://registry.npmjs.org/lunes-lib/-/lunes-lib-0.0.26.tgz",
+        "scope": null,
+        "escapedName": "lunes-lib",
+        "name": "lunes-lib",
+        "rawSpec": "https://registry.npmjs.org/lunes-lib/-/lunes-lib-0.0.26.tgz",
+        "spec": "https://registry.npmjs.org/lunes-lib/-/lunes-lib-0.0.26.tgz",
+        "type": "remote"
+      },
+      "D:\\workspaces\\lunes\\lunes-purchase"
+    ]
+  ],
+  "_from": "https://registry.npmjs.org/lunes-lib/-/lunes-lib-0.0.26.tgz",
+  "_id": "lunes-lib@0.0.26",
+  "_inCache": true,
+  "_location": "/lunes-lib",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "lunes-lib@https://registry.npmjs.org/lunes-lib/-/lunes-lib-0.0.26.tgz",
+    "scope": null,
+    "escapedName": "lunes-lib",
+    "name": "lunes-lib",
+    "rawSpec": "https://registry.npmjs.org/lunes-lib/-/lunes-lib-0.0.26.tgz",
+    "spec": "https://registry.npmjs.org/lunes-lib/-/lunes-lib-0.0.26.tgz",
+    "type": "remote"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/lunes-lib/-/lunes-lib-0.0.26.tgz",
+  "_shasum": "d66f639d0c2802e06bc4c4fceda29121c0fa531e",
+  "_shrinkwrap": null,
+  "_spec": "lunes-lib@https://registry.npmjs.org/lunes-lib/-/lunes-lib-0.0.26.tgz",
+  "_where": "D:\\workspaces\\lunes\\lunes-purchase",
   "dependencies": {
     "axios": "^0.17.1",
     "bluebird": "^3.5.1",
@@ -29,5 +66,5 @@
   "scripts": {
     "test": "jest"
   },
-  "version": "0.0.26"
+  "version": "0.0.27"
 }
