@@ -7,6 +7,8 @@ const confirmPin = require('./confirmPin')
 const confirmPhone = require('./confirmPhone')
 const logout = require('./logout')
 const update = require('./update')
+const verifyTwofa = require('./verifyTwofa');
+const generateTwofa = require('./generateTwofa');
 
 module.exports = {
   create,
@@ -17,5 +19,7 @@ module.exports = {
   confirmPin,
   confirmPhone,
   logout,
-  update
+  update,
+  verifyTwofa,
+  generateTwofa
 }

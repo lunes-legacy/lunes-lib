@@ -21,7 +21,7 @@ module.exports = async (email, accessToken) => {
 
 const create = async (headers, email) => {
   try {
-    const res = await axios.post(buyHistoryEndpoint, email, { headers })
+    const res = await axios.post(buyHistoryEndpoint, { email }, { headers })
     return res.data
   } catch (err) {
     throw err.response ? err.response.data : new Error(err)

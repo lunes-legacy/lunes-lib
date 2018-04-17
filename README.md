@@ -2,7 +2,7 @@
 
 The Official and agnostic library to wrap Lunes API.
 
-## V 0.0.21
+## V 0.0.28
 
 * Coins: Get coins prices, history
 
@@ -28,11 +28,11 @@ $ yarn add lunes-lib
 
 ```javascript
 //CommonJS's require
-const LunesCore = require("lunes-core");
+const LunesCore = require("lunes-lib");
 const { users, coins } = LunesCore;
 
 //Webpack/es6
-import { users, coins } from "lunes-core";
+import { users, coins } from "lunes-lib";
 ```
 
 ## API
@@ -99,11 +99,11 @@ exchange => Exchange's name, default is CCCAGG
 
 Returns an object containg the asked currency prices.
 
-e.g
+### ICO
 
-```javascript
-{"BTC":0.009878,"USD":10.79,"EUR":10.37}
-```
+#### .ico.buyBalance({email,sale_phase_id})
+
+Get the buy balance in cryptocurrency and lunes for the user
 
 #### .coins.getHistory({fromDate, toDate, fromSymbol,toSymbom, exchange})
 
@@ -161,6 +161,7 @@ Returns the user's wallet seed.
 ```sh
 $ npm test
 ```
+
 ## Pull requests
 
 Always at branch "develop".

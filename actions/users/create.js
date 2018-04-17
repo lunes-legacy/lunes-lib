@@ -7,7 +7,7 @@ const BASE_URL = require('../../constants/api')
 const endpoint = `${BASE_URL}/users/create`
 
 module.exports = async userData => {
-  const { email, password, fullname, testnet } = userData
+  const { email, password, fullname, coupon, testnet } = userData
 
   if (!validator.areNotEmpty([email, password, fullname])) {
     throw new Error('Email, password and fullname are required fields.')
@@ -28,6 +28,7 @@ module.exports = async userData => {
       email,
       password,
       fullname,
+      coupon,
       testnet
     })
     return res.data
