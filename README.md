@@ -2,7 +2,7 @@
 
 The Official and agnostic library to wrap Lunes API.
 
-## V 0.0.28
+## V 0.0.29
 
 * Coins: Get coins prices, history
 
@@ -155,6 +155,10 @@ Read address, request Lunes API and returns transaction history.
 ##### .coins.bitcoin.backupWallet({email}, accessToken)
 
 Returns the user's wallet seed.
+
+#### .coins.bitcoin.estimate({senderAddress, receivingAddress, amount, feePerByte}, accessToken)
+
+Calculates and returns the estimate fee for the given parameters.
 
 ## Tests (not tottaly covered)
 
