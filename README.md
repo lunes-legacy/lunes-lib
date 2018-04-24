@@ -156,7 +156,7 @@ Read address, request Lunes API and returns transaction history.
 
 Returns the user's wallet seed.
 
-#### .coins.bitcoin.estimate({senderAddress, receivingAddress, amount, feePerByte}, accessToken)
+##### .coins.bitcoin.estimate({senderAddress, receivingAddress, amount, feePerByte}, accessToken)
 
 Calculates and returns the estimate fee for the given parameters.
 
