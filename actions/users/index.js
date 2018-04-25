@@ -9,6 +9,7 @@ const logout = require('./logout')
 const update = require('./update')
 const verifyTwofa = require('./verifyTwofa');
 const generateTwofa = require('./generateTwofa');
+const saveTwofa = require('./saveTwofa');
 
 module.exports = {
   create,
@@ -21,5 +22,6 @@ module.exports = {
   logout,
   update,
   verifyTwofa,
-  generateTwofa
+  generateTwofa,
+  saveTwofa
 }
