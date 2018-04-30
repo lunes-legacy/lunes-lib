@@ -2,7 +2,7 @@
 
 The Official and agnostic library to wrap Lunes API.
 
-## V 0.0.29
+## V 0.0.30
 
 * Coins: Get coins prices, history
 
