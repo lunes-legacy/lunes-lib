@@ -1,16 +1,15 @@
 const axios = require('axios')
 
-const createEndpoint = `${require('../../../constants/api')}/coins/tx/create/btc`
+const endpoint = `${require('../../../constants/api')}/coins/tx/estimate`
 
 /**
  *
- * @param {*} transactionData - email, pin, receivingAddress, amount, feePerByte, testnet
+ * @param {*} transactionData - senderAddress, receivingAddress, amount, feePerByte, testnet
  * @param {*} accessToken .
  */
 module.exports = async (transactionData, accessToken) => {
   const headers = { Authorization: `Bearer ${accessToken}` }
   try {
-    // 1. create transaction
     const transactionResponse = await create(headers, transactionData)
 
     return transactionResponse
@@ -21,7 +20,8 @@ module.exports = async (transactionData, accessToken) => {
 
 const create = async (headers, transactionData) => {
   try {
-    const res = await axios.post(createEndpoint, transactionData, { headers })
+    const url = `${endpoint}/${transactionData.coin}`
+    const res = await axios.post(url, transactionData, { headers })
     return res.data
   } catch (err) {
     throw err.response ? err.response.data : new Error(err)
