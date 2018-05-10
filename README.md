@@ -2,7 +2,7 @@
 
 The Official and agnostic library to wrap Lunes API.
 
-## V 0.0.30
+## V 0.0.31
 
 * Coins: Get coins prices, history
 
@@ -89,7 +89,100 @@ Returns a confirmation and phoneIsVerified = true.
 
 ### Coins
 
-#### .coins.getPrice({fromSymbol,toSymbom,exchange})
+#### Balance
+
+`.coins.services.balance({params})`
+
+Obtain balance for an address.
+
+##### Parameters:
+
+* `network` String
+* `address` String
+* `testnet` Boolean (optional)
+
+##### Return: Object (documented in source-code)
+
+#### History
+
+`.coins.services.history({params})`
+
+Obtain transaction history for an address.
+
+##### Parameters:
+
+* `network` String
+* `address` String
+* `testnet` Boolean (optional)
+
+##### Return: Object (documented in source-code)
+
+#### Network Fees
+
+`.coins.services.networkFees({params})`
+
+Obtain the current network high, medium and low fees.
+
+##### Parameters:
+
+* `network` String
+* `testnet` Boolean (optional)
+
+##### Return: Object (documented in source-code)
+
+#### Estimate Fee
+
+`.coins.services.estimateFee({params}, accessToken)`
+
+Estimate transaction fee for given parameters.
+Must provide user accessToken for authentication.
+
+##### Parameters - Bitcoin Family:
+
+* `network` String
+* `testnet` Boolean (optional)
+* `toAddress` String
+* `fromAddress` String
+* `amount` String - satoshi unit
+* `feePerByte` String - satoshi unit
+
+##### Parameters - Ethereum:
+
+* `network` String
+* `testnet` Boolean (optional)
+* `toAddress` String
+* `fromAddress` String
+* `amount` String - wei unit
+* `gasLimit` String
+* `gasPrice` String - wei unit
+
+##### Return: Object (documented in source-code)
+
+#### Transaction
+
+`.coins.services.transaction({params}, accessToken)`
+
+Create transaction for given parameters.
+Must provide user accessToken for authentication.
+
+##### Parameters - Bitcoin Family:
+
+* `network` String
+* `testnet` Boolean (optional)
+* `toAddress` String
+* `amount` String - satoshi unit
+* `feePerByte` String - satoshi unit
+
+##### Parameters - Ethereum:
+
+* `network` String
+* `testnet` Boolean (optional)
+* `toAddress` String
+* `amount` String - wei unit
+* `gasLimit` String
+* `gasPrice` String - wei unit
+
+##### Return: Object (documented in source-code)
 
 Obtain the realtime price of one or more currencies.
 
@@ -155,10 +248,6 @@ Read address, request Lunes API and returns transaction history.
 ##### .coins.bitcoin.backupWallet({email}, accessToken)
 
 Returns the user's wallet seed.
-
-##### .coins.bitcoin.estimate({senderAddress, receivingAddress, amount, feePerByte}, accessToken)
-
-Calculates and returns the estimate fee for the given parameters.
 
 ## Tests (not tottaly covered)
 

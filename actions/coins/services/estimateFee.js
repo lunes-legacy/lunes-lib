@@ -8,9 +8,9 @@ const endpoint = `${require('../../../constants/api')}/coins/tx/estimate`
  * BtcFamily:
  * @param transactionData = {
       {String} network - coin network
-      {String} testnet - if is testnet network
-      {String} receivingAddress - Address to send the transaction
-      {String} senderAddress - Address sending the transaction
+      {Boolean} testnet - if is testnet network
+      {String} toAddress - Address to send the transaction
+      {String} fromAddress - Address sending the transaction
       {String} amount - Amount to send in satoshi unit - Ex: 5000000 (0.05 BTC)
       {String} feePerByte - Fee per byte to use in satoshi unit - Ex: 32 (0.00000032 BTC)
  * }
@@ -18,12 +18,12 @@ const endpoint = `${require('../../../constants/api')}/coins/tx/estimate`
  * Ethereum:
  * @param transactionData = {
       {String} network - coin network
-      {String} testnet - if is testnet network
+      {Boolean} testnet - if is testnet network
       {String} toAddress - Address to send the transaction
       {String} fromAddress - Address sending the transaction
-      {String} amount - Amount to send wei unit - Ex: 1500000000000000 (0.0015 ETH)
+      {String} amount - Amount to send in wei unit - Ex: 1500000000000000 (0.0015 ETH)
       {String} gasLimit - Gas limit to use - Ex: 21000
-      {String} gasPrice - Gas price to use in wei - Ex: 10000000000 (10 Gwei)
+      {String} gasPrice - Gas price to use in wei unit - Ex: 10000000000 (10 Gwei)
  * }
  *
  * @param accessToken - user's accessToken for authentication
@@ -47,18 +47,7 @@ const endpoint = `${require('../../../constants/api')}/coins/tx/estimate`
 module.exports = async (transactionData, accessToken) => {
   const headers = { Authorization: `Bearer ${accessToken}` }
   try {
-    const transactionResponse = await create(headers, transactionData)
-
-    return transactionResponse
-  } catch (err) {
-    throw err
-  }
-}
-
-const create = async (headers, transactionData) => {
-  try {
-    const url = `${endpoint}/${transactionData.network}`
-    const res = await axios.post(url, transactionData, { headers })
+    const res = await axios.post(endpoint, transactionData, { headers })
     return res.data
   } catch (err) {
     throw err.response ? err.response.data : new Error(err)

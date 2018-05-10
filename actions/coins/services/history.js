@@ -8,7 +8,7 @@ const endpoint = `${require('../../../constants/api')}/coins/history`
  * @param params = {
       {String} address - Address to use
       {String} network - network network
-      {String} testnet - if is testnet network
+      {Boolean} testnet - if is testnet network
  * }
  *
  * @return

@@ -8,7 +8,7 @@ const endpoint = `${require('../../../constants/api')}/coins/balance`
  * @param params = {
       {String} address - Address to use
       {String} network - coin network
-      {String} testnet - if is testnet network
+      {Boolean} testnet - if is testnet network
  * }
  *
  * @return values in coin lowest unit
@@ -25,10 +25,7 @@ module.exports = async params => {
   }`
   try {
     const res = await axios.get(url)
-    if (res) {
-      return res.data
-    }
-    return 0
+    return res.data
   } catch (err) {
     throw err.response ? err.response.data : new Error(err)
   }

@@ -5,7 +5,7 @@ const WAValidator = require('wallet-address-validator')
  *
  * @param {String} address - address to validate
  * @param {String} currency - the currency network - Ex: BTC or ETH
- * @param {String} testnet - if is testnet network
+ * @param {Boolean} testnet - if is testnet network
  */
 module.exports = (address, currency, testnet) => {
   try {
