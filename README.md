@@ -87,6 +87,18 @@ Confirm the phone number.
 
 Returns a confirmation and phoneIsVerified = true.
 
+#### Validate Token
+
+`.users.validateToken.(token)`
+
+Validate user's access token.
+
+##### Parameters:
+
+* `token` String
+
+##### Return: Object (documented in source-code)
+
 ### Coins
 
 #### Balance
