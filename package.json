@@ -1,73 +1,28 @@
 {
-  "_args": [
-    [
-      {
-        "raw": "lunes-lib@https://registry.npmjs.org/lunes-lib/-/lunes-lib-0.0.26.tgz",
-        "scope": null,
-        "escapedName": "lunes-lib",
-        "name": "lunes-lib",
-        "rawSpec": "https://registry.npmjs.org/lunes-lib/-/lunes-lib-0.0.26.tgz",
-        "spec": "https://registry.npmjs.org/lunes-lib/-/lunes-lib-0.0.26.tgz",
-        "type": "remote"
-      },
-      "D:\\workspaces\\lunes\\lunes-purchase"
-    ],
-    [
-      {
-        "raw": "lunes-lib@0.0.27",
-        "scope": null,
-        "escapedName": "lunes-lib",
-        "name": "lunes-lib",
-        "rawSpec": "0.0.27",
-        "spec": "0.0.27",
-        "type": "version"
-      },
-      "D:\\workspaces\\lunes\\lunes-purchase"
-    ]
-  ],
-  "_from": "lunes-lib@0.0.27",
-  "_id": "lunes-lib@0.0.27",
-  "_inCache": true,
-  "_location": "/lunes-lib",
-  "_nodeVersion": "7.8.0",
-  "_npmOperationalInternal": {
-    "host": "s3://npm-registry-packages",
-    "tmp": "tmp/lunes-lib_0.0.27_1523816253604_0.8002837126821187"
+  "name": "lunes-lib",
+  "version": "0.0.32",
+  "description": "The official Lunes API Wrapper.",
+  "scripts": {
+    "test": "jest"
   },
-  "_npmUser": {
-    "name": "laurindo",
-    "email": "dslaurindo@gmail.com"
-  },
-  "_npmVersion": "4.2.0",
-  "_phantomChildren": {},
-  "_requested": {
-    "raw": "lunes-lib@0.0.27",
-    "scope": null,
-    "escapedName": "lunes-lib",
-    "name": "lunes-lib",
-    "rawSpec": "0.0.27",
-    "spec": "0.0.27",
-    "type": "version"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/lunes-lib/-/lunes-lib-0.0.27.tgz",
-  "_shasum": "d61a4b7de52f2878acd83012896147f4286acb72",
-  "_shrinkwrap": null,
-  "_spec": "lunes-lib@0.0.27",
-  "_where": "D:\\workspaces\\lunes\\lunes-purchase",
   "dependencies": {
     "axios": "^0.17.1",
+    "bip39": "^2.5.0",
+    "bitcoinjs-lib": "^3.3.2",
+    "bitcoinjs-testnets": "^1.0.10",
     "bluebird": "^3.5.1",
     "crypto-js": "^3.1.9-1",
+    "ethereumjs-units": "^0.2.0",
+    "ethereumjs-util": "^5.2.0",
+    "ethereumjs-wallet": "^0.6.0",
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
-    "validator": "^9.2.0"
+    "satoshi-bitcoin": "^1.0.4",
+    "validator": "^9.2.0",
+    "wallet-address-validator": "^0.1.7",
+    "waves-api": "^0.24.2"
   },
-  "description": "The official Lunes API Wrapper.",
   "devDependencies": {
     "chance": "^1.0.12",
     "eslint": "^4.13.1",
@@ -115,12 +70,5 @@
       "name": "wandyer.silva",
       "email": "wandyer.s@gmail.com"
     }
-  ],
-  "name": "lunes-lib",
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
-  "scripts": {
-    "test": "jest"
-  },
-  "version": "0.0.28"
+  ]
 }
