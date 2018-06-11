@@ -10,7 +10,7 @@ module.exports = async (email, generateNew) => {
     url = `${url}&new=true`
   }
   try {
-    const res = await axios.get(url)
+    const res = await axios.post(url, {email:email,new:generateNew})
     return res.data
   } catch (err) {
     throw err.response ? err.response.data : new Error(err)
