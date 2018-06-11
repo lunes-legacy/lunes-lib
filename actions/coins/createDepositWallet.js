@@ -34,7 +34,7 @@ const create = async (headers, email, testnet) => {
     )
     return {
       BTC: res.data.resultBTC,
-      ETH: res.data.resultETH,
+      // ETH: res.data.resultETH,
       LTC: res.data.resultLTC
     }
   } catch (err) {

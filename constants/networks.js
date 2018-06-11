@@ -119,16 +119,16 @@ module.exports = {
     coinSymbol: 'LNS',
     coinName: 'Lunes',
     testnet: false,
-    apiUrl: undefined,
-    CONFIG: {
+    apiUrl: 'https://lunesnode.lunes.io/',
+    APICONFIG: {
       minimumSeedLength: 25,
       requestOffset: 0,
       requestLimit: 100,
       logLevel: 'warning',
       timeDiff: 0,
-      networkByte: '0'.charCodeAt(0),
-      nodeAddress: undefined,
-      matcherAddress: undefined
+      networkByte: '1'.charCodeAt(0),
+      nodeAddress: 'https://lunesnode.lunes.io/',
+      matcherAddress: 'https://lunesnode.lunes.io/matcher'
     }
   },
   LNSTESTNET: {
@@ -136,7 +136,7 @@ module.exports = {
     coinName: 'Lunes Testnet',
     testnet: true,
     apiUrl: 'https://testnet.lunes.io/',
-    CONFIG: {
+    APICONFIG: {
       minimumSeedLength: 25,
       requestOffset: 0,
       requestLimit: 100,

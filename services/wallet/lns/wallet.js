@@ -7,7 +7,7 @@ const WavesAPI = require('waves-api')
  */
 const mnemonicToSeed = (mnemonic, network) => {
   if (mnemonic) {
-    const Waves = WavesAPI.create(network.CONFIG)
+    const Waves = WavesAPI.create(network.APICONFIG)
     const seed = Waves.Seed.fromExistingPhrase(mnemonic)
     return seed
   }
