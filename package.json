@@ -1,6 +1,6 @@
 {
   "name": "lunes-lib",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "description": "The official Lunes API Wrapper.",
   "scripts": {
     "test": "jest"
@@ -33,7 +33,7 @@
   "directories": {},
   "dist": {
     "shasum": "d61a4b7de52f2878acd83012896147f4286acb72",
-    "tarball": "https://registry.npmjs.org/lunes-lib/-/lunes-lib-0.0.27.tgz",
+    "tarball": "https://registry.npmjs.org/lunes-lib/-/lunes-lib-0.0.33.tgz",
     "fileCount": 58,
     "unpackedSize": 146296,
     "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJa05c+CRA9TVsSAnZWagAA7rEP/2maFwPnAtJpFe8wyeGF\nGyQ/8hbNMfSpdFHMwbPeacV3ISD/DDHFtU26jfttLkg4gZlYIQyB/VdxQxBs\nUVBNwNQGu2u7z7q6L20jRV+4IwkYYRq7F5YjtInP0h5Tb+TSzLf8FNA7eUq3\nKy5vHaySdK/a4GNOzT8wKRDUpAJqd9GsUUwnOluFrMHJm0CiNhKzhihUjTJ/\nHI358/aLhlzMALcQHvuXdan9rVpTNOLfq5x3qJXXmCFztrrONDWw1RzN7+TO\nZa41dsahkxVGIqqG781YVA7rgzEYC+cQxjhxTVbKMoDPi10PxK9IdTgY2d94\nWQ2EBNEaXH6dH6sjO7IgAp6+GRRhF0Pc9J4NbS5lwy06z1iLa9w7SrlFDvlh\nrDOlrcXw7vxYRzOB416sz+Y5u1v4t2KBx+mhBZqUZV0xwirDObbPXbCVjYTW\nbisE4ump/3YK0N2itDkwQ4/G3yDS0BsUfq68k9u0/+L2eRYOQUXdERpOBsyN\nJYdfwxCh1iIhK299/qmO5Q9PCf+H8r2FDq2LnTDJ/jCKDdylq9/FJ+XzXqEl\n/32dFRxkFeBnTGqLTT/zMnTMKyWuwni5rSVVfSEg8jW/ftbeq9FvnI7g9ZIo\nLNVpdS0sVRKIacQjYlhX0i2lg65c/BHaib/iTMD5EFWHUo+wyW/hp8uovo4r\n+vUy\r\n=XPIU\r\n-----END PGP SIGNATURE-----\r\n"
