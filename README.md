@@ -2,7 +2,7 @@
 
 The Official and agnostic library to wrap Lunes API.
 
-## V 0.0.34
+## V 0.0.35
 
 * Coins: Get coins prices, history
 
@@ -28,11 +28,11 @@ $ yarn add lunes-lib
 
 ```javascript
 //CommonJS's require
-const LunesCore = require("lunes-lib");
-const { users, coins } = LunesCore;
+const LunesLib = require("lunes-lib");
+const { users, coins, ico, networks, services } = LunesLib;
 
 //Webpack/es6
-import { users, coins } from "lunes-lib";
+import { users, coins, ico, networks, services } from "lunes-lib";
 ```
 
 ## API
@@ -200,6 +200,22 @@ Must provide user accessToken for authentication.
 
 * `mnemonic` String
 * `network` String
+* `testnet` Boolean (optional)
+* `toAddress` String
+* `amount` String - in smallest unit
+* `fee` String - in smallest unit
+
+##### Return: Object (documented in source-code)
+
+#### Lease
+
+`.coins.services.lease({params})`
+
+Create a lease transaction for given parameters.
+
+##### Parameters:
+
+* `mnemonic` String
 * `testnet` Boolean (optional)
 * `toAddress` String
 * `amount` String - in smallest unit
