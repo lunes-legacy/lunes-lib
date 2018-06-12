@@ -1,14 +1,14 @@
-const WavesAPI = require('waves-api')
+const LunesJsApi = require('lunes-js-api')
 
 /**
  * Create a lunes seed from mnemonic
  * @param {*} mnemonic - the mnemonic words
- * @param {*} network - the coin network
+ * @param {*} network - Lunes Network
  */
 const mnemonicToSeed = (mnemonic, network) => {
   if (mnemonic) {
-    const Waves = WavesAPI.create(network.APICONFIG)
-    const seed = Waves.Seed.fromExistingPhrase(mnemonic)
+    const Lunes = LunesJsApi.create(network.APICONFIG)
+    const seed = Lunes.Seed.fromExistingPhrase(mnemonic)
     return seed
   }
 
@@ -17,8 +17,8 @@ const mnemonicToSeed = (mnemonic, network) => {
 
 /**
  * Create a lunes seed from the phrase
- * @param {*} phrase - the phrase words
- * @param {*} testnet - if testnet or not
+ * @param {*} mnemonic - the mnemonic words
+ * @param {*} network - Lunes Network
  */
 const newAddress = (mnemonic, network) => {
   const seed = mnemonicToSeed(mnemonic, network)
