@@ -1,24 +1,25 @@
 {
   "name": "lunes-lib",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "description": "The official Lunes API Wrapper.",
   "scripts": {
     "test": "jest"
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "biggystring": "^3.0.1",
     "bip39": "^2.5.0",
     "bitcoinjs-lib": "^3.3.2",
     "bitcoinjs-testnets": "^1.0.10",
     "bluebird": "^3.5.1",
     "crypto-js": "^3.1.9-1",
     "lodash": "^4.17.4",
+    "lunes-js-api": "^0.31.2",
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
     "satoshi-bitcoin": "^1.0.4",
     "validator": "^9.2.0",
-    "wallet-address-validator": "^0.1.7",
-    "waves-api": "^0.24.2"
+    "wallet-address-validator": "^0.1.7"
   },
   "devDependencies": {
     "chance": "^1.0.12",
