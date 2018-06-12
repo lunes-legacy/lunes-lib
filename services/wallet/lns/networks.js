@@ -27,7 +27,7 @@ module.exports = {
       logLevel: 'warning',
       timeDiff: 0,
       networkByte: '0'.charCodeAt(0),
-      nodeAddress: 'https://lunesnode-testnet.lunes.io',
+      nodeAddress: 'https://lunesnode-testnet.lunes.io/',
       matcherAddress: 'https://lunesnode-testnet.lunes.io/matcher'
     }
   }
