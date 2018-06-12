@@ -3,6 +3,8 @@ const axios = require('axios')
 const endpoint = `${require('../../../../constants/api')}/coins/wallet/validate-address`
 
 /**
+ * Action to validate user's address that is stored in DB
+ *
  *TODO:
  */
 module.exports = async (data, accessToken) => {

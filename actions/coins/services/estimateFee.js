@@ -26,6 +26,8 @@ const endpoint = `${require('../../../constants/api')}/coins/tx/estimate`
       {String} gasPrice - Gas price to use in wei unit - Ex: 10000000000 (10 Gwei)
  * }
  *
+ * Lunes: NOT SUPPORTED
+ *
  * @param accessToken - user's accessToken for authentication
  *
  * BtcFamily:
