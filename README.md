@@ -2,7 +2,7 @@
 
 The Official and agnostic library to wrap Lunes API.
 
-## V 0.0.31
+## V 0.0.34
 
 * Coins: Get coins prices, history
 
@@ -86,6 +86,8 @@ Returns a confirmation.
 Confirm the phone number.
 
 Returns a confirmation and phoneIsVerified = true.
+
+---
 
 #### Validate Token
 
@@ -194,8 +196,17 @@ Must provide user accessToken for authentication.
 * `gasLimit` String
 * `gasPrice` String - wei unit
 
-##### Return: Object (documented in source-code)
+##### Parameters - Lunes:
 
+* `mnemonic` String
+* `network` String
+* `testnet` Boolean (optional)
+* `toAddress` String
+* `amount` String - in smallest unit
+* `fee` String - in smallest unit
+
+##### Return: Object (documented in source-code)
+---
 Obtain the realtime price of one or more currencies.
 
 fromSymbol => e.g. one of BTC, USD, BRL
