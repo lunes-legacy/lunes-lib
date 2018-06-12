@@ -1,11 +1,14 @@
 const axios = require('axios')
-
 const endpoint = `${require('../../../constants/api')}/coins/tx/create`
+
+const LnsNetworks = require('../../../services/wallet/lns/networks')
+const LnsService = require('../../../services/wallet/lns')
+const validator = require('../../../services/validator')
 
 /**
  * Create and send a transaction for given parameters
  *
- * BtcFamily:
+ * BtcFamily: TODO: update documentation
  * @param transactionData = {
       {String} network - coin network
       {Boolean} testnet - if is testnet network
@@ -14,7 +17,7 @@ const endpoint = `${require('../../../constants/api')}/coins/tx/create`
       {String} feePerByte - Fee per byte to use in satoshi unit - Ex: 32 (0.00000032 BTC)
  * }
  *
- * Ethereum:
+ * Ethereum: TODO: update documentation
  * @param transactionData = {
       {String} network - coin network
       {Boolean} testnet - if is testnet network
@@ -22,6 +25,16 @@ const endpoint = `${require('../../../constants/api')}/coins/tx/create`
       {String} amount - Amount to send wei unit - Ex: 1500000000000000 (0.0015 ETH)
       {String} gasLimit - Gas limit to use - Ex: 21000
       {String} gasPrice - Gas price to use in wei - Ex: 10000000000 (10 Gwei)
+ * }
+ *
+ * Lunes:
+ * @param transactionData = {
+      {String} mnemonic - mnemonic - 12 word mnemonic used to create the Seed
+      {String} network - coin network
+      {Boolean} testnet - if is testnet network
+      {String} toAddress - Address to send the transaction
+      {String} amount - Amount to send in smallest unit, 8 precision
+      {String} fee - Fee to use in smallest unit, 8 precision - Ex: 100000 (0.001 LNS)
  * }
  *
  * @param accessToken - user's accessToken for authentication
@@ -33,10 +46,34 @@ const endpoint = `${require('../../../constants/api')}/coins/tx/create`
       }
  */
 module.exports = async (transactionData, accessToken) => {
-  const headers = { Authorization: `Bearer ${accessToken}` }
   try {
-    const res = await axios.post(endpoint, transactionData, { headers })
-    return res.data
+    const network = transactionData.network.toLowerCase()
+    const testnet = validator.checkBoolean(transactionData.testnet)
+    if (network === 'btc') {
+      const headers = { Authorization: `Bearer ${accessToken}` }
+      const res = await axios.post(endpoint, transactionData, { headers })
+      return res.data
+    } else if (network === 'ltc') {
+      const headers = { Authorization: `Bearer ${accessToken}` }
+      const res = await axios.post(endpoint, transactionData, { headers })
+      return res.data
+    } else if (network === 'dash') {
+      const headers = { Authorization: `Bearer ${accessToken}` }
+      const res = await axios.post(endpoint, transactionData, { headers })
+      return res.data
+    } else if (network === 'eth') {
+      const headers = { Authorization: `Bearer ${accessToken}` }
+      const res = await axios.post(endpoint, transactionData, { headers })
+      return res.data
+    } else if (network === 'lns') {
+      const result = await LnsService.transaction.startUserTransaction(
+        transactionData,
+        testnet ? LnsNetworks.LNSTESTNET : LnsNetworks.LNS
+      )
+      return result
+    }
+    return ''
+    // return res.data
   } catch (err) {
     throw err.response ? err.response.data : new Error(err)
   }
