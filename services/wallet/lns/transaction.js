@@ -97,7 +97,11 @@ const createTransaction = async (
     const fromAddress = seed.address
 
     // Check sender balance
-    const userBalance = await balance(fromAddress, network.coinSymbol)
+    const userBalance = await balance({
+      address: fromAddress,
+      network: network.coinSymbol,
+      testnet: network.testnet
+    })
 
     const finalAmount = bns.add(transactionAmount.toString(), fee.toString())
     if (userBalance.data.confirmed < finalAmount) {
