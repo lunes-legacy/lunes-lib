@@ -1,12 +1,12 @@
-const LunesJsApi = require('lunes-js-api')
-const validateAddress = require('./validateAddress')
 const errorPattern = require('../../errorPattern')
+const LunesJsAPI = require('lunes-js-api')
 const wallet = require('./wallet')
-const bns = require('biggystring')
+const validateAddress = require('./validateAddress')
 const balance = require('../../../actions/coins/services/balance')
+const bns = require('biggystring')
 
 /**
- * Create and send a transaction for given parameters
+ * Create and send a lease transaction with given parameters
  *
  * @param transactionData = {
       {String} mnemonic - 12 word mnemonic used to create the Seed
@@ -22,39 +22,33 @@ const balance = require('../../../actions/coins/services/balance')
         txID:
       }
 */
-const startUserTransaction = async (transactionData, network) => {
+const startUserLease = async (leaseData, network) => {
   try {
-    const { toAddress, mnemonic } = transactionData
+    const { toAddress, mnemonic } = leaseData
     const seed = wallet.mnemonicToSeed(mnemonic, network)
 
-    const transactionAmount = Number(transactionData.amount)
-    const fee = Number(transactionData.fee)
+    const amount = Number(leaseData.amount)
+    const fee = Number(leaseData.fee)
 
-    const result = await createTransaction(
-      seed,
-      toAddress,
-      transactionAmount,
-      fee,
-      network
-    )
+    const result = await createLease(seed, toAddress, amount, fee, network)
 
     return result
   } catch (error) {
     throw errorPattern(
-      error.message || 'Error lunes startUserTransaction',
-      error.status || 500,
-      error.messageKey || 'START_USER_LNS_TRANSACTION_ERROR',
+      error.message || 'Error on startUserLease',
+      error.status || 0,
+      error.messageKey || 'START_USER_LNS_LEASE_ERROR',
       error.logMessage || error.stack || ''
     )
   }
 }
 
 /**
- * Spend value from a seed wallet
+ * Send lease value from a seed wallet
  *
  * @param {Seed} seed - lunes-js-api's seed of wallet to send the transaction from
  * @param {String} toAddress - Address to send the transaction
- * @param {Number} transactionAmount - Amount to send in smallest unit
+ * @param {Number} amount - Amount to send in smallest unit
  * @param {Number} fee - Fee to use in smallest unit - Ex: 100000 (0.001 LNS)
  * @param {LnsNetworks} network - Lunes Network
 
@@ -64,13 +58,7 @@ const startUserTransaction = async (transactionData, network) => {
         txID:
       }
  */
-const createTransaction = async (
-  seed,
-  toAddress,
-  transactionAmount,
-  fee,
-  network
-) => {
+const createLease = async (seed, toAddress, amount, fee, network) => {
   try {
     // Check received address
     const validate = await validateAddress(toAddress, network)
@@ -87,12 +75,12 @@ const createTransaction = async (
       )
     }
     // don't try to send negative values
-    if (transactionAmount <= 0) {
-      throw errorPattern('Invalid amount', 401, 'INVALID_AMOUNT')
+    if (amount <= 0) {
+      throw errorPattern('Invalid amount', 0, 'INVALID_AMOUNT')
     }
 
     if (fee < 0) {
-      throw errorPattern('Fee cannot be smaller than 0.', 401, 'INVALID_FEE')
+      throw errorPattern('Fee cannot be smaller than 0.', 0, 'INVALID_FEE')
     }
     const fromAddress = seed.address
 
@@ -103,22 +91,22 @@ const createTransaction = async (
       testnet: network.testnet
     })
 
-    const finalAmount = bns.add(transactionAmount.toString(), fee.toString())
+    const finalAmount = bns.add(amount.toString(), fee.toString())
     if (userBalance.data.confirmed < finalAmount) {
-      throw errorPattern('Balance too small', 401, 'TRANSACTION_LOW_BALANCE')
+      throw errorPattern('Balance too small', 0, 'TRANSACTION_LOW_BALANCE')
     }
 
-    // Transaction
-    const transactionData = {
-      assetId: 'WAVES',
-      amount: transactionAmount,
-      fee: fee,
-      recipient: toAddress
+    // Lease
+    const leaseData = {
+      recipient: toAddress,
+      amount: amount,
+      fee: fee
     }
+
     try {
-      const Lunes = LunesJsApi.create(network.APICONFIG)
-      const transaction = await Lunes.API.Node.v1.assets
-        .transfer(transactionData, seed.keyPair)
+      const Lunes = LunesJsAPI.create(network.APICONFIG)
+      const transaction = await Lunes.API.Node.v1.leasing
+        .lease(leaseData, seed.keyPair)
         .then(res => {
           const result = {
             network: network.coinSymbol,
@@ -133,23 +121,23 @@ const createTransaction = async (
       return transaction
     } catch (error) {
       throw errorPattern(
-        error.data ? error.data.message : 'Error on transaction',
-        error.status || 500,
-        error.messageKey || 'ON_TRANSACTION_ERROR',
+        error.data ? error.data.message : 'Error on lease',
+        error.status || 0,
+        error.messageKey || 'LEASE_ERROR',
         ''
       )
     }
   } catch (error) {
     throw errorPattern(
-      error.message || 'Error creating lunes transaction',
-      error.status || 500,
-      error.messageKey || 'CREATE_LNS_TRANSACTION_ERROR',
+      error.message || 'Error creating lunes lease transaction',
+      error.status || 0,
+      error.messageKey || 'CREATE_LNS_LEASE_TRANSACTION_ERROR',
       error.logMessage || error.stack || ''
     )
   }
 }
 
 module.exports = {
-  createTransaction,
-  startUserTransaction
+  createLease,
+  startUserLease
 }
