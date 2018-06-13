@@ -10,7 +10,8 @@ module.exports = async params => {
 
     if (fromSymbol.toUpperCase() == "LNS") {
       let date = new Date();
-      let data = { time: date.getTime(), closed: 0.08 }
+      let data = JSON.parse(`{"data": { "time": ${date.getTime()}, "closed": 0.08 }, "message": "Historicalal chart - LNS to ${toSymbol}", "range": "RANGE_1D", "status": 200, "success": true }`);
+
       return data;
     }
 
