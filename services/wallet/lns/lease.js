@@ -8,7 +8,7 @@ const bns = require('biggystring')
 /**
  * Create and send a lease transaction with given parameters
  *
- * @param transactionData = {
+ * @param leaseData = {
       {String} mnemonic - 12 word mnemonic used to create the Seed
       {String} toAddress - Address to send the transaction
       {String} amount - Amount to send in smallest unit
@@ -53,7 +53,7 @@ const startUserLease = async (leaseData, network) => {
  * @param {LnsNetworks} network - Lunes Network
 
  * @return the transaction id
-      network: ,
+      network:
       data: {
         txID:
       }
