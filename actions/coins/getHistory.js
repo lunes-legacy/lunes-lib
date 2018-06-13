@@ -7,8 +7,14 @@ module.exports = async params => {
   const { fromSymbol, toSymbol, range } = params
 
   try {
-    const url = buildAPIQuery(fromSymbol, toSymbol, range)
 
+    if (fromSymbol.toUpperCase() == "LNS") {
+      let date = new Date();
+      let data = { time: date.getTime(), closed: 0.08 }
+      return data;
+    }
+
+    const url = buildAPIQuery(fromSymbol, toSymbol, range)
     const result = await axios.get(url).catch(error => {
       return error
     })
@@ -41,41 +47,41 @@ const buildAPIQuery = (fromSymbol, toSymbol, range) => {
   let limit = 24
 
   switch (range) {
-  case 'RANGE_1D':
-    endpoint = 'histohour'
-    aggregate = 1
-    limit = 24
-    break
-  case 'RANGE_1W':
-    endpoint = 'histoday'
-    aggregate = 1
-    limit = 7
-    break
-  case 'RANGE_1M':
-    endpoint = 'histoday'
-    aggregate = 1
-    limit = 30
-    break
-  case 'RANGE_3M':
-    endpoint = 'histoday'
-    aggregate = 3
-    limit = 30
-    break
-  case 'RANGE_6M':
-    endpoint = 'histoday'
-    aggregate = 6
-    limit = 30
-    break
-  case 'RANGE_1Y':
-    endpoint = 'histoday'
-    aggregate = 12
-    limit = 30
-    break
-  case 'RANGE_MAX':
-    endpoint = 'histoday'
-    aggregate = 200
-    limit = 2000 // maximum allowed limit
-    break
+    case 'RANGE_1D':
+      endpoint = 'histohour'
+      aggregate = 1
+      limit = 24
+      break
+    case 'RANGE_1W':
+      endpoint = 'histoday'
+      aggregate = 1
+      limit = 7
+      break
+    case 'RANGE_1M':
+      endpoint = 'histoday'
+      aggregate = 1
+      limit = 30
+      break
+    case 'RANGE_3M':
+      endpoint = 'histoday'
+      aggregate = 3
+      limit = 30
+      break
+    case 'RANGE_6M':
+      endpoint = 'histoday'
+      aggregate = 6
+      limit = 30
+      break
+    case 'RANGE_1Y':
+      endpoint = 'histoday'
+      aggregate = 12
+      limit = 30
+      break
+    case 'RANGE_MAX':
+      endpoint = 'histoday'
+      aggregate = 200
+      limit = 2000 // maximum allowed limit
+      break
   }
 
   return `${apiUrl}/${endpoint}?fsym=${fromSymbol}&tsym=${toSymbol}&aggregate=${aggregate}&limit=${limit}`
