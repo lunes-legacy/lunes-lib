@@ -2,7 +2,7 @@
 
 The Official and agnostic library to wrap Lunes API.
 
-## V 0.0.35
+## V 0.0.36
 
 * Coins: Get coins prices, history
 
@@ -222,6 +222,21 @@ Create a lease transaction for given parameters.
 * `fee` String - in smallest unit
 
 ##### Return: Object (documented in source-code)
+
+#### Lease Cancel
+
+`.coins.services.leaseCancel({params})`
+
+Cancel a lease transaction for given parameters.
+
+##### Parameters:
+
+* `mnemonic` String
+* `testnet` Boolean (optional)
+* `txID` String
+* `fee` String - in smallest unit
+
+##### Return: Object (documented in source-code)
 ---
 Obtain the realtime price of one or more currencies.
 
@@ -266,7 +281,7 @@ Return an object containing history metadata and an array containing the low, hi
     },
     {
       "close": 11388.52,
-      "time": "1516914000
+      "time": 1516914000
     }
   ]
 }
