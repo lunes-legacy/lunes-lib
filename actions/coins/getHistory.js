@@ -10,7 +10,15 @@ module.exports = async params => {
 
     if (fromSymbol.toUpperCase() == "LNS") {
       let date = new Date();
-      let data = JSON.parse(`{"data": { "time": ${date.getTime()}, "closed": 0.08 }, "message": "Historicalal chart - LNS to ${toSymbol}", "range": "RANGE_1D", "status": 200, "success": true }`);
+      let timestamp = date.getTime() - 43200000;
+      let objectList = [];
+
+      for (let index = 0; index <= 11; index++) {
+        objectList.push(({ "time": timestamp.toString().substring(0, 10), "close": 0.08 }));
+        timestamp += 3600000;
+      }
+
+      let data = ({ "data": objectList, "message": "Historicalal chart - LNS to " + toSymbol, "range": "RANGE_1D", "status": 200, "success": true });
 
       return data;
     }
