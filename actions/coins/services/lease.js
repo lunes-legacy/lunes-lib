@@ -4,7 +4,7 @@ const validator = require('../../../services/validator')
 const errorPattern = require('../../../services/errorPattern')
 
 /**
- * Find balance for an address
+ * Create a lease transaction for given parameters
  *
  * @param leaseData = {
       {String} mnemonic - mnemonic - 12 word mnemonic used to create the Seed
