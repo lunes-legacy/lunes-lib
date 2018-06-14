@@ -1,6 +1,6 @@
 {
   "name": "lunes-lib",
-  "version": "0.0.37",
+  "version": "0.0.38",
   "description": "The official Lunes API Wrapper.",
   "scripts": {
     "test": "jest"

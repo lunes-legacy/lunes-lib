@@ -23,7 +23,7 @@ const errorPattern = require('../../../services/errorPattern')
 module.exports = async cancelLeaseData => {
   try {
     const testnet = validator.checkBoolean(cancelLeaseData.testnet)
-    const result = await LnsService.cancelLease.startUserCancelLease(
+    const result = await LnsService.leaseCancel.startUserCancelLease(
       cancelLeaseData,
       testnet ? LnsNetworks.LNSTESTNET : LnsNetworks.LNS
     )
@@ -32,7 +32,7 @@ module.exports = async cancelLeaseData => {
     throw errorPattern(
       error.message || 'Error on coins.services.leaseCancel',
       error.status || 0,
-      error.messageKey || 'COINS_SERVICE_CANCEL_LEASE_ERROR',
+      error.messageKey || 'COINS_SERVICE_LEASE_CANCEL_ERROR',
       error.logMessage || error.stack || ''
     )
   }
