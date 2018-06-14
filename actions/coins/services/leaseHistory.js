@@ -33,7 +33,7 @@ module.exports = async params => {
   try {
     const res = await axios.get(url)
 
-    const leaseHistory = res.data.history.filter(val => {
+    const leaseHistory = res.data.data.history.filter(val => {
       if (val.otherParams.type === 8 || val.otherParams.type === 9) {
         return val
       }
