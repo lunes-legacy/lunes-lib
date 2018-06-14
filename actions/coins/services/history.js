@@ -3,7 +3,7 @@ const axios = require('axios')
 const endpoint = `${require('../../../constants/api')}/coins/history`
 
 /**
- * Find transaction histories for an address
+ * Obtain transaction history for an address.
  *
  * @param params = {
       {String} address - Address to use

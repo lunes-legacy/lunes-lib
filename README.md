@@ -2,7 +2,7 @@
 
 The Official and agnostic library to wrap Lunes API.
 
-## V 0.0.36
+## V 0.0.38
 
 * Coins: Get coins prices, history
 
@@ -235,6 +235,32 @@ Cancel a lease transaction for given parameters.
 * `testnet` Boolean (optional)
 * `txID` String
 * `fee` String - in smallest unit
+
+##### Return: Object (documented in source-code)
+
+#### Lease History
+
+`.coins.services.leaseHistory({params})`
+
+Obtain lease history for Lunes coin for an address.
+
+##### Parameters:
+
+* `address` String
+* `testnet` Boolean (optional)
+
+##### Return: Object (documented in source-code)
+
+#### Lease Balance
+
+`.coins.services.leaseBalance({params})`
+
+Obtain total leased balance of a Lunes coin address.
+
+##### Parameters:
+
+* `address` String
+* `testnet` Boolean (optional)
 
 ##### Return: Object (documented in source-code)
 ---
