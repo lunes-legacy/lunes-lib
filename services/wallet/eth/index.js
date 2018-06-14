@@ -1,5 +1,5 @@
-// const wallet = require('./wallet')
+const wallet = require('./wallet')
 
-// module.exports = {
-//   wallet
-// }
+module.exports = {
+  wallet
+}
