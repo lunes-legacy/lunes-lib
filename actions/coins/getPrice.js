@@ -1,10 +1,10 @@
-const axios = require('axios')
-const validator = require('../../services/validators/validator')
+const axios = require('axios');
+const validator = require('../../services/validators/validator');
 
-const endpoint = `${require('../../constants/Cryptocompare')}/price`
+const endpoint = `${require('../../constants/Cryptocompare')}/price`;
 
 module.exports = async params => {
-  const { fromSymbol, toSymbol, exchange } = params
+  const { fromSymbol, toSymbol, exchange } = params;
 
   const query = [
     fromSymbol && !validator.isEmpty(fromSymbol) ? `fsym=${fromSymbol}` : '',
@@ -17,11 +17,19 @@ module.exports = async params => {
   )
 
   try {
-    const res = await axios.get(
-      `${endpoint}${queryString.length > 0 ? `?${queryString}` : ''}`
-    )
-    return res.data
+    const res = await axios.get(`${endpoint}${queryString.length > 0 ? `?${queryString}` : ''}`);
+
+    if (fromSymbol.toUpperCase() == "LNS") {
+      const coinValues = await axios.get(`${endpoint}?fsym=USD&tsyms=BRL,EUR`);
+      let lnsEurValue = 0.08 * coinValues.data.EUR;
+      let lnsBrlValue = 0.08 * coinValues.data.BRL;
+      let objectLunes = { "BRL": lnsBrlValue, "EUR": lnsEurValue, "USD": 0.08 };
+
+      return objectLunes;
+    }
+    return res.data;
+
   } catch (err) {
-    throw err.response ? err.response.data : new Error(err)
+    throw err.response ? err.response.data : new Error(err);
   }
 }
