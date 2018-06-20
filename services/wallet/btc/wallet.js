@@ -23,15 +23,6 @@ const newAddress = (mnemonic, network) => {
   return address
 }
 
-const teste = (address, network) => {
-  let add = bitcoinjs.address.fromOutputScript(
-    address,
-    network.bitcoinjsNetwork
-  )
-
-  return add
-}
-
 /**
  * Create a bitcoin keyPair from the mnemonic words
  * @param {*} mnemonic - the mnemonic words
