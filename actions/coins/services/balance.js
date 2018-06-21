@@ -12,10 +12,10 @@ function getNetwork(coin, testnet, object)
 
   Object.keys(object).forEach((key) => {
     var val = object[key];
-    if (typeof val.coinSymbol === 'undefined') {
-      return findInObject(val);
+    if (typeof val.coinSymbol === 'undefined' && typeof val === 'object') {
+      return getNetwork(coin, testnet, val);
     } else {
-      if (!retorno && val.coinSymbol === coin && val.testnet === testnet) {
+      if (!retorno && val.coinSymbol.toUpperCase() === coin && val.testnet === testnet) {
         retorno = val;
       }
     }
