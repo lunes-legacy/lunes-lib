@@ -1,32 +1,31 @@
-const axios = require('axios')
+const validateAddress = require('../util/validateAddress')
+const errorPattern = require('../../../services/errorPattern')
 
-const endpoint = `${require('../../../constants/api')}/coins/balance`
-
-/**
- * Find balance for an address
- *
- * @param params = {
-      {String} address - Address to use
-      {String} network - coin network
-      {Boolean} testnet - if is testnet network
- * }
- *
- * @return values in coin lowest unit
-      network:
-      data: {
-        address:
-        confirmed:
-        unconfirmed:
-      }
- */
-module.exports = async params => {
-  let url = `${endpoint}/${params.network}/${params.address}?testnet=${
-    params.testnet
-  }`
+module.exports = async (network, address) => {
   try {
-    const res = await axios.get(url)
-    return res.data
-  } catch (err) {
-    throw err.response ? err.response.data : new Error(err)
+    if (network.coinSymbol.toLowerCase() !== 'lns') {
+      if (!validateAddress(address, network.coinSymbol, network.testnet)) {
+        throw errorPattern(
+          'Invalid ' + network.coinName + ' Address',
+          406,
+          'ADDRESS_INVALID',
+          'The address ' +
+            address +
+            ' is not a valid ' +
+            network.coinName +
+            ' address.'
+        )
+      }
+    }
+    const balance = require('./../../../services/wallet/'+network.coinSymbol.toLowerCase()+'/balance');
+
+    return balance(address, network);
+  } catch (error) {
+    throw errorPattern(
+      error.message || 'Error retrieving balance',
+      error.status || 500,
+      error.messageKey || 'BALANCE_ERROR',
+      error.logMessage || error.stack || ''
+    )
   }
 }

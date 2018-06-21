@@ -4,6 +4,7 @@ const validateAddress = require('./validateAddress')
 const lease = require('./lease')
 const leaseCancel = require('./leaseCancel')
 const leaseBalance = require('./leaseBalance')
+const balance = require('./balance')
 
 module.exports = {
   wallet,
@@ -11,5 +12,6 @@ module.exports = {
   validateAddress,
   lease,
   leaseCancel,
-  leaseBalance
+  leaseBalance,
+  balance
 }

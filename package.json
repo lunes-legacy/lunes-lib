@@ -24,7 +24,8 @@
     "moment-timezone": "^0.5.14",
     "satoshi-bitcoin": "^1.0.4",
     "validator": "^9.2.0",
-    "wallet-address-validator": "^0.1.7"
+    "wallet-address-validator": "^0.1.7",
+    "web3": "^1.0.0-beta.34"
   },
   "devDependencies": {
     "chance": "^1.0.12",

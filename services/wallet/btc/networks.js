@@ -49,7 +49,7 @@ module.exports = {
     insight: 'https://insight.bitpay.com/api/'
   },
   BTCTESTNET: {
-    coinSymbol: 'BTCTESTNET',
+    coinSymbol: 'BTC',
     coinName: 'Bitcoin Testnet',
     testnet: true,
     derivePath: 'm/44\'/1\'/0\'/0',
