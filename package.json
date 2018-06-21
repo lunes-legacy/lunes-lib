@@ -1,6 +1,6 @@
 {
   "name": "lunes-lib",
-  "version": "0.0.38",
+  "version": "0.0.39",
   "description": "The official Lunes API Wrapper.",
   "scripts": {
     "test": "jest"
@@ -12,7 +12,9 @@
     "bitcoinjs-lib": "^3.3.2",
     "bitcoinjs-testnets": "^1.0.10",
     "bluebird": "^3.5.1",
+    "coinselect": "^3.1.11",
     "crypto-js": "^3.1.9-1",
+    "electrum-client": "^0.0.6",
     "ethereumjs-units": "^0.2.0",
     "ethereumjs-util": "^5.2.0",
     "ethereumjs-wallet": "^0.6.0",
