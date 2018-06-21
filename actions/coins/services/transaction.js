@@ -1,15 +1,19 @@
 const axios = require('axios')
 const endpoint = `${require('../../../constants/api')}/coins/tx/create`
 
+const validator = require('../../../services/validator')
+
+const BtcNetworks = require('../../../services/wallet/btc/networks')
+const BtcService = require('../../../services/wallet/btc')
 const LnsNetworks = require('../../../services/wallet/lns/networks')
 const LnsService = require('../../../services/wallet/lns')
-const validator = require('../../../services/validator')
 
 /**
  * Create and send a transaction for given parameters
  *
  * BtcFamily: TODO: update documentation
  * @param transactionData = {
+      {String} mnemonic - mnemonic - to create the seed for an address
       {String} network - coin network
       {Boolean} testnet - if is testnet network
       {String} toAddress - Address to send the transaction
@@ -29,7 +33,7 @@ const validator = require('../../../services/validator')
  *
  * Lunes:
  * @param transactionData = {
-      {String} mnemonic - mnemonic - 12 word mnemonic used to create the Seed
+      {String} mnemonic - mnemonic - to create the seed for an address
       {String} network - coin network
       {Boolean} testnet - if is testnet network
       {String} toAddress - Address to send the transaction
@@ -50,17 +54,23 @@ module.exports = async (transactionData, accessToken) => {
     const network = transactionData.network.toLowerCase()
     const testnet = validator.checkBoolean(transactionData.testnet)
     if (network === 'btc') {
-      const headers = { Authorization: `Bearer ${accessToken}` }
-      const res = await axios.post(endpoint, transactionData, { headers })
-      return res.data
+      const result = await BtcService.transaction.startUserTransaction(
+        transactionData,
+        testnet ? BtcNetworks.BTCTESTNET : BtcNetworks.BTC
+      )
+      return result
     } else if (network === 'ltc') {
-      const headers = { Authorization: `Bearer ${accessToken}` }
-      const res = await axios.post(endpoint, transactionData, { headers })
-      return res.data
+      const result = await BtcService.transaction.startUserTransaction(
+        transactionData,
+        testnet ? BtcNetworks.LTCTESTNET : BtcNetworks.LTC
+      )
+      return result
     } else if (network === 'dash') {
-      const headers = { Authorization: `Bearer ${accessToken}` }
-      const res = await axios.post(endpoint, transactionData, { headers })
-      return res.data
+      const result = await BtcService.transaction.startUserTransaction(
+        transactionData,
+        testnet ? BtcNetworks.DASHTESTNET : BtcNetworks.DASH
+      )
+      return result
     } else if (network === 'eth') {
       const headers = { Authorization: `Bearer ${accessToken}` }
       const res = await axios.post(endpoint, transactionData, { headers })

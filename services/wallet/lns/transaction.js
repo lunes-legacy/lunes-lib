@@ -9,7 +9,7 @@ const balance = require('../../../actions/coins/services/balance')
  * Create and send a transaction for given parameters
  *
  * @param transactionData = {
-      {String} mnemonic - 12 word mnemonic used to create the Seed
+      {String} mnemonic - to create the seed for an address
       {String} toAddress - Address to send the transaction
       {String} amount - Amount to send in smallest unit
       {String} fee - Fee to use in smallest unit - Ex: 100000 (0.001 LNS)

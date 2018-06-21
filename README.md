@@ -2,7 +2,7 @@
 
 The Official and agnostic library to wrap Lunes API.
 
-## V 0.0.38
+## V 0.0.39
 
 * Coins: Get coins prices, history
 
@@ -177,10 +177,11 @@ Must provide user accessToken for authentication.
 `.coins.services.transaction({params}, accessToken)`
 
 Create transaction for given parameters.
-Must provide user accessToken for authentication.
+Must provide user accessToken for authentication. (will be removed soon)
 
 ##### Parameters - Bitcoin Family:
 
+* `mnemonic` String
 * `network` String
 * `testnet` Boolean (optional)
 * `toAddress` String

@@ -5,7 +5,7 @@ const MnemonicService = require('../mnemonic')
 /**
  * Derive a bitcoin address from a mnemonic
  * @param {*} mnemonic - the mnemonic words
- * @param {*} coin - coin
+ * @param {*} network - Bitcoin Network
  * TODO: segwit or not parameter
  */
 const newAddress = (mnemonic, network) => {
@@ -24,16 +24,16 @@ const newAddress = (mnemonic, network) => {
 }
 
 /**
- * Create a bitcoin keyPair from the mnemonic words
+ * Create a keyPair from the mnemonic words
  * @param {*} mnemonic - the mnemonic words
- * @param {*} coin - coin
+ * @param {*} network - Bitcoin Network
  * TODO: add derivation index from DB
  */
-const mnemonicToKeyPair = (mnemonic, coin) => {
-  const network = coin.bitcoinjsNetwork
+const mnemonicToKeyPair = (mnemonic, network) => {
+  const bitcoinnetwork = network.bitcoinjsNetwork
   var seed = MnemonicService.mnemonicToSeed(mnemonic)
-  let hdNode = bitcoinjs.HDNode.fromSeedBuffer(seed, network)
-  let keyPair = hdNode.derivePath(coin.derivePath + '/0')
+  let hdNode = bitcoinjs.HDNode.fromSeedBuffer(seed, bitcoinnetwork)
+  let keyPair = hdNode.derivePath(network.derivePath + '/0')
   return keyPair
 }
 
