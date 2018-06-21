@@ -70,15 +70,11 @@ module.exports = {
       networkName: 'BitcoinSegwitTestnet',
       peers: [
         {
-          host: 'testnet.hsmiths.com',
-          port: 53012
+          host: 'testnet1.bauerj.eu',
+          port: 50002
         },
         {
           host: 'testnet.qtornado.com',
-          port: 51002
-        },
-        {
-          host: 'electrum.akinbo.org',
           port: 51002
         }
       ]
