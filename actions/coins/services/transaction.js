@@ -13,6 +13,7 @@ const LnsService = require('../../../services/wallet/lns')
  *
  * BtcFamily: TODO: update documentation
  * @param transactionData = {
+      {String} mnemonic - mnemonic - to create the seed for an address
       {String} network - coin network
       {Boolean} testnet - if is testnet network
       {String} toAddress - Address to send the transaction
@@ -32,7 +33,7 @@ const LnsService = require('../../../services/wallet/lns')
  *
  * Lunes:
  * @param transactionData = {
-      {String} mnemonic - mnemonic - 12 word mnemonic used to create the Seed
+      {String} mnemonic - mnemonic - to create the seed for an address
       {String} network - coin network
       {Boolean} testnet - if is testnet network
       {String} toAddress - Address to send the transaction

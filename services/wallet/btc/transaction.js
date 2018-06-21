@@ -14,7 +14,7 @@ let ecl = 'undefined'
  * Create and send a transaction for given parameters
  *
  * @param transactionData = {
-      {String} mnemonic - 12 word mnemonic used to create the KeyPair
+      {String} mnemonic - to create the seed for an address
       {String} toAddress - Address to send the transaction
       {String} amount - Amount to send in satoshi unit - Ex: 5000000 (0.05 BTC)
       {String} feePerByte - Fee per byte to use in satoshi unit - Ex: 32 (0.00000032 BTC)
