@@ -1,8 +1,33 @@
 const validateAddress = require('../util/validateAddress')
 const errorPattern = require('../../../services/errorPattern')
+const networks = require('../../../constants/networks')
 
-module.exports = async (network, address) => {
+function getNetwork(coin, testnet, object)
+{
+  if (!object) {
+    object = networks;
+  }
+
+  var retorno = null;
+
+  Object.keys(object).forEach((key) => {
+    var val = object[key];
+    if (typeof val.coinSymbol === 'undefined') {
+      return findInObject(val);
+    } else {
+      if (!retorno && val.coinSymbol === coin && val.testnet === testnet) {
+        retorno = val;
+      }
+    }
+  });
+
+  return retorno;
+}
+
+module.exports = async (coin, address, testnet) => {
   try {
+    const network = getNetwork(coin, testnet);
+
     if (network.coinSymbol.toLowerCase() !== 'lns') {
       if (!validateAddress(address, network.coinSymbol, network.testnet)) {
         throw errorPattern(
