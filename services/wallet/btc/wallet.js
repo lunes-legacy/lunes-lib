@@ -1,6 +1,8 @@
 const bitcoinjs = require('bitcoinjs-lib')
 require('bitcoinjs-testnets').register(bitcoinjs.networks)
 const MnemonicService = require('../mnemonic')
+const ValidateAddress = require('../validateAddress')
+const errorPattern = require('../../errorPattern')
 
 /**
  * Derive a bitcoin address from a mnemonic
@@ -20,6 +22,21 @@ const newAddress = (mnemonic, network) => {
     scriptPubKey,
     network.bitcoinjsNetwork
   )
+
+  if (!ValidateAddress(address, network.coinSymbol, network.testnet)) {
+    throw errorPattern(
+      'Invalid ' + network.coinName + ' Address',
+      0,
+      'ADDRESS_INVALID',
+      'The address ' +
+        address +
+        ' is not a valid ' +
+        network.coinName +
+        ' address.'
+    )
+  }
+
+  // validar endereço
   return address
 }
 
@@ -30,6 +47,10 @@ const newAddress = (mnemonic, network) => {
  * TODO: add derivation index from DB
  */
 const mnemonicToKeyPair = (mnemonic, network) => {
+  // validar mnemonic
+  if (!MnemonicService.validateMnemonic(mnemonic)) {
+    throw errorPattern('Invalid mnemonic', 0, 'INVALID_MNEMONIC')
+  }
   const bitcoinnetwork = network.bitcoinjsNetwork
   var seed = MnemonicService.mnemonicToSeed(mnemonic)
   let hdNode = bitcoinjs.HDNode.fromSeedBuffer(seed, bitcoinnetwork)
