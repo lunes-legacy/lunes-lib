@@ -2,7 +2,7 @@
 
 The Official and agnostic library to wrap Lunes API.
 
-## V 0.0.39
+## V 0.0.40
 
 * Coins: Get coins prices, history
 
@@ -105,7 +105,7 @@ Validate user's access token.
 
 #### Balance
 
-`.coins.services.balance({params})`
+`.coins.services.balance(network, address, testnet)`
 
 Obtain balance for an address.
 
@@ -113,7 +113,7 @@ Obtain balance for an address.
 
 * `network` String
 * `address` String
-* `testnet` Boolean (optional)
+* `testnet` Boolean
 
 ##### Return: Object (documented in source-code)
 

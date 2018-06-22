@@ -1,5 +1,6 @@
 const BtcNetworks = require('../services/wallet/btc/networks')
 const LnsNetworks = require('../services/wallet/lns/networks')
+const EthNetworks = require('../services/wallet/eth/networks')
 
 module.exports = {
   BTC: BtcNetworks.BTC,
@@ -8,18 +9,8 @@ module.exports = {
   LTCTESTNET: BtcNetworks.LTCTESTNET,
   DASH: BtcNetworks.DASH,
   DASHTESTNET: BtcNetworks.DASHTESTNET,
-  ETH: {
-    coinSymbol: 'ETH',
-    coinName: 'Ethereum',
-    testnet: false,
-    defaultFee: 23000
-  },
-  ROPSTEN: {
-    coinSymbol: 'ETH',
-    coinName: 'Ethereum Testnet',
-    testnet: true,
-    defaultFee: 23000
-  },
+  ETH: EthNetworks.ETH,
+  ROPSTEN: EthNetworks.ROPSTEN,
   LNS: LnsNetworks.LNS,
   LNSTESTNET: LnsNetworks.LNSTESTNET
 }

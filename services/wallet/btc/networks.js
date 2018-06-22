@@ -49,7 +49,7 @@ module.exports = {
     insight: 'https://insight.bitpay.com/api/'
   },
   BTCTESTNET: {
-    coinSymbol: 'BTCTESTNET',
+    coinSymbol: 'BTC',
     coinName: 'Bitcoin Testnet',
     testnet: true,
     derivePath: 'm/44\'/1\'/0\'/0',
@@ -77,18 +77,6 @@ module.exports = {
           host: 'testnet1.bauerj.eu',
           port: 50002
         }
-        // {
-        //   host: 'testnet.hsmiths.com',
-        //   port: 53012
-        // }
-        // {
-        //   host: 'electrum.akinbo.org',
-        //   port: 51002
-        // }
-        // {
-        //   host: 'testnetnode.arihanc.com',
-        //   port: 51001
-        // }
       ]
     },
     insight: 'https://test-insight.bitpay.com/api/'
