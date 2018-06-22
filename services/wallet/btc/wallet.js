@@ -8,7 +8,6 @@ const errorPattern = require('../../errorPattern')
  * Derive a bitcoin address from a mnemonic
  * @param {*} mnemonic - the mnemonic words
  * @param {*} network - Bitcoin Network
- * TODO: segwit or not parameter
  */
 const newAddress = (mnemonic, network) => {
   const keyPair = mnemonicToKeyPair(mnemonic, network)
@@ -35,8 +34,6 @@ const newAddress = (mnemonic, network) => {
         ' address.'
     )
   }
-
-  // validar endereço
   return address
 }
 
@@ -47,7 +44,6 @@ const newAddress = (mnemonic, network) => {
  * TODO: add derivation index from DB
  */
 const mnemonicToKeyPair = (mnemonic, network) => {
-  // validar mnemonic
   if (!MnemonicService.validateMnemonic(mnemonic)) {
     throw errorPattern('Invalid mnemonic', 0, 'INVALID_MNEMONIC')
   }
