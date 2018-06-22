@@ -6,7 +6,8 @@ module.exports = async (address, network) => {
   try {
     const electrum = await ElectrumClient(network)
     const balance = await electrum.blockchainAddress_getBalance(address)
-
+    electrum.close();
+    
     return {
       status: 'success',
       data: {

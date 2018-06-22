@@ -4,29 +4,25 @@ const networks = require('../../../constants/networks')
 
 function getNetwork(coin, testnet, object)
 {
-  if (!object) {
-    object = networks;
-  }
-
-  var retorno = null;
+  var network = null;
 
   Object.keys(object).forEach((key) => {
     var val = object[key];
-    if (typeof val.coinSymbol === 'undefined' && typeof val === 'object') {
+    if (typeof val === 'object' && typeof val.coinSymbol === 'undefined') {
       return getNetwork(coin, testnet, val);
     } else {
-      if (!retorno && val.coinSymbol.toUpperCase() === coin && val.testnet === testnet) {
-        retorno = val;
+      if (!network && val.coinSymbol === coin && val.testnet === testnet) {
+        network = val;
       }
     }
   });
 
-  return retorno;
+  return network;
 }
 
 module.exports = async (coin, address, testnet) => {
   try {
-    const network = getNetwork(coin, testnet);
+    const network = getNetwork(coin.toUpperCase(), testnet, networks);
 
     if (network.coinSymbol.toLowerCase() !== 'lns') {
       if (!validateAddress(address, network.coinSymbol, network.testnet)) {
