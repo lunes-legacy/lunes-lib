@@ -11,16 +11,7 @@ const errorPattern = require('../../errorPattern')
  */
 const newAddress = (mnemonic, network) => {
   const keyPair = mnemonicToKeyPair(mnemonic, network)
-  let redeemScript = bitcoinjs.script.witnessPubKeyHash.output.encode(
-    bitcoinjs.crypto.hash160(keyPair.getPublicKeyBuffer())
-  )
-  let scriptPubKey = bitcoinjs.script.scriptHash.output.encode(
-    bitcoinjs.crypto.hash160(redeemScript)
-  )
-  let address = bitcoinjs.address.fromOutputScript(
-    scriptPubKey,
-    network.bitcoinjsNetwork
-  )
+  const address = keyPair.getAddress()
 
   if (!ValidateAddress(address, network.coinSymbol, network.testnet)) {
     throw errorPattern(

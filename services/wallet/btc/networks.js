@@ -3,7 +3,7 @@ module.exports = {
     coinSymbol: 'BTC',
     coinName: 'Bitcoin',
     testnet: false,
-    derivePath: 'm/49\'/0\'/0\'/0',
+    derivePath: 'm/44\'/0\'/0\'/0',
     maxFee: 1000000,
     defaultFee: 1000,
     bitcoinjsNetwork: {
@@ -52,7 +52,7 @@ module.exports = {
     coinSymbol: 'BTCTESTNET',
     coinName: 'Bitcoin Testnet',
     testnet: true,
-    derivePath: 'm/49\'/1\'/0\'/0',
+    derivePath: 'm/44\'/1\'/0\'/0',
     maxFee: 1000000,
     defaultFee: 1000,
     bitcoinjsNetwork: {
