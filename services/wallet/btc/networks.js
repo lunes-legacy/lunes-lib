@@ -3,7 +3,7 @@ module.exports = {
     coinSymbol: 'BTC',
     coinName: 'Bitcoin',
     testnet: false,
-    derivePath: 'm/44\'/0\'/0\'/0',
+    derivePath: 'm/49\'/0\'/0\'/0',
     maxFee: 1000000,
     defaultFee: 1000,
     bitcoinjsNetwork: {
@@ -52,7 +52,7 @@ module.exports = {
     coinSymbol: 'BTCTESTNET',
     coinName: 'Bitcoin Testnet',
     testnet: true,
-    derivePath: 'm/44\'/1\'/0\'/0',
+    derivePath: 'm/49\'/1\'/0\'/0',
     maxFee: 1000000,
     defaultFee: 1000,
     bitcoinjsNetwork: {
@@ -70,17 +70,25 @@ module.exports = {
       networkName: 'BitcoinSegwitTestnet',
       peers: [
         {
-          host: 'testnet.hsmiths.com',
-          port: 53012
-        },
-        {
           host: 'testnet.qtornado.com',
           port: 51002
         },
         {
-          host: 'electrum.akinbo.org',
-          port: 51002
+          host: 'testnet1.bauerj.eu',
+          port: 50002
         }
+        // {
+        //   host: 'testnet.hsmiths.com',
+        //   port: 53012
+        // }
+        // {
+        //   host: 'electrum.akinbo.org',
+        //   port: 51002
+        // }
+        // {
+        //   host: 'testnetnode.arihanc.com',
+        //   port: 51001
+        // }
       ]
     },
     insight: 'https://test-insight.bitpay.com/api/'

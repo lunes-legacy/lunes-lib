@@ -10,7 +10,7 @@ module.exports = async network => {
     const ecl = new ElectrumClient(peer.port, peer.host, 'ssl')
     try {
       await ecl.connect()
-      const ver = await ecl.server_version('2.7.11', '1.0')
+      await ecl.server_version('2.7.11', '1.2')
       return ecl
     } catch (e) {
       return module.exports(network)
