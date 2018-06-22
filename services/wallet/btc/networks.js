@@ -70,17 +70,25 @@ module.exports = {
       networkName: 'BitcoinSegwitTestnet',
       peers: [
         {
-          host: 'testnet.hsmiths.com',
-          port: 53012
-        },
-        {
           host: 'testnet.qtornado.com',
           port: 51002
         },
         {
-          host: 'electrum.akinbo.org',
-          port: 51002
+          host: 'testnet1.bauerj.eu',
+          port: 50002
         }
+        // {
+        //   host: 'testnet.hsmiths.com',
+        //   port: 53012
+        // }
+        // {
+        //   host: 'electrum.akinbo.org',
+        //   port: 51002
+        // }
+        // {
+        //   host: 'testnetnode.arihanc.com',
+        //   port: 51001
+        // }
       ]
     },
     insight: 'https://test-insight.bitpay.com/api/'
