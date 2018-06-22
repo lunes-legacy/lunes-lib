@@ -1,10 +1,9 @@
-const BtcNetworks = require('../networks')
 const ElectrumClient = require('electrum-client')
 
-module.exports = async network => {
-  const peers = BtcNetworks[network].electrumx.peers
+module.exports = async (network) => {
+  const peers = network.electrumx.peers
   if (peers) {
-    const getRandomPeer = () => peers[(peers.length * Math.random()) | 0]
+    const getRandomPeer = () => {return peers[(peers.length * Math.random()) | 0];}
     const peer = getRandomPeer()
     console.log(peer.host)
     const ecl = new ElectrumClient(peer.port, peer.host, 'ssl')

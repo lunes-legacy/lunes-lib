@@ -43,6 +43,7 @@ const startUserTransaction = async (transactionData, network) => {
       network
     )
 
+    ecl.close()
     return result
   } catch (error) {
     throw errorPattern(
@@ -104,7 +105,7 @@ const createTransaction = async (
     }
 
     bitcoinjsnetwork = network.bitcoinjsNetwork
-    electrumNetwork = network.coinSymbol
+    electrumNetwork = network
 
     // senderAddress
     const fromAddress = keyPair.getAddress()
@@ -207,7 +208,6 @@ const broadcast = async signedTxHex => {
     const broadcastResponse = await ecl.blockchainTransaction_broadcast(
       signedTxHex
     )
-
     // check if rejected transaction
     if (broadcastResponse.indexOf('rejected') >= 0) {
       throw errorPattern(broadcastResponse, 401, 'BROADCAST_REJECTED_ERROR')
@@ -230,6 +230,7 @@ const findUTXOs = async address => {
       ecl = await ElectrumAPI(electrumNetwork)
     }
     const utxos = await ecl.blockchainAddress_listunspent(address)
+
     return utxos
   } catch (error) {
     throw errorPattern(
