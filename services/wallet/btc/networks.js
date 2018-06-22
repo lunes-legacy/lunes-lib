@@ -3,7 +3,7 @@ module.exports = {
     coinSymbol: 'BTC',
     coinName: 'Bitcoin',
     testnet: false,
-    derivePath: 'm/44\'/0\'/0\'/0',
+    derivePath: 'm/49\'/0\'/0\'/0',
     maxFee: 1000000,
     defaultFee: 1000,
     bitcoinjsNetwork: {
@@ -52,7 +52,7 @@ module.exports = {
     coinSymbol: 'BTC',
     coinName: 'Bitcoin Testnet',
     testnet: true,
-    derivePath: 'm/44\'/1\'/0\'/0',
+    derivePath: 'm/49\'/1\'/0\'/0',
     maxFee: 1000000,
     defaultFee: 1000,
     bitcoinjsNetwork: {
@@ -70,12 +70,12 @@ module.exports = {
       networkName: 'BitcoinSegwitTestnet',
       peers: [
         {
-          host: 'testnet1.bauerj.eu',
-          port: 50002
-        },
-        {
           host: 'testnet.qtornado.com',
           port: 51002
+        },
+        {
+          host: 'testnet1.bauerj.eu',
+          port: 50002
         }
       ]
     },
