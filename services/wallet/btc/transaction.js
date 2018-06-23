@@ -43,7 +43,6 @@ const startUserTransaction = async (transactionData, network) => {
       network
     )
 
-    ecl.close()
     return result
   } catch (error) {
     throw errorPattern(
@@ -200,46 +199,28 @@ const createTransaction = async (
 }
 
 const broadcast = async signedTxHex => {
-  try {
-    if (ecl === 'undefined') {
-      ecl = await ElectrumAPI(electrumNetwork)
-    }
+  const axios = require('axios')
+  const endpoint = `${require('../../../constants/api')}/coins/transaction`
 
-    const broadcastResponse = await ecl.blockchainTransaction_broadcast(
-      signedTxHex
-    )
-    // check if rejected transaction
-    if (broadcastResponse.indexOf('rejected') >= 0) {
-      throw errorPattern(broadcastResponse, 401, 'BROADCAST_REJECTED_ERROR')
-    } else {
-      return broadcastResponse
-    }
-  } catch (error) {
-    throw errorPattern(
-      error.message || 'Error broadcasting transaction',
-      error.status || 500,
-      error.messageKey || 'BROADCAST_TRANSACTION_ERROR',
-      error.logMessage || error.stack || ''
-    )
-  }
+  let url = `${endpoint}/${electrumNetwork.coinSymbol}/broadcast/${signedTxHex}?testnet=${
+    electrumNetwork.testnet
+  }`
+
+  const serverResponse = await axios.get(url)
+  return serverResponse.data
 }
 
 const findUTXOs = async address => {
-  try {
-    if (ecl === 'undefined') {
-      ecl = await ElectrumAPI(electrumNetwork)
-    }
-    const utxos = await ecl.blockchainAddress_listunspent(address)
+  const axios = require('axios')
+  const endpoint = `${require('../../../constants/api')}/coins/transaction`
 
-    return utxos
-  } catch (error) {
-    throw errorPattern(
-      error.message || 'Error finding address utxos',
-      error.status || 500,
-      error.messageKey || 'FIND_UTXOS_ERROR',
-      error.logMessage || error.stack || ''
-    )
-  }
+  let url = `${endpoint}/${electrumNetwork.coinSymbol}/findUTXOs/${address}?testnet=${
+    electrumNetwork.testnet
+  }`
+
+  const serverResponse = await axios.get(url)
+
+  return serverResponse.data
 }
 
 const convertUTXO = utxo => {
