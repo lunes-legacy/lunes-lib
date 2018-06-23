@@ -1,19 +1,12 @@
-const sb = require('satoshi-bitcoin')
-const ElectrumClient = require('./api/electrumApi')
-const errorPattern = require('../../errorPattern')
+const axios = require('axios')
+const endpoint = `${require('../../../constants/api')}/coins/balance`
 
 module.exports = async (address, network) => {
-  const electrum = await ElectrumClient(network)
-  const balance = await electrum.blockchainAddress_getBalance(address)
-  electrum.close();
+  let url = `${endpoint}/${network.coinSymbol}/${address}?testnet=${
+    network.testnet
+  }`
 
-  return {
-    status: 'success',
-    data: {
-      network: network.coinSymbol,
-      address: address,
-      confirmed_balance: balance.confirmed.toString(),
-      unconfirmed_balance: balance.unconfirmed.toString()
-    }
-  };
+  const serverResponse = await axios.get(url)
+  
+  return serverResponse.data
 }
