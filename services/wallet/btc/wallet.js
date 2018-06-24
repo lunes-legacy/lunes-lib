@@ -35,9 +35,9 @@ const newAddress = (mnemonic, network) => {
  * TODO: add derivation index from DB
  */
 const mnemonicToKeyPair = (mnemonic, network) => {
-  if (!MnemonicService.validateMnemonic(mnemonic)) {
-    throw errorPattern('Invalid mnemonic', 0, 'INVALID_MNEMONIC')
-  }
+  // if (!MnemonicService.validateMnemonic(mnemonic)) {
+  //   throw errorPattern('Invalid mnemonic', 0, 'INVALID_MNEMONIC')
+  // }
   const bitcoinnetwork = network.bitcoinjsNetwork
   var seed = MnemonicService.mnemonicToSeed(mnemonic)
   let hdNode = bitcoinjs.HDNode.fromSeedBuffer(seed, bitcoinnetwork)
