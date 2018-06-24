@@ -63,11 +63,7 @@ const cancelLease = async (seed, txID, fee, network) => {
     const fromAddress = seed.address
 
     // Check sender balance
-    const userBalance = await balance({
-      address: fromAddress,
-      network: network.coinSymbol,
-      testnet: network.testnet
-    })
+    const userBalance = await balance(network.coinSymbol, fromAddress, network.testnet)
 
     if (userBalance.data.confirmed < fee) {
       throw errorPattern('Balance too small', 0, 'TRANSACTION_LOW_BALANCE')
