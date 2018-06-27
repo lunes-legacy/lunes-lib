@@ -122,7 +122,7 @@ module.exports = {
     insight: 'https://insight.litecore.io/api/'
   },
   LTCTESTNET: {
-    coinSymbol: 'LTCTESTNET',
+    coinSymbol: 'LTC',
     coinName: 'Litecoin Testnet',
     testnet: true,
     derivePath: 'm/44\'/1\'/0\'/0',
@@ -186,7 +186,7 @@ module.exports = {
     insight: 'https://insight.dash.org/insight-api-dash/'
   },
   DASHTESTNET: {
-    coinSymbol: 'DASHTESTNET',
+    coinSymbol: 'DASH',
     coinName: 'Dash Testenet',
     testnet: true,
     derivePath: 'm/44\'/1\'/0\'/0',
