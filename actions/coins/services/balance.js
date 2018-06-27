@@ -2,27 +2,26 @@ const validateAddress = require('../util/validateAddress')
 const errorPattern = require('../../../services/errorPattern')
 const networks = require('../../../constants/networks')
 
-function getNetwork(coin, testnet, object)
-{
-  var network = null;
+function getNetwork (coin, testnet, object) {
+  var network = null
 
-  Object.keys(object).forEach((key) => {
-    var val = object[key];
+  Object.keys(object).forEach(key => {
+    var val = object[key]
     if (typeof val === 'object' && typeof val.coinSymbol === 'undefined') {
-      return getNetwork(coin, testnet, val);
+      return getNetwork(coin, testnet, val)
     } else {
       if (!network && val.coinSymbol === coin && val.testnet === testnet) {
-        network = val;
+        network = val
       }
     }
-  });
+  })
 
-  return network;
+  return network
 }
 
 module.exports = async (coin, address, testnet) => {
   try {
-    const network = getNetwork(coin.toUpperCase(), testnet, networks);
+    const network = getNetwork(coin.toUpperCase(), testnet, networks)
 
     if (network.coinSymbol.toLowerCase() !== 'lns') {
       if (!validateAddress(address, network.coinSymbol, network.testnet)) {
@@ -38,9 +37,21 @@ module.exports = async (coin, address, testnet) => {
         )
       }
     }
-    const balance = require('./../../../services/wallet/'+network.coinSymbol.toLowerCase()+'/balance');
 
-    return balance(address, network);
+    let balance
+
+    if (
+      network.coinSymbol === 'BTC' ||
+      network.coinSymbol === 'LTC' ||
+      network.coinSymbol === 'DASH'
+    ) {
+      balance = require('./../../../services/wallet/btc/balance')
+    } else {
+      balance = require('./../../../services/wallet/' +
+        network.coinSymbol.toLowerCase() +
+        '/balance')
+    }
+    return balance(address, network)
   } catch (error) {
     throw errorPattern(
       error.message || 'Error retrieving balance',
