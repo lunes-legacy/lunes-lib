@@ -1,6 +1,3 @@
-const axios = require('axios')
-const endpoint = `${require('../../../constants/api')}/coins/tx/create`
-
 const validator = require('../../../services/validator')
 
 const BtcNetworks = require('../../../services/wallet/btc/networks')
@@ -71,10 +68,6 @@ module.exports = async (transactionData, accessToken) => {
         testnet ? BtcNetworks.DASHTESTNET : BtcNetworks.DASH
       )
       return result
-    } else if (network === 'eth') {
-      const headers = { Authorization: `Bearer ${accessToken}` }
-      const res = await axios.post(endpoint, transactionData, { headers })
-      return res.data
     } else if (network === 'lns') {
       const result = await LnsService.transaction.startUserTransaction(
         transactionData,

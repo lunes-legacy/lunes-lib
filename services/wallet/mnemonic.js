@@ -1,8 +1,37 @@
-let bip39 = require('bip39')
+const axios = require('axios')
+const endpoint = `${require('../../constants/api')}/coins/mobile/mnemonic`
+
+const generateMnemonic = async () => {
+  const data = {
+    method: 'generateMnemonic'
+  }
+
+  const result = await axios.post(endpoint, data)
+  return result.data
+}
+
+const validateMnemonic = async mnemonic => {
+  const data = {
+    mnemonic: mnemonic,
+    method: 'validateMnemonic'
+  }
+
+  const result = await axios.post(endpoint, data)
+  return result.data
+}
+
+const mnemonicToSeed = async mnemonic => {
+  const data = {
+    mnemonic: mnemonic,
+    method: 'mnemonicToSeed'
+  }
+
+  const result = await axios.post(endpoint, data)
+  return result.data
+}
 
 module.exports = {
-  generateMnemonic: () => bip39.generateMnemonic(),
-  validateMnemonic: mnemonic => bip39.validateMnemonic(mnemonic),
-  mnemonicToSeed: mnemonic => bip39.mnemonicToSeed(mnemonic),
-  mnemonicToSeedHex: mnemonic => bip39.mnemonicToSeedHex(mnemonic)
+  generateMnemonic,
+  validateMnemonic,
+  mnemonicToSeed
 }

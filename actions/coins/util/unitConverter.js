@@ -1,4 +1,3 @@
-const EthereumUnits = require('ethereumjs-units')
 const sb = require('satoshi-bitcoin')
 
 const toBitcoin = value => {
@@ -17,25 +16,7 @@ const toSatoshi = value => {
   return value
 }
 
-const toWei = value => {
-  if (!(typeof value === 'string' || value instanceof String)) {
-    value = value.toString()
-  }
-  value = EthereumUnits.convert(value, 'eth', 'wei')
-  return value
-}
-
-const toEth = value => {
-  if (!(typeof value === 'string' || value instanceof String)) {
-    value = value.toString()
-  }
-  value = EthereumUnits.convert(value, 'wei', 'eth')
-  return value
-}
-
 module.exports = {
   toBitcoin,
-  toSatoshi,
-  toWei,
-  toEth
+  toSatoshi
 }
