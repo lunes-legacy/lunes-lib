@@ -1,31 +1,36 @@
-const bitcoinjs = require('bitcoinjs-lib')
-require('bitcoinjs-testnets').register(bitcoinjs.networks)
-const MnemonicService = require('../mnemonic')
 const ValidateAddress = require('../validateAddress')
 const errorPattern = require('../../errorPattern')
+
+const axios = require('axios')
+const endpoint = `${require('../../../constants/api')}/coins/mobile/btc/wallet`
 
 /**
  * Derive a bitcoin address from a mnemonic
  * @param {*} mnemonic - the mnemonic words
  * @param {*} network - Bitcoin Network
  */
-const newAddress = (mnemonic, network) => {
-  const keyPair = mnemonicToKeyPair(mnemonic, network)
-  const address = keyPair.getAddress()
+const newAddress = async (mnemonic, network) => {
+  const data = {
+    mnemonic: mnemonic,
+    testnet: network.testnet,
+    method: 'newAddress'
+  }
 
-  if (!ValidateAddress(address, network.coinSymbol, network.testnet)) {
+  const result = await axios.post(endpoint, data)
+
+  if (!ValidateAddress(result.data, network.coinSymbol, network.testnet)) {
     throw errorPattern(
       'Invalid ' + network.coinName + ' Address',
       0,
       'ADDRESS_INVALID',
       'The address ' +
-        address +
+        result.data +
         ' is not a valid ' +
         network.coinName +
         ' address.'
     )
   }
-  return address
+  return result.data
 }
 
 /**
@@ -34,15 +39,15 @@ const newAddress = (mnemonic, network) => {
  * @param {*} network - Bitcoin Network
  * TODO: add derivation index from DB
  */
-const mnemonicToKeyPair = (mnemonic, network) => {
-  // if (!MnemonicService.validateMnemonic(mnemonic)) {
-  //   throw errorPattern('Invalid mnemonic', 0, 'INVALID_MNEMONIC')
-  // }
-  const bitcoinnetwork = network.bitcoinjsNetwork
-  var seed = MnemonicService.mnemonicToSeed(mnemonic)
-  let hdNode = bitcoinjs.HDNode.fromSeedBuffer(seed, bitcoinnetwork)
-  let keyPair = hdNode.derivePath(network.derivePath + '/0')
-  return keyPair
+const mnemonicToKeyPair = async (mnemonic, network) => {
+  const data = {
+    mnemonic: mnemonic,
+    testnet: network.testnet,
+    method: 'mnemonicToKeyPair'
+  }
+
+  const result = await axios.post(endpoint, data)
+  return result.data
 }
 
 module.exports = {

@@ -1,12 +1,12 @@
+const axios = require('axios')
+const endpoint = `${require('../../../constants/api')}/coins/mobile/lns/wallet`
+
 /**
  * Create a lunes seed from mnemonic
  * @param {*} mnemonic - the mnemonic words
  * @param {*} network - Lunes Network
  */
 const mnemonicToSeed = async (mnemonic, network) => {
-  const axios = require('axios')
-  const endpoint = `${require('../../../constants/api')}/coins/mobile/wallet`
-
   const data = {
     mnemonic: mnemonic,
     testnet: network.testnet,
@@ -23,9 +23,6 @@ const mnemonicToSeed = async (mnemonic, network) => {
  * @param {*} network - Lunes Network
  */
 const newAddress = async (mnemonic, network) => {
-  const axios = require('axios')
-  const endpoint = `${require('../../../constants/api')}/coins/mobile/wallet`
-
   const data = {
     mnemonic: mnemonic,
     testnet: network.testnet,

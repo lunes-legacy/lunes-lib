@@ -7,12 +7,7 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
-    "biggystring": "^3.0.1",
-    "bitcoinjs-lib": "^3.3.2",
-    "bitcoinjs-testnets": "^1.0.10",
     "bluebird": "^3.5.1",
-    "coinselect": "^3.1.11",
-    "electrum-client": "^0.0.6",
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",

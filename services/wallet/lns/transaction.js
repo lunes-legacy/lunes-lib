@@ -20,7 +20,7 @@ const errorPattern = require('../../errorPattern')
 const startUserTransaction = async (transactionData, network) => {
   try {
     const axios = require('axios')
-    const endpoint = `${require('../../../constants/api')}/coins/mobile/transaction`
+    const endpoint = `${require('../../../constants/api')}/coins/mobile/lns/transaction`
 
     const data = {
       mnemonic: transactionData.mnemonic,
