@@ -23,6 +23,7 @@ const LnsService = require('../../../services/wallet/lns')
  *
  * Ethereum: TODO: update documentation
  * @param transactionData = {
+      {String} mnemonic - mnemonic - to create the seed for an address
       {String} network - coin network
       {Boolean} testnet - if is testnet network
       {String} toAddress - Address to send the transaction
