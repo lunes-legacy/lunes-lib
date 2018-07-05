@@ -24,7 +24,9 @@ module.exports = async (coin, address, testnet) => {
     const network = getNetwork(coin.toUpperCase(), testnet, networks)
 
     if (network.coinSymbol.toLowerCase() !== 'lns') {
-      if (!validateAddress(address, network.coinSymbol, network.testnet)) {
+      if (
+        !(await validateAddress(address, network.coinSymbol, network.testnet))
+      ) {
         throw errorPattern(
           'Invalid ' + network.coinName + ' Address',
           406,

@@ -1,10 +1,18 @@
-const WAValidator = require('wallet-address-validator')
 const errorPattern = require('../errorPattern')
 
-module.exports = (address, currency, testnet) => {
+module.exports = async (address, currency, testnet) => {
   try {
-    currency = currency.replace('TESTNET', '')
-    return WAValidator.validate(address, currency, testnet ? 'testnet' : 'prod')
+    const axios = require('axios')
+    const endpoint = `${require('../../constants/api')}/coins/mobile/validate-address`
+
+    const data = {
+      address: address,
+      currency: currency,
+      testnet: testnet
+    }
+
+    const result = await axios.post(endpoint, data)
+    return result.data
   } catch (error) {
     throw errorPattern(
       error.message || 'Error validating address',

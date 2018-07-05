@@ -18,7 +18,9 @@ const newAddress = async (mnemonic, network) => {
 
   const result = await axios.post(endpoint, data)
 
-  if (!ValidateAddress(result.data, network.coinSymbol, network.testnet)) {
+  if (
+    !(await ValidateAddress(result.data, network.coinSymbol, network.testnet))
+  ) {
     throw errorPattern(
       'Invalid ' + network.coinName + ' Address',
       0,
