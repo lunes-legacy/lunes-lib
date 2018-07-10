@@ -14,25 +14,16 @@ module.exports = async params => {
       let timestamp = date.getTime() - 43200000;
       let objectList = [];
 
-      let BTCPrice = await getPrice({fromSymbol:'BTC',toSymbol:'USD'});
-
-      let LUNESData = await axios.get(`https://exrates.me/public/coinmarketcap/ticker`);
-      LUNESData     = LUNESData.data.LNS_BTC;
-
-      let lowPrice  = LUNESData.low24hr  * BTCPrice.USD;
-      let highPrice = LUNESData.high24hr * BTCPrice.USD;
+      // let BTCPrice = await getPrice({fromSymbol:'BTC',toSymbol:'USD'});
+      let LUNESPrice = await getPrice({fromSymbol:'LUNES',toSymbol:'USD'});
+      LUNESPrice = LUNESPrice.USD;
 
       for (let index = 0; index <= 11; index++) {
-        if (index < 6) {
-          objectList.push(({ "time": timestamp.toString().substring(0, 10), "close": lowPrice }));
+          objectList.push(({ "time": timestamp.toString().substring(0, 10), "close": LUNESPrice }));
           timestamp += 3600000;
-        } else {
-          objectList.push(({ "time": timestamp.toString().substring(0, 10), "close": highPrice }));
-          timestamp += 3600000;
-        }
       }
 
-      let data = ({ "data": objectList, "message": "Historicalal chart - LUNES to " + toSymbol, "range": "RANGE_1D", "status": 200, "success": true });
+      let data = ({ "data": objectList, "message": "Historical chart - LUNES to " + toSymbol, "range": "RANGE_1D", "status": 200, "success": true });
 
       return data;
     }
