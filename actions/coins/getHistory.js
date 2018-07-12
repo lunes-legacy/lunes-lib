@@ -1,5 +1,6 @@
 const axios = require('axios')
 const Promise = require('bluebird')
+const getPrice = require('./getPrice');
 
 const apiUrl = `${require('../../constants/Cryptocompare')}`
 
@@ -8,17 +9,21 @@ module.exports = async params => {
 
   try {
 
-    if (fromSymbol.toUpperCase() == "LNS") {
+    if (fromSymbol.search(/(lns)|(lunes)/i) !== -1) {
       let date = new Date();
       let timestamp = date.getTime() - 43200000;
       let objectList = [];
 
+      // let BTCPrice = await getPrice({fromSymbol:'BTC',toSymbol:'USD'});
+      let LUNESPrice = await getPrice({fromSymbol:'LUNES',toSymbol:'USD'});
+      LUNESPrice = LUNESPrice.USD;
+
       for (let index = 0; index <= 11; index++) {
-        objectList.push(({ "time": timestamp.toString().substring(0, 10), "close": 0.08 }));
-        timestamp += 3600000;
+          objectList.push(({ "time": timestamp.toString().substring(0, 10), "close": LUNESPrice }));
+          timestamp += 3600000;
       }
 
-      let data = ({ "data": objectList, "message": "Historicalal chart - LNS to " + toSymbol, "range": "RANGE_1D", "status": 200, "success": true });
+      let data = ({ "data": objectList, "message": "Historical chart - LUNES to " + toSymbol, "range": "RANGE_1D", "status": 200, "success": true });
 
       return data;
     }

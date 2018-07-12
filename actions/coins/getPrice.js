@@ -19,17 +19,27 @@ module.exports = async params => {
   try {
     const res = await axios.get(`${endpoint}${queryString.length > 0 ? `?${queryString}` : ''}`);
 
-    if (fromSymbol.toUpperCase() == "LNS") {
-      const coinValues = await axios.get(`${endpoint}?fsym=USD&tsyms=BRL,EUR`);
-      let lnsEurValue = 0.08 * coinValues.data.EUR;
-      let lnsBrlValue = 0.08 * coinValues.data.BRL;
-      let objectLunes = { "BRL": lnsBrlValue, "EUR": lnsEurValue, "USD": 0.08 };
+    if (fromSymbol.search(/(lns)|(lunes)/i) !== -1) {
+      let coinValues = await axios.get(`${endpoint}?fsym=USD&tsyms=BRL,EUR`);
+      coinValues = coinValues.data;
+      
+      //Get LUNES price in BTC
+      let LUNESData  = await axios.get(`https://exrates.me/public/coinmarketcap/ticker`);
+      LUNESData      = LUNESData.data.LNS_BTC;
+      
+      //Get USD BTC price 
+      let BTCValue  = await axios.get(`${endpoint}?fsym=BTC&tsyms=USD,BRL,EUR`);
+      BTCValue = BTCValue.data;
+      let lnsUsdValue = BTCValue.USD * LUNESData.last;
+      let lnsEurValue = lnsUsdValue * coinValues.EUR;
+      let lnsBrlValue = lnsUsdValue * coinValues.BRL;
+      let objectLunes = { "BRL": lnsBrlValue, "EUR": lnsEurValue, "USD": lnsUsdValue };
 
       return objectLunes;
     }
     return res.data;
 
   } catch (err) {
-    throw err.response ? err.response.data : new Error(err);
+    return err.response ? err.response.data : new Error(err);
   }
 }
