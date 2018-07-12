@@ -85,6 +85,7 @@ module.exports = async (transactionData, accessToken) => {
     return ''
     // return res.data
   } catch (err) {
-    throw err.response ? err.response.data : new Error(err)
+    // throw err.response ? err.response.data : new Error(err)
+    return err.response ? err.response.data : err
   }
 }
