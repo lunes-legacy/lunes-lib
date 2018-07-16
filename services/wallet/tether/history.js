@@ -13,17 +13,43 @@ const onlyTetherUSTransactions = (array) => {
   return newArray;
 }
 const identifyTransactionType = (transactions, address) => {
-  return transactions.map((transaction) => {
-    if (transaction.referenceaddress === address)
-      transaction.type = 'SPENT';
-    else if (transaction.sendingaddress === address)
-      transaction.type = 'RECEIVED';
+  return transactions.map((tx) => {
+    if (tx.referenceaddress === address)
+      tx.type = 'SPENT';
+    else if (tx.sendingaddress === address)
+      tx.type = 'RECEIVED';
     else
       throw errorPattern('Unknown transaction type',500,'TXHISTORY_ERROR');
-    return transaction;
+    return tx;
   });
 }
-
+// [
+//   type:
+//   otherParams:
+//   txid:
+//   date:
+//   blockHeight:
+//   nativeAmount:
+//   networkFee:
+// ]
+const arrangeTransactionsToReturn = (transactions) => {
+  return transactions.map((tx) => {
+    return {
+      type:         tx.type,
+      blockHeight:  undefined,
+      txid:         tx.txid,
+      date:         tx.blocktime,
+      nativeAmount: unitConverter.toSatoshi(tx.amount),
+      networkFee:   unitConverter.toSatoshi(tx.fee),
+      otherParams: {
+        propertyid:       tx.propertyid,
+        propertyname:     tx.propertyname,
+        confirmations:    tx.confirmations,
+        sendingaddress:   tx.sendingaddress,
+        referenceaddress: tx.referenceaddress }
+    }
+  });
+}
 module.exports = async (params) => {
   try {
     if (!params.address)
@@ -49,6 +75,7 @@ module.exports = async (params) => {
 
     transactions = onlyTetherUSTransactions(transactions);
     transactions = identifyTransactionType(transactions, params.address);
+    transactions = arrangeTransactionsToReturn(transactions);
 
     let network = params.network;
     let data    = {
