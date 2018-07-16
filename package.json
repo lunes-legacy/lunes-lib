@@ -6,9 +6,10 @@
     "test": "jest"
   },
   "_moduleAliases": {
-      "@Root": "./",
-      "@Services": "./services/",
-      "@WalletServices": "./services/wallet/"
+    "@Root": "./",
+    "@Services": "./services/",
+    "@WalletServices": "./services/wallet/",
+    "@Util": "./actions/coins/util/"
   },
   "dependencies": {
     "axios": "^0.17.1",

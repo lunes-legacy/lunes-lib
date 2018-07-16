@@ -1,5 +1,6 @@
 require('module-alias/register');
-const errorPattern = require('@Services/errorPattern.js');
+const errorPattern  = require('@Services/errorPattern.js');
+const unitConverter = require('@Util/unitConverter.js');
 const Axios = require('./axios');
 
 const onlyTetherUSTransactions = (array) => {
@@ -10,6 +11,17 @@ const onlyTetherUSTransactions = (array) => {
     return transaction.propertyid === 31;
   });
   return newArray;
+}
+const identifyTransactionType = (transactions, address) => {
+  return transactions.map((transaction) => {
+    if (transaction.referenceaddress === address)
+      transaction.type = 'SPENT';
+    else if (transaction.sendingaddress === address)
+      transaction.type = 'RECEIVED';
+    else
+      throw errorPattern('Unknown transaction type',500,'TXHISTORY_ERROR');
+    return transaction;
+  });
 }
 
 module.exports = async (params) => {
@@ -36,6 +48,7 @@ module.exports = async (params) => {
       transactions = JSON.parse(transactions);
 
     transactions = onlyTetherUSTransactions(transactions);
+    transactions = identifyTransactionType(transactions, params.address);
 
     let network = params.network;
     let data    = {
