@@ -1,6 +1,8 @@
 const axios = require('axios')
 
-const endpoint = `${require('../../../constants/api')}/coins/history`
+const endpoint = `${require('../../../constants/api')}/coins/history`;
+
+const tetherAddressHistory = require('./../../../services/wallet/tether/history.js');
 
 /**
  * Obtain transaction history for an address.
@@ -25,7 +27,12 @@ const endpoint = `${require('../../../constants/api')}/coins/history`
                 ]
       }
  */
+
 module.exports = async params => {
+  if (params.network.search(/(tether)/i) !== -1) {
+    params.network = params.network.toUpperCase();
+    return await tetherAddressHistory(params);
+  }
   let url = `${endpoint}/${params.network}/${params.address}?testnet=${
     params.testnet
   }`
