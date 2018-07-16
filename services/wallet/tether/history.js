@@ -23,15 +23,6 @@ const identifyTransactionType = (transactions, address) => {
     return tx;
   });
 }
-// [
-//   type:
-//   otherParams:
-//   txid:
-//   date:
-//   blockHeight:
-//   nativeAmount:
-//   networkFee:
-// ]
 const arrangeTransactionsToReturn = (transactions) => {
   return transactions.map((tx) => {
     return {
