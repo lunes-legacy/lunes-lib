@@ -22,7 +22,7 @@ function getNetwork (coin, testnet, object) {
 module.exports = async (coin, address, testnet) => {
   try {
     const network = getNetwork(coin.toUpperCase(), testnet, networks)
-    if (network.coinSymbol.search(/(lns)|(lunes)/i) !== -1) {
+    if (network.coinSymbol.search(/(lns)|(lunes)/i) === -1) {
       if (!validateAddress(address, network.coinSymbol, network.testnet)) {
         throw errorPattern(
           'Invalid ' + network.coinName + ' Address',
