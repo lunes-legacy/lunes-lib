@@ -1,6 +1,5 @@
-require('module-alias/register');
-const errorPattern  = require('@Services/errorPattern.js');
-const unitConverter = require('@Util/unitConverter.js');
+const errorPattern  = require('./../../errorPattern.js');
+const unitConverter = require('./../../../actions/coins/util/unitConverter.js');
 const Axios = require('./axios');
 
 const onlyTetherUSTransactions = (array) => {

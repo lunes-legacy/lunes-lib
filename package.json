@@ -7,7 +7,9 @@
   },
   "_moduleAliases": {
     "@Root": "./",
+    "@Constants": "./constants/",
     "@Services": "./services/",
+    "@Actions": "./actions/",
     "@WalletServices": "./services/wallet/",
     "@Util": "./actions/coins/util/"
   },
@@ -26,7 +28,6 @@
     "ethereumjs-wallet": "^0.6.0",
     "lodash": "^4.17.4",
     "lunes-js-api": "^0.31.2",
-    "module-alias": "^2.1.0",
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
     "satoshi-bitcoin": "^1.0.4",
