@@ -53,10 +53,22 @@ module.exports = async (transactionData, accessToken) => {
   try {
     const network = transactionData.network.toLowerCase()
     const testnet = validator.checkBoolean(transactionData.testnet)
-    if (network.search(/(btc)|(dash)|(ltc)|(tether)/i) !== -1) {
+    if (network === 'btc') {
       const result = await BtcService.transaction.startUserTransaction(
         transactionData,
-        testnet ? BtcNetworks[network.toUpperCase()] : BtcNetworks[network.toUpperCase()]
+        testnet ? BtcNetworks.BTCTESTNET : BtcNetworks.BTC
+      )
+      return result
+    } else if (network === 'ltc') {
+      const result = await BtcService.transaction.startUserTransaction(
+        transactionData,
+        testnet ? BtcNetworks.LTCTESTNET : BtcNetworks.LTC
+      )
+      return result
+    } else if (network === 'dash') {
+      const result = await BtcService.transaction.startUserTransaction(
+        transactionData,
+        testnet ? BtcNetworks.DASHTESTNET : BtcNetworks.DASH
       )
       return result
     } else if (network === 'eth') {
@@ -67,6 +79,12 @@ module.exports = async (transactionData, accessToken) => {
       const result = await LnsService.transaction.startUserTransaction(
         transactionData,
         testnet ? LnsNetworks.LNSTESTNET : LnsNetworks.LNS
+      )
+      return result
+    } else if (network === 'usdt') {
+      const result = await BtcService.transaction.startUserTransaction(
+        transactionData,
+        testnet ? BtcNetworks.USDTTESTNET : BtcNetworks.USDT
       )
       return result
     }

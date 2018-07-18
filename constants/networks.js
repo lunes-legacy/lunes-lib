@@ -1,7 +1,7 @@
 const BtcNetworks = require('../services/wallet/btc/networks')
 const LnsNetworks = require('../services/wallet/lns/networks')
 const EthNetworks = require('../services/wallet/eth/networks')
-const TetherNetworks = require('../services/wallet/tether/networks')
+const UsdtNetworks = require('../services/wallet/usdt/networks')
 
 module.exports = {
   BTC: BtcNetworks.BTC,
@@ -14,6 +14,6 @@ module.exports = {
   ROPSTEN: EthNetworks.ROPSTEN,
   LNS: LnsNetworks.LNS,
   LNSTESTNET: LnsNetworks.LNSTESTNET,
-  TETHER: TetherNetworks.TETHER,
-  TETHERTESTNET: TetherNetworks.TETHERTESTNET
+  USDT: UsdtNetworks.USDT,
+  USDTTESTNET: UsdtNetworks.USDTTESTNET
 }

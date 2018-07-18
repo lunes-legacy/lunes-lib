@@ -2,7 +2,7 @@ const errorPattern  = require('./../../errorPattern.js');
 const unitConverter = require('./../../../actions/coins/util/unitConverter.js');
 const Axios = require('./axios');
 
-const onlyTetherUSTransactions = (array) => {
+const onlyUSDTransactions = (array) => {
   if (!array[0].propertyid)
     throw errorPattern('Transaction attribute called propertyid was not found on transaction object',500,'TXHISTORY_ERROR');
 
@@ -43,7 +43,7 @@ const arrangeTransactionsToReturn = (transactions) => {
 module.exports = async (params) => {
   if (!params.address)
     throw errorPattern(`Invalid address, got '${params.address}'`);
-  if (!params.testnet)
+  if (typeof params.testnet !== 'boolean')
     throw errorPattern(`Invalid testnet parameter, got '${params.testnet}'`);
 
   let requestParams = new URLSearchParams();
@@ -62,7 +62,7 @@ module.exports = async (params) => {
   if (transactions instanceof String || typeof transactions === 'string')
     transactions = JSON.parse(transactions);
 
-  transactions = onlyTetherUSTransactions(transactions);
+  transactions = onlyUSDTransactions(transactions);
   transactions = identifyTransactionType(transactions, params.address);
   transactions = arrangeTransactionsToReturn(transactions);
 
