@@ -4,6 +4,10 @@ const history = require('./history')
 const networkFees = require('./networkFees')
 const transaction = require('./transaction')
 const wallet = require('./wallet')
+const lease = require('./lease')
+const leaseCancel = require('./leaseCancel')
+const leaseHistory = require('./leaseHistory')
+const leaseBalance = require('./leaseBalance')
 
 module.exports = {
   balance,
@@ -11,5 +15,9 @@ module.exports = {
   history,
   networkFees,
   transaction,
-  wallet
+  wallet,
+  lease,
+  leaseCancel,
+  leaseHistory,
+  leaseBalance
 }
