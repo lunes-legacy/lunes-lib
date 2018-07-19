@@ -2,6 +2,8 @@ const errorPattern = require('./../../errorPattern.js');
 const Axios = require('./axios');
 
 const onlyUSDTBalance = (balance) => {
+  if (!balance)
+    return balance;
   return balance.filter((obj) => {
     return obj.symbol.search(/(SP31)/i) !== -1
   });
