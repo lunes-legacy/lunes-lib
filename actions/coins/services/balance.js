@@ -43,7 +43,8 @@ module.exports = async (coin, address, testnet) => {
     if (
       network.coinSymbol === 'BTC' ||
       network.coinSymbol === 'LTC' ||
-      network.coinSymbol === 'DASH'
+      network.coinSymbol === 'DASH' ||
+      network.coinSymbol === 'BCH'
     ) {
       balance = require('./../../../services/wallet/btc/balance')
     } else {
