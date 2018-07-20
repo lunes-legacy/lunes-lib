@@ -6,7 +6,7 @@ module.exports = {
   BTC: BtcNetworks.BTC,
   BTCTESTNET: BtcNetworks.BTCTESTNET,
   BCH: BtcNetworks.BCH,
-  BCHTESTNET: BchNetworks.BCHTESTNET,
+  BCHTESTNET: BtcNetworks.BCHTESTNET,
   LTC: BtcNetworks.LTC,
   LTCTESTNET: BtcNetworks.LTCTESTNET,
   DASH: BtcNetworks.DASH,
