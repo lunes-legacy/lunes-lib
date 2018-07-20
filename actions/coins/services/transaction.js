@@ -5,6 +5,7 @@ const validator = require('../../../services/validator')
 
 const BtcNetworks = require('../../../services/wallet/btc/networks')
 const BtcService = require('../../../services/wallet/btc')
+const UsdtService = require('../../../services/wallet/usdt')
 const LnsNetworks = require('../../../services/wallet/lns/networks')
 const LnsService = require('../../../services/wallet/lns')
 const BchService = require('../../../services/wallet/bch')
@@ -90,7 +91,7 @@ module.exports = async (transactionData, accessToken) => {
       )
       return result
     } else if (network === 'usdt') {
-      const result = await BtcService.transaction.startUserTransaction(
+      const result = await UsdtService.transaction.startUserTransaction(
         transactionData,
         testnet ? BtcNetworks.USDTTESTNET : BtcNetworks.USDT
       )
