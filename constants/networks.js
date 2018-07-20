@@ -5,6 +5,8 @@ const EthNetworks = require('../services/wallet/eth/networks')
 module.exports = {
   BTC: BtcNetworks.BTC,
   BTCTESTNET: BtcNetworks.BTCTESTNET,
+  BCH: BtcNetworks.BCH,
+  BCHTESTNET: BchNetworks.BCHTESTNET,
   LTC: BtcNetworks.LTC,
   LTCTESTNET: BtcNetworks.LTCTESTNET,
   DASH: BtcNetworks.DASH,
