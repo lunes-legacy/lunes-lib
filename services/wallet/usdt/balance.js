@@ -28,6 +28,10 @@ module.exports = async (address, network) => {
     });
 
   let usdt = onlyUSDTBalance(result.data.balance);
+
+  if (usdt.length < 1)
+    throw errorPattern('No one Tether balance was found from this address',500,'BALANCE_ERROR');
+
   usdt = usdt[0];
 
   let balance = {
