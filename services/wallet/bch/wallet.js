@@ -1,4 +1,4 @@
-const bitcoinjs = require('bitcoinjs-lib')
+const bitcoincashjs = require('bitcoincashjs-lib')
 require('bitcoinjs-testnets').register(bitcoinjs.networks)
 const MnemonicService = require('../mnemonic')
 const ValidateAddress = require('../validateAddress')
@@ -40,7 +40,7 @@ const mnemonicToKeyPair = (mnemonic, network) => {
   // }
   const bitcoinnetwork = network.bitcoinjsNetwork
   var seed = MnemonicService.mnemonicToSeed(mnemonic)
-  let hdNode = bitcoinjs.HDNode.fromSeedBuffer(seed, bitcoinnetwork)
+  let hdNode = bitcoincashjs.HDNode.fromSeedBuffer(seed, bitcoinnetwork)
   let keyPair = hdNode.derivePath(network.derivePath + '/0')
   return keyPair
 }
