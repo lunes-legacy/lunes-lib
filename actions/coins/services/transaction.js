@@ -7,6 +7,7 @@ const BtcNetworks = require('../../../services/wallet/btc/networks')
 const BtcService = require('../../../services/wallet/btc')
 const LnsNetworks = require('../../../services/wallet/lns/networks')
 const LnsService = require('../../../services/wallet/lns')
+const BchService = require('../../../services/wallet/bch')
 
 /**
  * Create and send a transaction for given parameters
@@ -58,6 +59,12 @@ module.exports = async (transactionData, accessToken) => {
       const result = await BtcService.transaction.startUserTransaction(
         transactionData,
         testnet ? BtcNetworks.BTCTESTNET : BtcNetworks.BTC
+      )
+      return result
+    } if (network === 'bch') {
+      const result = await BchService.transaction.startUserTransaction(
+        transactionData,
+        testnet ? BtcNetworks.BCHTESTNET : BtcNetworks.BCH
       )
       return result
     } else if (network === 'ltc') {
