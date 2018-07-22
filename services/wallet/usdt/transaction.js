@@ -114,6 +114,11 @@ const createTransaction = async (
   console.log(d);
   return;
 }
+async function pushtx(raw) {
+  let params = new URLSearchParams;
+  params.append('signedTransaction',raw);
+  return await Axios.post('/v1/transaction/pushtx/',params);
+}
 /**
  * Spend value from a keyPair wallet
  *
