@@ -5,14 +5,6 @@
   "scripts": {
     "test": "jest"
   },
-  "_moduleAliases": {
-    "@Root": "./",
-    "@Constants": "./constants/",
-    "@Services": "./services/",
-    "@Actions": "./actions/",
-    "@WalletServices": "./services/wallet/",
-    "@Util": "./actions/coins/util/"
-  },
   "dependencies": {
     "axios": "^0.17.1",
     "biggystring": "^3.0.1",
