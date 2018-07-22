@@ -10,6 +10,7 @@
     "biggystring": "^3.0.1",
     "bip39": "^2.5.0",
     "bitcoinjs-lib": "^3.3.2",
+    "bitcoincashjs-lib": "git://github.com/bigearth/bitcoincashjs-lib.git#master",
     "bitcoinjs-testnets": "^1.0.10",
     "bluebird": "^3.5.1",
     "coinselect": "^3.1.11",
