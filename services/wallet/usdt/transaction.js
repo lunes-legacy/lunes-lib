@@ -33,6 +33,8 @@ let ecl = 'undefined'
         txID:
       }
  */
+
+
 const startUserTransaction = async (transactionData, network) => {
   try {
     const { toAddress, mnemonic } = transactionData
@@ -42,7 +44,7 @@ const startUserTransaction = async (transactionData, network) => {
     const transactionAmount = Number(transactionData.amount)
     const feePerByte = Number(transactionData.feePerByte)
 
-
+    // remove it just when the code gets into production
     console.log(`=== Starting ${network.coinSymbol} transaction ===`);
     console.log(`__________________________________________`);
     console.log(`Mnemonic____: ${mnemonic}`);
@@ -93,182 +95,63 @@ const createTransaction = async (
   feePerByte,
   network
 ) => {
-  try {
-    //it should be removed ?
-    if (network.coinSymbol.search(/(usdt)/i) === -1) {
-      if (!ValidateAddress(toAddress, network.coinSymbol, network.testnet)) {
-        throw errorPattern(
-          'Invalid ' + network.coinName + ' Address',
-          406,
-          'ADDRESS_INVALID',
-          'The address ' +
-            toAddress +
-            ' is not a valid ' +
-            network.coinName +
-            ' address.'
-        )
-      }
-    }
+  transactionAmount = transactionAmount / (10**8);
+  let raw = await getUnsignedTransaction({
+    pubKey:      keyPair.getPublicKeyBuffer().toString('hex'),
+    fee:         5000 / (10**8),
+    testnet:     network.testnet,
+    fromAddress: keyPair.getAddress(),
+    toAddress,
+    transactionAmount,
+  }).then(e => e.data);
 
-    // don't try to send negative values
-    if (transactionAmount <= 0) {
-      throw errorPattern('Invalid amount', 401, 'INVALID_AMOUNT')
-    }
+  let tx  = bitcoinjs.Transaction.fromHex(raw);
+  let txb = bitcoinjs.TransactionBuilder.fromTransaction(tx);
+  txb.sign(0, keyPair)
+  let raw = txb.build().toHex();
 
-    if (feePerByte < 0) {
-      throw errorPattern(
-        'Fee per byte cannot be smaller than 0.',
-        401,
-        'INVALID_FEE'
-      )
-    }
-
-    bitcoinjsnetwork = network.bitcoinjsNetwork
-    // electrumNetwork = network
-
-    // senderAddress
-    const fromAddress = keyPair.getAddress()
-
-    // 1. find utxos
-    const utxos = await findUTXOs(fromAddress)
-    // console.log(utxos);
-    // return;
-
-    // address with unconfirmed output
-    if (utxos.length === 0) {
-      throw errorPattern(
-        'Sender balance with not enough confirmations.',
-        401,
-        'TRANSACTION_UNCONFIRMED_BALANCE'
-      )
-    }
-
-    // 3. set target and ammount
-    const targets = [
-      {
-        address: toAddress,
-        value: transactionAmount
-      }
-    ]
-
-    let { inputs, outputs } = coinSelect(utxos, targets, feePerByte)
-
-    // console.log('INP::: ',inputs);
-    // console.log('_______________');
-    // console.log('OUT::: ',outputs);
-    // return;
-
-    // .inputs and .outputs will be undefined if no solution was found
-    if (!inputs || !outputs) {
-      throw errorPattern('Balance too small.', 401, 'TRANSACTION_LOW_BALANCE')
-    }
-
-    // 4. build the transaction
-    let txb = new bitcoinjs.TransactionBuilder(bitcoinjsnetwork)
-
-    // 4.1. outputs
-    outputs.forEach(output => {
-      // Add change address (sender)
-      if (!output.address) {
-        output.address = fromAddress
-      }
-
-      txb.addOutput(output.address, output.value)
-    })
-
-    // 4.2 inputs
-    inputs.forEach(input => {
-      txb.addInput(input.txid, input.vout)
-    })
-
-    // 5. sign
-    txb = sign(txb, keyPair)
-
-    // console.log(txb);
-    // return;
-    txb.tx.data_protocol = 'SP';
-    // console.log('txb:',txb);
-    // console.log('txb.tx',txb.tx);
-    // return;
-    let txHex = txb.build().toHex();
-    // const txHex = txb.build().toHex()
-    // console.log('OPS::', txHex);
-
-    // 6. broadcast
-    const broadcastResult = await broadcast(txHex)
-
-    const result = {
-      network: network.coinSymbol,
-      data: {
-        txID: broadcastResult
-      }
-    }
-    return result
-  } catch (error) {
-    throw errorPattern(
-      error.message || 'Error creating transaction',
-      error.status || 500,
-      error.messageKey || 'CREATE_TRANSACTION_ERROR',
-      error.logMessage || error.stack || ''
-    )
-  }
+  let d = await pushtx(raw).then(e => e.data);
+  console.log(d);
+  return;
 }
+/**
+ * Spend value from a keyPair wallet
+ *
+ * @param {Hex(String)} pubKey - Sender's public key
+ * @param {String}      toAddress - Address to send the transaction
+ * @param {Number}      transactionAmount - Amount to send in satoshis unit - Ex: 50000
+ * @param {Number}      feePerByte - Fee per byte to use in satoshis unit - Ex: 32
+ * @param {Bool}        testnet -
 
-const broadcast = async signedTxHex => {
+ * @return {
+
+  }
+ */
+const getUnsignedTransaction = async (data) => {
+  let { pubKey, fromAddress, toAddress, transactionAmount, fee, testnet } = data;
   let params = new URLSearchParams;
-  params.append('signedTransaction', signedTxHex);
-  let result = await Axios.post('/v1/transaction/pushtx/', params)
-    .catch((e) => {
-      let { status, headers } = e.response;
-      throw errorPattern('Error on trying to broadcast the transaction',status,'BROADCASTTX_ERROR',{headers, data: e.data});
-    });
+  params.append('transaction_version',1);
+  params.append('currency_identifier',31);
+  params.append('fee',fee);
+  params.append('testnet',testnet);
+  params.append('pubkey',pubKey);
+  params.append('amount_to_transfer',transactionAmount);
+  params.append('transaction_from',fromAddress);
+  params.append('transaction_to',toAddress);
+  return await Axios.post('/v1/transaction/getunsigned/0', params)
+  .then(e => e.data)
+  .catch(e => errorPattern('Error on trying to get unsigned transaction',500,'GETUNSIGNEDTRANSACTION_ERROR',e));
+}
+const broadcast = async signedTxHex => {
 
-  let { status, pushed, message, code } = result.data;
-  if (status !== 'OK')
-    throw errorPattern(pushed, 500, 'BROADCASTTX_ERROR', result);
-  // throw errorPattern(pushed, 500, 'BROADCASTTX_ERROR', result.data);
-
-  return result;
 }
 
 const findUTXOs = async address => {
-  const onlyTetherTransactions = (transactions) => {
-    if (!(transactions instanceof Array))
-      throw errorPattern(`Only arrays are accepted in this function`,500,'FINDUTXOS_ERROR');
 
-    return transactions.filter((tx) => {
-      return tx.propertyid === 31;
-    });
-  }
-
-  let params = new URLSearchParams;
-  params.append('addr',address);
-  let result = await Axios.post('/v1/transaction/address', params)
-    .catch(e => {
-      let { status, headers } = e.response;
-      throw errorPattern('Error on trying to get unspent transactions',status,'TRANSACTION_ERROR',headers);
-    });
-
-  if (result.data.transactions.length < 1)
-    throw errorPattern('No unspent transaction was found',500,'TRANSACTION_EMPTY_UTXO');
-
-  return convertUTXOs( onlyTetherTransactions(result.data.transactions) );
 }
 
-const convertUTXOs = (utxos) => {
-  if (!(utxos instanceof Array))
-    throw errorPattern(`This function only accepts array from the 'utxos' parameter`,500,'CONVERT_UTXOS_ERROR');
 
-  return utxos.map((utxo) => {
-    return {
-      txid:  utxo.txid,
-      value: unitConverter.toSatoshi(utxo.amount),
-      vout:  0
-    }
-  });
-}
 const convertUTXO = utxo => {
-  return; // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
   try {
     const newUtxo = {
       txId: utxo.tx_hash,
@@ -286,6 +169,18 @@ const convertUTXO = utxo => {
   }
 }
 
+// const signTx = async (txHex, keyPair) => {
+//   let params = new URLSearchParams;
+//   params.append('unsigned_hex', txHex);
+//   params.append('pubkey', keyPair.getPublicKeyBuffer().toString('hex'));
+//   console.log('txHex::',txHex);
+
+//   let r = await Axios.post('/v1/armory/getunsigned',params)
+//     .catch(e => {
+//       console.log(e);
+//     });
+//   console.log(r);
+// }
 const sign = (tx, keyPair) => {
   try {
     _.times(tx.inputs.length, i => tx.sign(i, keyPair))
