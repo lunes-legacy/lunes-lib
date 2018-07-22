@@ -1,5 +1,5 @@
 const bitcoincashjs = require('bitcoincashjs-lib')
-require('bitcoinjs-testnets').register(bitcoinjs.networks)
+require('bitcoinjs-testnets').register(bitcoincashjs.networks)
 const MnemonicService = require('../mnemonic')
 const ValidateAddress = require('../validateAddress')
 const errorPattern = require('../../errorPattern')
