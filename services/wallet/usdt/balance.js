@@ -1,7 +1,7 @@
 const errorPattern = require('./../../errorPattern.js');
 const Axios = require('./axios');
 
-const onlyTetherBalance = (balance) => {
+const onlyUSDTBalance = (balance) => {
   return balance.filter((obj) => {
     return obj.symbol.search(/(SP31)/i) !== -1
   });
@@ -25,15 +25,15 @@ module.exports = async (address, network) => {
       throw errorPattern(message, status, 'BALANCE_ERROR', {messageKey, headers});
     });
 
-  let tether = onlyTetherBalance(result.data.balance);
-  tether = tether[0];
+  let usdt = onlyUSDTBalance(result.data.balance);
+  usdt = usdt[0];
 
   let balance = {
     network: network.coinSymbol.toUpperCase(),
     data: {
       address: address,
-      confirmed: tether.value.toString(),
-      unconfirmed: (tether.pendingpos - tether.pendingneg).toString()
+      confirmed: usdt.value.toString(),
+      unconfirmed: (usdt.pendingpos - usdt.pendingneg).toString()
     }
   };
   return balance;

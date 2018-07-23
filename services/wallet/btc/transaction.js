@@ -77,17 +77,20 @@ const createTransaction = async (
   network
 ) => {
   try {
-    if (!ValidateAddress(toAddress, network.coinSymbol, network.testnet)) {
-      throw errorPattern(
-        'Invalid ' + network.coinName + ' Address',
-        406,
-        'ADDRESS_INVALID',
-        'The address ' +
-          toAddress +
-          ' is not a valid ' +
-          network.coinName +
-          ' address.'
-      )
+    //it should be removed ?
+    if (network.coinSymbol.search(/(usdt)/i) === -1) {
+      if (!ValidateAddress(toAddress, network.coinSymbol, network.testnet)) {
+        throw errorPattern(
+          'Invalid ' + network.coinName + ' Address',
+          406,
+          'ADDRESS_INVALID',
+          'The address ' +
+            toAddress +
+            ' is not a valid ' +
+            network.coinName +
+            ' address.'
+        )
+      }
     }
 
     // don't try to send negative values

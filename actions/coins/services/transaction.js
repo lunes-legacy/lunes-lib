@@ -89,6 +89,12 @@ module.exports = async (transactionData, accessToken) => {
         testnet ? LnsNetworks.LNSTESTNET : LnsNetworks.LNS
       )
       return result
+    } else if (network === 'usdt') {
+      const result = await BtcService.transaction.startUserTransaction(
+        transactionData,
+        testnet ? BtcNetworks.USDTTESTNET : BtcNetworks.USDT
+      )
+      return result
     }
     return ''
     // return res.data

@@ -1,6 +1,6 @@
 module.exports = {
-  TETHER: {
-    coinSymbol: 'TETHER',
+  USDT: {
+    coinSymbol: 'USDT',
     coinName: 'Tether MainNet',
     testnet: false,
     derivePath: 'm/44\'/1\'/0\'/0',
@@ -19,8 +19,8 @@ module.exports = {
       wif: 0x80
     }
   },
-  TETHERTESTNET: {
-    coinSymbol: 'TETHERTESTNET',
+  USDTTESTNET: {
+    coinSymbol: 'USDTTESTNET',
     coinName: 'Tether Testnet',
     testnet: true,
     derivePath: 'm/44\'/1\'/0\'/0',
