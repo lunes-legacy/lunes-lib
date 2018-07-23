@@ -40,10 +40,10 @@ const decodeHexTransaction   = require('./decodeHexTransaction.js');
 const startUserTransaction = async (transactionData, network) => {
   try {
     const { toAddress, mnemonic } = transactionData
-    //TODO this line below should be uncommented
-    const keyPair = UsdtWallet.mnemonicToKeyPair(mnemonic, network)
-    //TODO this line below should be removed
-    // const keyPair = BtctWallet.mnemonicToKeyPair(mnemonic, networks['BTC'])
+    // TODO this line below should be uncommented
+    // const keyPair = UsdtWallet.mnemonicToKeyPair(mnemonic, network)
+    //TODO this line below should be removed in order to generate a different addres to BTC
+    const keyPair = BtctWallet.mnemonicToKeyPair(mnemonic, networks['BTC'])
 
     const transactionAmount = Number(transactionData.amount)
     const feePerByte = Number(transactionData.feePerByte)
@@ -59,7 +59,7 @@ const startUserTransaction = async (transactionData, network) => {
     return result
   } catch (error) {
     //TODO: remove this console and return <<<
-    console.log(error);return
+    // console.log(error);return
     throw errorPattern(
       error.message || 'Error startUserTransaction',
       error.status || 500,
@@ -91,84 +91,80 @@ const createTransaction = async (
   feePerByte,
   network
 ) => {
-  console.log("Fazendo login");
-  // let user = await login({email:'marcelosmtp@gmail.com',password:'123123123'});
-  let user = {accessToken:''};
+  try {
     // TODO remove it just when the code gets into production
-  console.log(`=== Starting ${network.coinSymbol} transaction ===`);
-  console.log(`__________________________________________`);
-  // console.log(`Mnemonic____: ${mnemonic}`);
-  console.log(`From________: ${keyPair.getAddress()}`);
-  console.log(`To__________: ${toAddress}`);
-  console.log(`Amount______: ${transactionAmount} (satoshi)`);
-  console.log(`Testnet?____: ${network.testnet} (satoshi)`);
-  console.log(`FeePerByte__: ${feePerByte} (satoshi)`);
-  let pubKey   = keyPair.getPublicKeyBuffer().toString('hex'),
-  fromAddress  = keyPair.getAddress(),
-  STHAmount    = transactionAmount,
-  BTCAmount    = unitConverter.toBitcoin(transactionAmount),
-  //ESTIMATE THE FEE
-  estimatedFee = await estimateFee({
-    network: 'BTC',
-    testnet: network.testnet,
-    fromAddress,
-    toAddress,
-    // toAddress:   '1Hz96kJKF2HLPGY15JWLB5m9qGNxvt8tHJ',
-    // fromAddress: '1C1mCxRukix1KfegAY5zQQJV7samAciZpv',
-    amount: STHAmount,
-    feePerByte: feePerByte
-  })
-  .catch(e => { throw e; }) //e variable is already an errorPattern
-  .then(r => unitConverter.toBitcoin(r));
+    console.log(`=== Starting ${network.coinSymbol} transaction ===`);
+    console.log(`__________________________________________`);
+    // console.log(`Mnemonic____: ${mnemonic}`);
+    console.log(`From________: ${keyPair.getAddress()}`);
+    console.log(`To__________: ${toAddress}`);
+    console.log(`Amount______: ${transactionAmount} (satoshi)`);
+    console.log(`Testnet?____: ${network.testnet} (satoshi)`);
+    console.log(`FeePerByte__: ${feePerByte} (satoshi)`);
+    let pubKey   = keyPair.getPublicKeyBuffer().toString('hex'),
+    fromAddress  = keyPair.getAddress(),
+    STHAmount    = transactionAmount,
+    BTCAmount    = unitConverter.toBitcoin(transactionAmount),
+    //ESTIMATE THE FEE
+    estimatedFee = await estimateFee({
+      network: 'BTC',
+      testnet: network.testnet,
+      fromAddress,
+      toAddress,
+      amount: STHAmount,
+      feePerByte: feePerByte
+    })
+    .catch(e => { throw e; }) //e variable is already an errorPattern
+    .then(r => unitConverter.toBitcoin(r));
 
 
-  // return; //<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-  console.log(`Fee____: ${estimatedFee} (btc)`);
-  console.log(`__________________________________________`);
-  return;
-  // READ
-  // TO AVOID ERRORS, WE DO THE 'getUnsigedTransaction' twice, here and inside the estimateFee
-  // READ
+    console.log(`Fee_________: ${estimatedFee} (btc)`);
+    console.log(`__________________________________________`);
+    // READ
+    // TO AVOID ERRORS, WE DO THE 'getUnsigedTransaction' twice, here and inside the estimateFee
+    // READ
+    //GET UNSIGNED TRANSACTION FROM AN OBJECT
+    let unsignedhex = await getUnsignedTransaction({
+      fee:         estimatedFee,
+      testnet:     network.testnet,
+      transactionAmount: BTCAmount,
+      pubKey,
+      toAddress,
+      fromAddress,
+    })
+    .catch(e => { //catch have to be in first place
+      let { statusText, status, headers } = e.response;
+      throw errorPattern(
+        `Error on trying to get an unsigned transaction. Explorer status text: ${statusText}`,
+        status || 500, 'CREATETRANSACTION_ERROR', headers );
+    })
+    .then(r => {
+      let { error, status, unsignedhex } = r;
+      if (error)
+        throw errorPattern(`${error}`,status||500,'GETUNSIGNEDTRANSACTION_ERROR');
+      if (!unsignedhex)
+        throw errorPattern(`Block explorer didnt return any unsignedhex`,500,'GETUNSIGNEDTRANSACTION_ERROR');
+      return unsignedhex;
+    })
+    let tx       = bitcoinjs.Transaction.fromHex(unsignedhex);
+    let txb      = bitcoinjs.TransactionBuilder.fromTransaction(tx);
+    //multi input signing
+    for (let i = 0; i < tx.ins.length; i++) {
+      txb.sign(i, keyPair);
+    }
+    let hex      = txb.build().toHex();
 
-  //GET UNSIGNED TRANSACTION FROM AN OBJECT
-  let unsignedhex = await getUnsignedTransaction({
-    fee:         estimatedFee,
-    testnet:     network.testnet,
-    // fromAddress: '1C1mCxRukix1KfegAY5zQQJV7samAciZpv',
-    // toAddress: '1Hz96kJKF2HLPGY15JWLB5m9qGNxvt8tHJ',
-    transactionAmount: BTCAmount,
-    pubKey,
-    toAddress,
-    fromAddress,
-  })
-  .catch(e => { //catch have to be in first place
-    let { statusText, status, headers } = e.response;
-    throw errorPattern(
-      `Error on trying to get an unsigned transaction. Explorer status text: ${statusText}`,
-      status || 500, 'CREATETRANSACTION_ERROR', headers );
-  })
-  .then(r => {
-    let { error, status, unsignedhex } = r;
-    if (error)
-      throw errorPattern(`${error}`,status||500,'GETUNSIGNEDTRANSACTION_ERROR');
-    if (!unsignedhex)
-      throw errorPattern(`Block explorer didnt return any unsignedhex`,500,'GETUNSIGNEDTRANSACTION_ERROR');
-    return unsignedhex;
-  })
-  let tx       = bitcoinjs.Transaction.fromHex(unsignedhex);
-  let txb      = bitcoinjs.TransactionBuilder.fromTransaction(tx);
-  //multi input signing
-  for (let i = 0; i < tx.ins.length; i++) {
-    txb.sign(i, keyPair);
+    let resultPush = await pushtx(hex).then(e => e.data);
+    let { status, pushed } = resultPush;
+    if (status.toUpperCase() !== "OK")
+      throw errorPattern('Error on trying to create an user transaction',500,'CREATETRANSACTION_ERROR',resultPush);
+    return { network: 'USDT', data: { txID: resultPush.tx } }
+  } catch (e) {
+    //problably it is already an errorPattern object
+    if ('message' in e && 'status' in e && 'logMessage' in e)
+      return e;
+    return errorPattern(e.message || 'Error on creating transaction', e.status || 500, 'CREATETRANSACTION_ERROR', e);
   }
-  let hex      = txb.build().toHex();
-
-  // let bla = await decodeHexTransaction(hex).then(e => e.data);
-  // console.log(bla.BTC.vin);
-  // console.log(bla.BTC.vout); return;
-
-  let d = await pushtx(hex).then(e => e.data);
-  console.log(d);
 }
 const pushtx = async (raw) => {
   let params = new URLSearchParams;

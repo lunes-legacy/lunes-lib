@@ -2,6 +2,7 @@ const axios = require('axios')
 
 const endpoint = `${require('../../../constants/api')}/coins/tx/estimate`
 
+const USDTEstimate = require('./../../../services/wallet/usdt/estimateFee.js');
 /**
  * Estimate transaction fee for given parameters
  *
@@ -47,8 +48,15 @@ const endpoint = `${require('../../../constants/api')}/coins/tx/estimate`
       }
  */
 module.exports = async (transactionData, accessToken) => {
-  const headers = { Authorization: `Bearer ${accessToken}` }
   try {
+    if (transactionData.network.search(/(usdt)/i) !== -1) {
+      let estimatedFee = await USDTEstimate(transactionData);
+      return {
+        network: transactionData.network.toUpperCase(),
+        data: { fee: estimatedFee }
+      }
+    }
+    const headers = { Authorization: `Bearer ${accessToken}` }
     const res = await axios.post(endpoint, transactionData, { headers })
     return res.data
   } catch (err) {
