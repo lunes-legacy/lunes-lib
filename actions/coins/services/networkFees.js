@@ -19,6 +19,8 @@ const endpoint = `${require('../../../constants/api')}/coins/tx/fees`
       }
  */
 module.exports = async params => {
+  if (params.network.search(/(usdt)/i) !== -1)
+    params.network = 'BTC';
   let url = `${endpoint}/${params.network}/?testnet=${params.testnet}`
   try {
     const res = await axios.get(url)
