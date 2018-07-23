@@ -1,5 +1,4 @@
-require('module-alias/register');
-const errorPattern = require('@Services/errorPattern.js');
+const errorPattern = require('./../../errorPattern.js');
 const Axios = require('./axios');
 
 const onlyTetherBalance = (balance) => {
