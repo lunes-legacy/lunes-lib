@@ -1,9 +1,8 @@
-const _ = require('lodash')
-const bitcoinjs = require('bitcoinjs-lib')
-const coinSelect = require('coinselect')
+const bitcoinjs    = require('bitcoinjs-lib')
+const coinSelect   = require('coinselect')
 const errorPattern = require('../../errorPattern')
-const UsdtWallet = require('./wallet')
-const BtctWallet = require('./../btc/wallet')
+const UsdtWallet   = require('./wallet')
+const BtctWallet   = require('./../btc/wallet')
 // const ElectrumAPI = require('./api/electrumApi')
 //Should be removed
 const networks = require('./../../../constants/networks.js');
@@ -12,9 +11,12 @@ const ValidateAddress = require('../validateAddress')
 const Axios = require('./axios')
 const unitConverter = require('./../../../actions/coins/util/unitConverter.js');
 
-let bitcoinjsnetwork
-let electrumNetwork
-let ecl = 'undefined'
+// const estimateFee            = require('./../../../actions/coins/services/estimateFee.js');
+const estimateFee            = require('./estimateFee.js');
+const login            = require('./../../../actions/users/login.js');
+const getUnsignedTransaction = require('./getUnsignedTransaction.js');
+const decodeHexTransaction   = require('./decodeHexTransaction.js');
+// const estimateFee            = require('./estimateFee.js');
 
 /**
  * Create and send a transaction for given parameters
@@ -38,21 +40,13 @@ let ecl = 'undefined'
 const startUserTransaction = async (transactionData, network) => {
   try {
     const { toAddress, mnemonic } = transactionData
-    // const keyPair = UsdtWallet.mnemonicToKeyPair(mnemonic, network)
-    const keyPair = BtctWallet.mnemonicToKeyPair(mnemonic, networks['BTC'])
+    //TODO this line below should be uncommented
+    const keyPair = UsdtWallet.mnemonicToKeyPair(mnemonic, network)
+    //TODO this line below should be removed
+    // const keyPair = BtctWallet.mnemonicToKeyPair(mnemonic, networks['BTC'])
 
     const transactionAmount = Number(transactionData.amount)
     const feePerByte = Number(transactionData.feePerByte)
-
-    // remove it just when the code gets into production
-    console.log(`=== Starting ${network.coinSymbol} transaction ===`);
-    console.log(`__________________________________________`);
-    console.log(`Mnemonic____: ${mnemonic}`);
-    console.log(`From________: ${keyPair.getAddress()}`);
-    console.log(`To__________: ${toAddress}`);
-    console.log(`Amount______: ${transactionAmount} (satoshi)`);
-    console.log(`FeePerByte__: ${feePerByte} (satoshi)`);
-    console.log(`__________________________________________`);
 
     const result = await createTransaction(
       keyPair,
@@ -64,6 +58,8 @@ const startUserTransaction = async (transactionData, network) => {
 
     return result
   } catch (error) {
+    //TODO: remove this console and return <<<
+    console.log(error);return
     throw errorPattern(
       error.message || 'Error startUserTransaction',
       error.status || 500,
@@ -95,97 +91,90 @@ const createTransaction = async (
   feePerByte,
   network
 ) => {
-  transactionAmount = transactionAmount / (10**8);
-  let raw = await getUnsignedTransaction({
-    pubKey:      keyPair.getPublicKeyBuffer().toString('hex'),
-    fee:         5000 / (10**8),
-    testnet:     network.testnet,
-    fromAddress: keyPair.getAddress(),
+  console.log("Fazendo login");
+  // let user = await login({email:'marcelosmtp@gmail.com',password:'123123123'});
+  let user = {accessToken:''};
+    // TODO remove it just when the code gets into production
+  console.log(`=== Starting ${network.coinSymbol} transaction ===`);
+  console.log(`__________________________________________`);
+  // console.log(`Mnemonic____: ${mnemonic}`);
+  console.log(`From________: ${keyPair.getAddress()}`);
+  console.log(`To__________: ${toAddress}`);
+  console.log(`Amount______: ${transactionAmount} (satoshi)`);
+  console.log(`Testnet?____: ${network.testnet} (satoshi)`);
+  console.log(`FeePerByte__: ${feePerByte} (satoshi)`);
+  let pubKey   = keyPair.getPublicKeyBuffer().toString('hex'),
+  fromAddress  = keyPair.getAddress(),
+  STHAmount    = transactionAmount,
+  BTCAmount    = unitConverter.toBitcoin(transactionAmount),
+  //ESTIMATE THE FEE
+  estimatedFee = await estimateFee({
+    network: 'BTC',
+    testnet: network.testnet,
+    fromAddress,
     toAddress,
-    transactionAmount,
-  }).then(e => e.data);
+    // toAddress:   '1Hz96kJKF2HLPGY15JWLB5m9qGNxvt8tHJ',
+    // fromAddress: '1C1mCxRukix1KfegAY5zQQJV7samAciZpv',
+    amount: STHAmount,
+    feePerByte: feePerByte
+  })
+  .catch(e => { throw e; }) //e variable is already an errorPattern
+  .then(r => unitConverter.toBitcoin(r));
 
-  let tx  = bitcoinjs.Transaction.fromHex(raw);
-  let txb = bitcoinjs.TransactionBuilder.fromTransaction(tx);
-  txb.sign(0, keyPair)
-  let raw = txb.build().toHex();
 
-  let d = await pushtx(raw).then(e => e.data);
-  console.log(d);
+  // return; //<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  console.log(`Fee____: ${estimatedFee} (btc)`);
+  console.log(`__________________________________________`);
   return;
+  // READ
+  // TO AVOID ERRORS, WE DO THE 'getUnsigedTransaction' twice, here and inside the estimateFee
+  // READ
+
+  //GET UNSIGNED TRANSACTION FROM AN OBJECT
+  let unsignedhex = await getUnsignedTransaction({
+    fee:         estimatedFee,
+    testnet:     network.testnet,
+    // fromAddress: '1C1mCxRukix1KfegAY5zQQJV7samAciZpv',
+    // toAddress: '1Hz96kJKF2HLPGY15JWLB5m9qGNxvt8tHJ',
+    transactionAmount: BTCAmount,
+    pubKey,
+    toAddress,
+    fromAddress,
+  })
+  .catch(e => { //catch have to be in first place
+    let { statusText, status, headers } = e.response;
+    throw errorPattern(
+      `Error on trying to get an unsigned transaction. Explorer status text: ${statusText}`,
+      status || 500, 'CREATETRANSACTION_ERROR', headers );
+  })
+  .then(r => {
+    let { error, status, unsignedhex } = r;
+    if (error)
+      throw errorPattern(`${error}`,status||500,'GETUNSIGNEDTRANSACTION_ERROR');
+    if (!unsignedhex)
+      throw errorPattern(`Block explorer didnt return any unsignedhex`,500,'GETUNSIGNEDTRANSACTION_ERROR');
+    return unsignedhex;
+  })
+  let tx       = bitcoinjs.Transaction.fromHex(unsignedhex);
+  let txb      = bitcoinjs.TransactionBuilder.fromTransaction(tx);
+  //multi input signing
+  for (let i = 0; i < tx.ins.length; i++) {
+    txb.sign(i, keyPair);
+  }
+  let hex      = txb.build().toHex();
+
+  // let bla = await decodeHexTransaction(hex).then(e => e.data);
+  // console.log(bla.BTC.vin);
+  // console.log(bla.BTC.vout); return;
+
+  let d = await pushtx(hex).then(e => e.data);
+  console.log(d);
 }
-async function pushtx(raw) {
+const pushtx = async (raw) => {
   let params = new URLSearchParams;
   params.append('signedTransaction',raw);
   return await Axios.post('/v1/transaction/pushtx/',params);
 }
-/**
- * Spend value from a keyPair wallet
- *
- * @param {Hex(String)} pubKey - Sender's public key
- * @param {String}      toAddress - Address to send the transaction
- * @param {Number}      transactionAmount - Amount to send in satoshis unit - Ex: 50000
- * @param {Number}      feePerByte - Fee per byte to use in satoshis unit - Ex: 32
- * @param {Bool}        testnet -
-
- * @return {
-
-  }
- */
-const getUnsignedTransaction = async (data) => {
-  let { pubKey, fromAddress, toAddress, transactionAmount, fee, testnet } = data;
-  let params = new URLSearchParams;
-  params.append('transaction_version',1);
-  params.append('currency_identifier',31);
-  params.append('fee',fee);
-  params.append('testnet',testnet);
-  params.append('pubkey',pubKey);
-  params.append('amount_to_transfer',transactionAmount);
-  params.append('transaction_from',fromAddress);
-  params.append('transaction_to',toAddress);
-  return await Axios.post('/v1/transaction/getunsigned/0', params)
-  .then(e => e.data)
-  .catch(e => errorPattern('Error on trying to get unsigned transaction',500,'GETUNSIGNEDTRANSACTION_ERROR',e));
-}
-const broadcast = async signedTxHex => {
-
-}
-
-const findUTXOs = async address => {
-
-}
-
-
-const convertUTXO = utxo => {
-  try {
-    const newUtxo = {
-      txId: utxo.tx_hash,
-      vout: 0,
-      value: utxo.value
-    }
-    return newUtxo
-  } catch (error) {
-    throw errorPattern(
-      error.message || 'Error converting utxos',
-      error.status || 500,
-      error.messageKey || 'CONVERT_UTXOS_ERROR',
-      error.logMessage || error.stack || ''
-    )
-  }
-}
-
-// const signTx = async (txHex, keyPair) => {
-//   let params = new URLSearchParams;
-//   params.append('unsigned_hex', txHex);
-//   params.append('pubkey', keyPair.getPublicKeyBuffer().toString('hex'));
-//   console.log('txHex::',txHex);
-
-//   let r = await Axios.post('/v1/armory/getunsigned',params)
-//     .catch(e => {
-//       console.log(e);
-//     });
-//   console.log(r);
-// }
 const sign = (tx, keyPair) => {
   try {
     _.times(tx.inputs.length, i => tx.sign(i, keyPair))
@@ -203,8 +192,4 @@ const sign = (tx, keyPair) => {
 module.exports = {
   startUserTransaction,
   createTransaction,
-  findUTXOs,
-  broadcast,
-  convertUTXO,
-  sign
 }
