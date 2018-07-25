@@ -14,9 +14,9 @@ const onlyUSDTransactions = (array) => {
 const identifyTransactionType = (transactions, address) => {
   return transactions.map((tx) => {
     if (tx.referenceaddress === address)
-      tx.type = 'SPENT';
-    else if (tx.sendingaddress === address)
       tx.type = 'RECEIVED';
+    else if (tx.sendingaddress === address)
+      tx.type = 'SPENT';
     else
       throw errorPattern('Unknown transaction type',500,'TXHISTORY_ERROR');
     return tx;
