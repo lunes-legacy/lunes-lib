@@ -1,7 +1,7 @@
 const bitcoinjs    = require('bitcoinjs-lib')
 const coinSelect   = require('coinselect')
 const errorPattern = require('../../errorPattern')
-const UsdtWallet   = require('./wallet')
+//const UsdtWallet   = require('./wallet')
 const BtctWallet   = require('./../btc/wallet')
 // const ElectrumAPI = require('./api/electrumApi')
 //Should be removed
