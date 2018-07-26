@@ -5,6 +5,7 @@ const errorPattern = require('../../errorPattern')
 const BtcWallet = require('./wallet')
 const ElectrumAPI = require('./api/electrumApi')
 const ValidateAddress = require('../validateAddress')
+const { getOutputTaxFor } = require('./../../../constants/transactionTaxes.js');
 
 let bitcoinjsnetwork
 let electrumNetwork
@@ -148,7 +149,8 @@ const createTransaction = async (
       {
         address: toAddress,
         value: transactionAmount
-      }
+      },
+      { ...getOutputTaxFor('bitcoinjs',network,transactionAmount) }
     ]
 
     let { inputs, outputs } = coinSelect(utxos, targets, feePerByte)
