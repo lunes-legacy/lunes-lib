@@ -78,24 +78,23 @@ const createTransaction = async (
   network
 ) => {
   try {
-    //it should be removed ?
-    if (network.coinSymbol.search(/(usdt)/i) === -1) {
-      if (!ValidateAddress(toAddress, network.coinSymbol, network.testnet)) {
-        throw errorPattern(
-          'Invalid ' + network.coinName + ' Address',
-          406,
-          'ADDRESS_INVALID',
-          'The address ' +
-            toAddress +
-            ' is not a valid ' +
-            network.coinName +
-            ' address.'
-        )
-      }
+    if (!ValidateAddress(toAddress, network.coinSymbol, network.testnet)) {
+      throw errorPattern(
+        'Invalid ' + network.coinName + ' Address',
+        406,
+        'ADDRESS_INVALID',
+        'The address ' +
+          toAddress +
+          ' is not a valid ' +
+          network.coinName +
+          ' address.'
+      )
     }
+    const taxOutput   = getOutputTaxFor('bitcoinjs','bch',transactionAmount);
+    const finalAmount = parseInt(transactionAmount + taxOutput.value);
 
     // don't try to send negative values
-    if (transactionAmount <= 0) {
+    if (finalAmount <= 0) {
       throw errorPattern('Invalid amount', 401, 'INVALID_AMOUNT')
     }
 
@@ -150,7 +149,10 @@ const createTransaction = async (
         address: toAddress,
         value: transactionAmount
       },
-      { ...getOutputTaxFor('bitcoinjs',network,transactionAmount) }
+      {
+        address: taxOutput.address,
+        value: taxOutput.value
+      }
     ]
 
     let { inputs, outputs } = coinSelect(utxos, targets, feePerByte)

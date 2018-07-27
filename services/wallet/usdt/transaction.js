@@ -133,7 +133,7 @@ const createTransaction = async (
     let unsignedhex = await getUnsignedTransaction({
       fee:         estimatedFee,
       testnet:     network.testnet,
-      transactionAmount: BTCAmount,
+      transactionAmount,
       pubKey,
       toAddress,
       fromAddress,
@@ -160,6 +160,7 @@ const createTransaction = async (
       txb.sign(i, keyPair);
     }
     let hex      = txb.build().toHex();
+    console.log('hex: ', hex);
 
     let resultPush = await pushtx(hex).then(e => e.data);
     let { status, pushed } = resultPush;

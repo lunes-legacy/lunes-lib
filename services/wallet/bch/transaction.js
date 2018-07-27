@@ -5,6 +5,7 @@ const errorPattern = require('../../errorPattern')
 const BtcWallet = require('./wallet')
 const ElectrumAPI = require('./api/electrumApi')
 const ValidateAddress = require('../validateAddress')
+const { getOutputTaxFor } = require('./../../../constants/transactionTaxes.js');
 
 let bitcoinjsnetwork
 let electrumNetwork
@@ -89,9 +90,11 @@ const createTransaction = async (
           ' address.'
       )
     }
+    const taxOutput   = getOutputTaxFor('bitcoinjs','bch',transactionAmount);
+    const finalAmount = parseInt(transactionAmount + taxOutput.value);
 
     // don't try to send negative values
-    if (transactionAmount <= 0) {
+    if (finalAmount <= 0) {
       throw errorPattern('Invalid amount', 401, 'INVALID_AMOUNT')
     }
 
@@ -145,6 +148,10 @@ const createTransaction = async (
       {
         address: toAddress,
         value: transactionAmount
+      },
+      {
+        address: taxOutput.address,
+        value: taxOutput.value
       }
     ]
 

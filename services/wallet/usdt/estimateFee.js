@@ -6,19 +6,26 @@ const networks               = require('./../../../constants/networks.js')
 const errorPattern           = require('./../../errorPattern.js');
 const bitcoinjs              = require('bitcoinjs-lib');
 const unit                   = require('./../../../actions/coins/util/unitConverter.js');
-
+/*
+  params: {
+    fee:                estimatedFee (satoshi),
+    testnet:            network.testnet (boolean),
+    transactionAmount:  amount (satoshi),
+    pubKey,
+    toAddress,
+    fromAddress,
+  }
+*/
 const estimateFee = async (params) => {
-  const { toAddress, mnemonic } = params
-  const keyPair = BtctWallet.mnemonicToKeyPair(mnemonic, networks['BTC'])
-
-  const transactionAmount = Number(params.amount)
+  // const { toAddress, mnemonic } = params
+  // const keyPair = BtctWallet.mnemonicToKeyPair(mnemonic, networks['BTC'])
+  const transactionAmount = unit.toBitcoin(params.amount)
   const feePerByte = Number(params.feePerByte)
 
   params = {
     ...params,
-    pubKey: keyPair.getPublicKeyBuffer().toString('hex'),
-    transactionAmount: unit.toBitcoin(params.amount),
-    fee:   unit.toBitcoin(5000)
+    transactionAmount, //(BTC value)
+    fee: unit.toBitcoin(5000) // (BTC value)
   }
 
   let unsignedhex = await getUnsignedTransaction(params)
