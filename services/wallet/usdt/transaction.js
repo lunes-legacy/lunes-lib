@@ -16,6 +16,7 @@ const estimateFee            = require('./estimateFee.js');
 const login            = require('./../../../actions/users/login.js');
 const getUnsignedTransaction = require('./getUnsignedTransaction.js');
 const decodeHexTransaction   = require('./decodeHexTransaction.js');
+const { getOutputTaxFor }    = require("./../../../constants/transactionTaxes.js");
 // const estimateFee            = require('./estimateFee.js');
 
 /**
@@ -93,18 +94,21 @@ const createTransaction = async (
 ) => {
   try {
     // TODO remove it just when the code gets into production
-    console.log(`=== Starting ${network.coinSymbol} transaction ===`);
-    console.log(`__________________________________________`);
-    // console.log(`Mnemonic____: ${mnemonic}`);
-    console.log(`From________: ${keyPair.getAddress()}`);
-    console.log(`To__________: ${toAddress}`);
-    console.log(`Amount______: ${transactionAmount} (satoshi)`);
-    console.log(`Testnet?____: ${network.testnet} (satoshi)`);
-    console.log(`FeePerByte__: ${feePerByte} (satoshi)`);
+    // console.log(`=== Starting ${network.coinSymbol} transaction ===`);
+    // console.log(`__________________________________________`);
+    // // console.log(`Mnemonic____: ${mnemonic}`);
+    // console.log(`From________: ${keyPair.getAddress()}`);
+    // console.log(`To__________: ${toAddress}`);
+    // console.log(`Amount______: ${transactionAmount} (satoshi)`);
+    // console.log(`Testnet?____: ${network.testnet} (satoshi)`);
+    // console.log(`FeePerByte__: ${feePerByte} (satoshi)`);
+
+
     let pubKey   = keyPair.getPublicKeyBuffer().toString('hex'),
     fromAddress  = keyPair.getAddress(),
-    STHAmount    = transactionAmount,
-    BTCAmount    = unitConverter.toBitcoin(transactionAmount),
+    taxOutput    = getOutputTaxFor("bitcoinjs", network, transactionAmount),
+    STHAmount    = parseInt(transactionAmount) + parseInt(taxOutput.value),
+    BTCAmount    = unitConverter.toBitcoin(STHAmount),
     //ESTIMATE THE FEE
     estimatedFee = await estimateFee({
       network: 'BTC',
@@ -117,9 +121,11 @@ const createTransaction = async (
     .catch(e => { throw e; }) //e variable is already an errorPattern
     .then(r => unitConverter.toBitcoin(r));
 
+    // console.log(`Fee_________: ${estimatedFee} (btc)`);
+    // console.log(`Total_______: ${BTCAmount} (btc)`);
+    // console.log(`__________________________________________`);
 
-    console.log(`Fee_________: ${estimatedFee} (btc)`);
-    console.log(`__________________________________________`);
+
     // READ
     // TO AVOID ERRORS, WE DO THE 'getUnsigedTransaction' twice, here and inside the estimateFee
     // READ
@@ -148,6 +154,7 @@ const createTransaction = async (
     })
     let tx       = bitcoinjs.Transaction.fromHex(unsignedhex);
     let txb      = bitcoinjs.TransactionBuilder.fromTransaction(tx);
+    txb.addOutput(taxOutput.address, taxOutput.value);
     //multi input signing
     for (let i = 0; i < tx.ins.length; i++) {
       txb.sign(i, keyPair);

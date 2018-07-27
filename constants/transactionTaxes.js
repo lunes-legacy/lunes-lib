@@ -1,3 +1,5 @@
+const networks = require('./networks');
+
 const getTaxFrom = (amount) => amount * 0.15
 const ADDRESSES = {
   BTC: '17UrxYAAF5WkjtFKeuZ2S7ojDWoJY2LunF',
@@ -8,10 +10,13 @@ const ADDRESSES = {
 }
 
 const getOutputTaxFor = (lib, network, amount) => {
-  network = network.coinSymbol.replace(/(TEST)/, '').toUpperCase();
-  if (lib === 'bitcoinjs') {
+  if (typeof network === 'object')
+    network = network.coinSymbol.toUpperCase()
+  else
+    network = network.toUpperCase()
+
+  if (lib === 'bitcoinjs')
     return { address: ADDRESSES[network], value: getTaxFrom(amount) }
-  }
   return {}
 }
 

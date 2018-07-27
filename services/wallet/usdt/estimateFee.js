@@ -5,6 +5,7 @@ const BtctWallet             = require('./../btc/wallet.js');
 const networks               = require('./../../../constants/networks.js')
 const errorPattern           = require('./../../errorPattern.js');
 const bitcoinjs              = require('bitcoinjs-lib');
+const unit                   = require('./../../../actions/coins/util/unitConverter.js');
 
 const estimateFee = async (params) => {
   const { toAddress, mnemonic } = params
@@ -16,9 +17,8 @@ const estimateFee = async (params) => {
   params = {
     ...params,
     pubKey: keyPair.getPublicKeyBuffer().toString('hex'),
-    transactionAmount: (params.amount / 10**8).toFixed(8),
-    fee:   (5000 / 10**8).toFixed(8),
-    feePerByte
+    transactionAmount: unit.toBitcoin(params.amount),
+    fee:   unit.toBitcoin(5000)
   }
 
   let unsignedhex = await getUnsignedTransaction(params)
@@ -35,20 +35,25 @@ const estimateFee = async (params) => {
   let decoded  = bitcoinjs.Transaction.fromHex(unsignedhex);
 
   if (decoded instanceof Array)
-    throw errorPattern(`Param 'decoded' is an array`,500,'ESTIMATEFEE_ERROR');
+    throw errorPattern(`Variable 'decoded' is an array`,500,'ESTIMATEFEE_ERROR');
   if (!(decoded instanceof Object))
-    throw errorPattern(`Got ${typeof decoded} in 'decoded' param`,500,'ESTIMATEFEE_ERROR');
+    throw errorPattern(`Got ${typeof decoded} from 'decoded' variable`,500,'ESTIMATEFEE_ERROR');
   if (!decoded.ins || !decoded.outs)
     throw errorPattern(`ins or outs attributes were not found in decoded's attribute BTC`,500,'ESTIMATEFEE_ERROR');
   if (decoded.ins < 1 || decoded.outs < 1)
     throw errorPattern(`Not enough number of inputs or outputs`,500,'ESTIMATEFEE_ERROR');
 
+
   let inputs       = decoded.ins.length;
-  let outputs      = decoded.outs.length;
+  console.log('inputs',inputs);
+  let outputs      = decoded.outs.length + 1; //+ 1 to the output tax <<
+  console.log('outputs',outputs);
   let inputSize    = 148;
   let outputSize   = 34;
   let txSize       = (inputs * inputSize) + (outputs * outputSize) + 10 + (inputs/2); //in bytes
+  console.log('txSize',txSize);
   let estimatedFee = parseInt(txSize * feePerByte);
+  console.log('estimatedFee',estimatedFee);
   return estimatedFee;
 }
 
