@@ -3,7 +3,7 @@ const Axios = require('./axios');
 
 const onlyUSDTBalance = (balance) => {
   return balance.filter((obj) => {
-    return obj.symbol.search(/(SP31)/i) !== -1
+    return parseInt(obj.id) === 31
   });
 }
 
@@ -27,8 +27,12 @@ module.exports = async (address, network) => {
 
   let usdt = onlyUSDTBalance(result.data.balance);
 
-  if (usdt.length < 1)
-    throw errorPattern('No one Tether balance was found from this address',500,'BALANCE_ERROR');
+  if (usdt.length < 1) {
+    return {
+      network: network.coinSymbol.toUpperCase(),
+      data: { address, confirmed: 0, unconfirmed: 0 }
+    }
+  }
 
   usdt = usdt[0];
 
