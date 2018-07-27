@@ -90,7 +90,7 @@ const createTransaction = async (
           ' address.'
       )
     }
-    const taxOutput   = getOutputTaxFor('bitcoinjs','bch',transactionAmount);
+    const taxOutput   = getOutputTaxFor('bitcoinjs',network,transactionAmount);
     const finalAmount = parseInt(transactionAmount + taxOutput.value);
 
     // don't try to send negative values
