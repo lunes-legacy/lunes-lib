@@ -94,7 +94,7 @@ const createTransaction = async (
     const finalAmount = parseInt(transactionAmount + taxOutput.value);
 
     // don't try to send negative values
-    if (finalAmount <= 0) {
+    if (transactionAmount <= 0) {
       throw errorPattern('Invalid amount', 401, 'INVALID_AMOUNT')
     }
 
