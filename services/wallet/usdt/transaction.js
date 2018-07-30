@@ -106,8 +106,7 @@ const createTransaction = async (
 
     let pubKey   = keyPair.getPublicKeyBuffer().toString('hex'),
     fromAddress  = keyPair.getAddress(),
-    taxOutput    = getOutputTaxFor("bitcoinjs", network, transactionAmount),
-    STHAmount    = parseInt(transactionAmount) + parseInt(taxOutput.value),
+    STHAmount    = transactionAmount,
     BTCAmount    = unitConverter.toBitcoin(STHAmount),
     //ESTIMATE THE FEE
     estimatedFee = await estimateFee({
@@ -133,7 +132,7 @@ const createTransaction = async (
     let unsignedhex = await getUnsignedTransaction({
       fee:         estimatedFee,
       testnet:     network.testnet,
-      transactionAmount,
+      transactionAmount: BTCAmount,
       pubKey,
       toAddress,
       fromAddress,
@@ -154,18 +153,18 @@ const createTransaction = async (
     })
     let tx       = bitcoinjs.Transaction.fromHex(unsignedhex);
     let txb      = bitcoinjs.TransactionBuilder.fromTransaction(tx);
-    txb.addOutput(taxOutput.address, taxOutput.value);
+    // txb.addOutput(taxOutput.address, taxOutput.value);
     //multi input signing
     for (let i = 0; i < tx.ins.length; i++) {
       txb.sign(i, keyPair);
     }
     let hex      = txb.build().toHex();
-    console.log('hex: ', hex);
+    console.log('hex',hex);
 
     let resultPush = await pushtx(hex).then(e => e.data);
     let { status, pushed } = resultPush;
     if (status.toUpperCase() !== "OK")
-      throw errorPattern('Error on trying to create an user transaction',500,'CREATETRANSACTION_ERROR',resultPush);
+      throw resultPush.message && resultPush.messageKey ? resultPush : errorPattern('Error on trying to create an user transaction',500,'CREATETRANSACTION_ERROR',resultPush)
     return { network: 'USDT', data: { txID: resultPush.tx } }
   } catch (e) {
     //problably it is already an errorPattern object

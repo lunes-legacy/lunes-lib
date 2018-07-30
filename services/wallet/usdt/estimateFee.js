@@ -52,15 +52,11 @@ const estimateFee = async (params) => {
 
 
   let inputs       = decoded.ins.length;
-  console.log('inputs',inputs);
   let outputs      = decoded.outs.length + 1; //+ 1 to the output tax <<
-  console.log('outputs',outputs);
   let inputSize    = 148;
   let outputSize   = 34;
   let txSize       = (inputs * inputSize) + (outputs * outputSize) + 10 + (inputs/2); //in bytes
-  console.log('txSize',txSize);
   let estimatedFee = parseInt(txSize * feePerByte);
-  console.log('estimatedFee',estimatedFee);
   return estimatedFee;
 }
 
