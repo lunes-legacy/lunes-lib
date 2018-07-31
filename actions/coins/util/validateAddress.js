@@ -9,6 +9,8 @@ const WAValidator = require('wallet-address-validator')
  */
 module.exports = (address, currency, testnet) => {
   try {
+    if (currency.search(/(usdt)/i) !== -1)
+      currency = 'BTC';
     return WAValidator.validate(address, currency, testnet ? 'testnet' : 'prod')
   } catch (error) {
     throw error.response ? error.response.data : new Error(error)

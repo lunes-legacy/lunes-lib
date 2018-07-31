@@ -22,8 +22,7 @@ function getNetwork (coin, testnet, object) {
 module.exports = async (coin, address, testnet) => {
   try {
     const network = getNetwork(coin.toUpperCase(), testnet, networks)
-
-    if (network.coinSymbol.toLowerCase() !== 'lns') {
+    if (network.coinSymbol.search(/(lns)|(lunes)/i) === -1) {
       if (!validateAddress(address, network.coinSymbol, network.testnet)) {
         throw errorPattern(
           'Invalid ' + network.coinName + ' Address',
@@ -39,7 +38,6 @@ module.exports = async (coin, address, testnet) => {
     }
 
     let balance
-
     if (
       network.coinSymbol === 'BTC' ||
       network.coinSymbol === 'LTC' ||
@@ -47,6 +45,8 @@ module.exports = async (coin, address, testnet) => {
       network.coinSymbol === 'BCH'
     ) {
       balance = require('./../../../services/wallet/btc/balance')
+    } else if (network.coinSymbol.search(/(usdt)/i) !== -1) {
+      balance = require('./../../../services/wallet/usdt/balance');
     } else {
       balance = require('./../../../services/wallet/' +
         network.coinSymbol.toLowerCase() +

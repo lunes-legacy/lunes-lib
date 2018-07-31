@@ -1,4 +1,6 @@
+const USDTNetworks = require('./../usdt/networks.js');
 module.exports = {
+  ...USDTNetworks,
   BTC: {
     coinSymbol: 'BTC',
     coinName: 'Bitcoin',
