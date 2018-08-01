@@ -27,9 +27,14 @@ module.exports = async (address, network) => {
 
   let usdt = onlyUSDTBalance(result.data.balance);
 
-  if (usdt.length < 1)
-    throw errorPattern('No one Tether balance was found from this address',500,'BALANCE_ERROR');
-
+  if (usdt.length < 1){
+    usdt[0] = {
+      'value' : 0
+      ,'pendingpos' : 0
+      ,'pendingneg' : 0
+    }
+  }
+  
   usdt = usdt[0];
 
   let balance = {

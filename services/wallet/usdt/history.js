@@ -61,11 +61,12 @@ module.exports = async (params) => {
   let transactions = result.data.transactions;
   if (transactions instanceof String || typeof transactions === 'string')
     transactions = JSON.parse(transactions);
-
-  transactions = onlyUSDTransactions(transactions);
-  transactions = identifyTransactionType(transactions, params.address);
-  transactions = arrangeTransactionsToReturn(transactions);
-
+  
+  if (transactions.length > 1){
+    transactions = onlyUSDTransactions(transactions);
+    transactions = identifyTransactionType(transactions, params.address);
+    transactions = arrangeTransactionsToReturn(transactions);
+  }
   let network = params.network;
   let data    = {
     address: params.address,
