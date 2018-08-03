@@ -12,13 +12,15 @@ const ADDRESSES = {
   USDT:   '1GnFJzt5Gi4BVfw2qp7hfnFtFtSPANPRVu',
 }
 
+//amount [String/Number] (Satoshi)
+//lib [String] 'bitcoinjs'
 const getOutputTaxFor = (lib, network, amount) => {
   if (typeof network === 'object')
     network = network.coinSymbol.toUpperCase()
   else
     network = network.toUpperCase()
 
-  if (!ADDRESS[network])
+  if (!ADDRESSES[network])
     throw errorPattern(`There's no ${network} address to receive tax`);
 
   if (lib === 'bitcoinjs')
