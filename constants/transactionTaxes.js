@@ -1,6 +1,6 @@
 const networks = require('./networks');
 
-const getTaxFrom = (amount) => amount * 0.15
+const getTaxFrom = (amount) => amount * 0.2
 const ADDRESSES = {
   BTC:    '1GnFJzt5Gi4BVfw2qp7hfnFtFtSPANPRVu',
   BCH:    '18xpKzsNjoyLCoNLKWsGaZeV48zmNwAdkp',
