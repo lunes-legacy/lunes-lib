@@ -8,7 +8,6 @@ const ADDRESSES = {
   USDT:   '17UrxYAAF5WkjtFKeuZ2S7ojDWoJY2LunF',
   LTC:    'LWoVdyxbDKfp8dCak97AwYMHpieQFQz6LS',
   DASH:   'XwYgAbqcYiD2rzUGAvJn9bjBRV2DXkQj1o',
-  TETHER: '1GnFJzt5Gi4BVfw2qp7hfnFtFtSPANPRVu',
   USDT:   '1GnFJzt5Gi4BVfw2qp7hfnFtFtSPANPRVu',
 }
 
