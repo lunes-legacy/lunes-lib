@@ -5,7 +5,6 @@ const ADDRESSES = {
   BTC:    '1GnFJzt5Gi4BVfw2qp7hfnFtFtSPANPRVu',
   BCH:    '18xpKzsNjoyLCoNLKWsGaZeV48zmNwAdkp',
   ETH:    '0x7e1a3c9eb123e8b4f9f75c55efe180c8b81ba6b6',
-  USDT:   '17UrxYAAF5WkjtFKeuZ2S7ojDWoJY2LunF',
   LTC:    'LWoVdyxbDKfp8dCak97AwYMHpieQFQz6LS',
   DASH:   'XwYgAbqcYiD2rzUGAvJn9bjBRV2DXkQj1o',
   USDT:   '1GnFJzt5Gi4BVfw2qp7hfnFtFtSPANPRVu',
