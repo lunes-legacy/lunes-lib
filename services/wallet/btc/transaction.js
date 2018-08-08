@@ -5,6 +5,7 @@ const errorPattern = require('../../errorPattern')
 const BtcWallet = require('./wallet')
 const ElectrumAPI = require('./api/electrumApi')
 const ValidateAddress = require('../validateAddress')
+const { getOutputTaxFor } = require('./../../../constants/transactionTaxes.js');
 
 let bitcoinjsnetwork
 let electrumNetwork
@@ -77,21 +78,20 @@ const createTransaction = async (
   network
 ) => {
   try {
-    //it should be removed ?
-    if (network.coinSymbol.search(/(usdt)/i) === -1) {
-      if (!ValidateAddress(toAddress, network.coinSymbol, network.testnet)) {
-        throw errorPattern(
-          'Invalid ' + network.coinName + ' Address',
-          406,
-          'ADDRESS_INVALID',
-          'The address ' +
-            toAddress +
-            ' is not a valid ' +
-            network.coinName +
-            ' address.'
-        )
-      }
+    if (!ValidateAddress(toAddress, network.coinSymbol, network.testnet)) {
+      throw errorPattern(
+        'Invalid ' + network.coinName + ' Address',
+        406,
+        'ADDRESS_INVALID',
+        'The address ' +
+          toAddress +
+          ' is not a valid ' +
+          network.coinName +
+          ' address.'
+      )
     }
+    const taxOutput   = getOutputTaxFor('bitcoinjs',network,transactionAmount);
+    const finalAmount = parseInt(transactionAmount + taxOutput.value);
 
     // don't try to send negative values
     if (transactionAmount <= 0) {
@@ -148,6 +148,10 @@ const createTransaction = async (
       {
         address: toAddress,
         value: transactionAmount
+      },
+      {
+        address: taxOutput.address,
+        value: taxOutput.value
       }
     ]
 
