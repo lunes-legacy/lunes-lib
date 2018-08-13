@@ -48,7 +48,7 @@ module.exports = async params => {
       const newCash = await axios.get(newCashUrl)
       const newCashData = newCash.data.market
 
-      const lunesBrl = parseFloat(newCashData.lastPrice)
+      const lunesBrl = parseFloat(newCashData.sellPrice)
       const lunesUsd = lunesBrl / coinValues.BRL // Convert from BRL to USD
       const lunesEur = lunesUsd * coinValues.EUR // Convert from BRL to EUR
 
