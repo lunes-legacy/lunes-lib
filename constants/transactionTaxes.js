@@ -2,12 +2,13 @@ const networks = require('./networks');
 
 const getTaxFrom = (amount) => amount * 0.2
 const ADDRESSES = {
-  BTC:    '1GnFJzt5Gi4BVfw2qp7hfnFtFtSPANPRVu',
-  BCH:    '18xpKzsNjoyLCoNLKWsGaZeV48zmNwAdkp',
-  ETH:    '0x7e1a3c9eb123e8b4f9f75c55efe180c8b81ba6b6',
-  LTC:    'LWoVdyxbDKfp8dCak97AwYMHpieQFQz6LS',
-  DASH:   'XwYgAbqcYiD2rzUGAvJn9bjBRV2DXkQj1o',
-  USDT:   '1GnFJzt5Gi4BVfw2qp7hfnFtFtSPANPRVu',
+  LUNES:  '37zs8HvLx8p52EiNXyDSCk7hQYtan4fAW6c',
+  BTC:    '1MycTYF1haUQZXkK2WVbr9YuJ8ixh2WpQ3',
+  BCH:    '1BNKsChBd3SPejTnoHiBEMGgktP8CNPFtw',
+  ETH:    '0xe872c69376d66357202637d6bc81c137d69271ca',
+  LTC:    'LcffvJPwviuESTw1vQicQ2nayWvRu23Eta',
+  USDT:   '1MycTYF1haUQZXkK2WVbr9YuJ8ixh2WpQ3',
+  DASH:   'XpngUBj4duoKGmpBiJNPjPpmQuMFGkoaGg',
 }
 
 //amount [String/Number] (Satoshi)
