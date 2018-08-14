@@ -47,7 +47,7 @@ const estimateFee = async (params) => {
     throw errorPattern(`Got ${typeof decoded} from 'decoded' variable`,500,'ESTIMATEFEE_ERROR');
   if (!decoded.ins || !decoded.outs)
     throw errorPattern(`ins or outs attributes were not found in decoded's attribute BTC`,500,'ESTIMATEFEE_ERROR');
-  if (decoded.ins < 1 || decoded.outs < 1)
+  if (decoded.ins.length < 1 || decoded.outs.length < 1)
     throw errorPattern(`Not enough number of inputs or outputs`,500,'ESTIMATEFEE_ERROR');
 
 
