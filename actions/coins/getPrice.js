@@ -26,23 +26,25 @@ module.exports = async params => {
       const exratesUrl = 'https://exrates.me/public/coinmarketcap/ticker'
       const newCashUrl = 'https://broker.newc.com.br/api/ticket/market/LUNES'
 
-      // Get LUNES price from Exrates
-      const exrates = await axios.get(exratesUrl)
+      try {
+        // Get LUNES price from Exrates
+        const exrates = await axios.get(exratesUrl)
 
-      // Return exrates values if find lunes in response
-      if (Object.keys(exrates).includes('LNS_BTC')) {
-        const LUNESData = exrates.data.LNS_BTC
+        // Return exrates values if find lunes in response
+        if (Object.keys(exrates).includes('LNS_BTC')) {
+          const LUNESData = exrates.data.LNS_BTC
 
-        // Get USD BTC price
-        let BTCValue = await axios.get(`${endpoint}?fsym=BTC&tsyms=USD,BRL,EUR`)
-        BTCValue = BTCValue.data
+          // Get USD BTC price
+          let BTCValue = await axios.get(`${endpoint}?fsym=BTC&tsyms=USD,BRL,EUR`)
+          BTCValue = BTCValue.data
 
-        const lnsUsdValue = BTCValue.USD * LUNESData.last
-        const lnsEurValue = lnsUsdValue * coinValues.EUR
-        const lnsBrlValue = lnsUsdValue * coinValues.BRL
+          const lnsUsdValue = BTCValue.USD * LUNESData.last
+          const lnsEurValue = lnsUsdValue * coinValues.EUR
+          const lnsBrlValue = lnsUsdValue * coinValues.BRL
 
-        return { 'BRL': lnsBrlValue, 'EUR': lnsEurValue, 'USD': lnsUsdValue }
-      }
+          return { 'BRL': lnsBrlValue, 'EUR': lnsEurValue, 'USD': lnsUsdValue }
+        }
+      } catch (err) { /* Do nothing */ }
 
       // If not find in exrates fetch values from NewCash
       const newCash = await axios.get(newCashUrl)
@@ -50,7 +52,7 @@ module.exports = async params => {
 
       const lunesBrl = parseFloat(newCashData.sellPrice)
       const lunesUsd = lunesBrl / coinValues.BRL // Convert from BRL to USD
-      const lunesEur = lunesUsd * coinValues.EUR // Convert from BRL to EUR
+      const lunesEur = lunesUsd * coinValues.EUR // Convert from USD to EUR
 
       return { 'BRL': lunesBrl, 'EUR': lunesUsd, 'USD': lunesEur }
     }
