@@ -20,7 +20,7 @@
     "ethereumjs-util": "^5.2.0",
     "ethereumjs-wallet": "^0.6.0",
     "lodash": "^4.17.4",
-    "lunes-js-api": "^0.31.2",
+    "lunes-js-api": "0.31.2",
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
     "satoshi-bitcoin": "^1.0.4",
