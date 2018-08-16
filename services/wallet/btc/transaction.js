@@ -213,6 +213,9 @@ const broadcast = async signedTxHex => {
   }`
 
   const serverResponse = await axios.get(url)
+  .catch(e => {
+    throw e.message && e.status ? e : errorPattern(e.message || 'Error on broadcast transaction',500,'BROADCAST_ERROR',e)
+  })
   return serverResponse.data
 }
 
