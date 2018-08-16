@@ -168,14 +168,15 @@ const createTransaction = async (
       },
       {
         address: taxOutput.address,
-        value: taxOutput.value
+        value: parseInt(taxOutput.value)
       }
     ]
 
     let { inputs, outputs } = coinSelect(utxos, targets, feePerByte)
     // .inputs and .outputs will be undefined if no solution was found
     if (!inputs || !outputs) {
-      throw errorPattern('Balance too small.', 401, 'TRANSACTION_LOW_BALANCE')
+      // throw errorPattern('Balance too small.', 401, 'TRANSACTION_LOW_BALANCE')
+      throw errorPattern(`Insufficient funds, you have '${totalInputsAmount}' and trying to send '${transactionAmount}'`, 401, 'TRANSACTION_LOW_BALANCE')
     }
 
     // 4. build the transaction
