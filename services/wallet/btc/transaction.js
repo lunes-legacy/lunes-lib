@@ -166,10 +166,11 @@ const createTransaction = async (
         address: toAddress,
         value: parseInt(transactionAmount)
       },
-      {
-        address: taxOutput.address,
-        value: parseInt(taxOutput.value)
-      }
+      //TODO FIX IT BEFORE UNCOMMENT
+      // {
+      //   address: taxOutput.address,
+      //   value: parseInt(taxOutput.value)
+      // }
     ]
 
     let { inputs, outputs } = coinSelect(utxos, targets, feePerByte)
