@@ -204,10 +204,6 @@ const createTransaction = async (
 
     // 6. broadcast
     const broadcastResult = await broadcast(txHex)
-    .catch(e => {
-      console.error('CREATE_BROADCAST_CATCH_PROMISE', e)
-      throw e
-    })
 
     const result = {
       network: network.coinSymbol,
@@ -217,7 +213,6 @@ const createTransaction = async (
     }
     return result
   } catch (error) {
-    console.error('LIB_CREATETX_CATCH', error)
     throw errorPattern(
       error.message || 'Error creating transaction',
       error.status || 500,
@@ -250,10 +245,7 @@ const broadcast = async signedTxHex => {
   }`
 
   const serverResponse = await axios.get(url)
-  .catch(e => {
-    console.error('BROADCAST_AXIOS_CATCH_ONPROMISE',e)
-    throw e.message && e.status ? e : errorPattern(e.message || 'Error on broadcast transaction',500,'BROADCAST_ERROR',e)
-  })
+
   return serverResponse.data
 }
 
