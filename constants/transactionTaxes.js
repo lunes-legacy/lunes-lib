@@ -10,20 +10,39 @@ const ADDRESSES = {
   USDT:   '1MycTYF1haUQZXkK2WVbr9YuJ8ixh2WpQ3',
   DASH:   'XpngUBj4duoKGmpBiJNPjPpmQuMFGkoaGg',
 }
+const TESTADDRESSES = {
+  LUNES: '37dAVxk6G5jgBbcAHDv1RThcu4AEhhGJXHo',
+  BTC:   'mw3m9ZwSydi1zHZehBZRVdRRHGMjLPDwHv',
+  BCH:   'mw3m9ZwSydi1zHZehBZRVdRRHGMjLPDwHv',
+  ETH:   '0xe6bf40e081edb415e3ed0f68691b3e11c64cd6ce',
+  LTC:   'mw3m9ZwSydi1zHZehBZRVdRRHGMjLPDwHv',
+  USDT:  'mw3m9ZwSydi1zHZehBZRVdRRHGMjLPDwHv',
+  DASH:  'ybrFhiaoZs9RhrcAQMDfZGKEXtq629b7LT',
+}
 
 //amount [String/Number] (Satoshi)
 //lib [String] 'bitcoinjs'
 const getOutputTaxFor = (lib, network, amount) => {
-  if (typeof network === 'object')
-    network = network.coinSymbol.toUpperCase()
-  else
-    network = network.toUpperCase()
+  if (network && network.constructor.name === 'String')
+    network = networks[network.toUpperCase()]
+  if (!network)
+    throw errorPattern('Network param is missing')
 
-  if (!ADDRESSES[network])
-    throw errorPattern(`There's no ${network} address to receive tax`);
+  testnet = network.testnet
+  let symbol = network.coinSymbol
 
-  if (lib === 'bitcoinjs')
-    return { address: ADDRESSES[network], value: getTaxFrom(amount) }
+  console.warn('NETWORK_COIN_SYMBOL::', symbol)
+  if (testnet) {
+    if (!TESTADDRESSES[symbol])
+      throw errorPattern(`There's no ${network} address to receive tax`);
+    if (lib === 'bitcoinjs')
+      return { address: TESTADDRESSES[symbol], value: getTaxFrom(amount) }
+  } else {
+    if (!ADDRESSES[symbol])
+      throw errorPattern(`There's no ${network} address to receive tax`);
+    if (lib === 'bitcoinjs')
+      return { address: ADDRESSES[symbol], value: getTaxFrom(amount) }
+  }
   return {}
 }
 

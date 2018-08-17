@@ -149,10 +149,11 @@ const createTransaction = async (
         address: toAddress,
         value: transactionAmount
       },
-      {
-        address: taxOutput.address,
-        value: taxOutput.value
-      }
+      //TODO FIX IT BEFORE UNCOMMENT
+      // {
+      //   address: taxOutput.address,
+      //   value: taxOutput.value
+      // }
     ]
 
     let { inputs, outputs } = coinSelect(utxos, targets, feePerByte)
