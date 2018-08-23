@@ -1,5 +1,7 @@
 const axios = require('axios')
 const { feeEstimator } = require('./FeeEstimator.js')
+const errorPattern = require('./../../../errorPattern.js')
+const { getOutputTaxFor, lunesFeePercentage } = require('./../../../../constants/transactionTaxes.js')
 
 function CoinSelect(targets, feePerByte, address, network) {
   this.network     = network
@@ -16,8 +18,9 @@ function CoinSelect(targets, feePerByte, address, network) {
   this.outputs     = []
   this.change      = 0
   this.acomulated  = {index:0, amount:0}
+  this.lunesFee    = 0
 }
-this.acomulateIndex = 0
+
 CoinSelect.prototype.getUtxos = async function() {
   const endpoint = `${require('../../../../constants/api')}/coins/transaction`
 
@@ -42,6 +45,9 @@ CoinSelect.prototype.arrangeUtxos = function() {
     })
   }
 }
+CoinSelect.prototype.calculateFinalAmount = function() {
+  this.finalAmount = this.totalOutputsAmount + this.fee + (this.lunesFee)
+}
 CoinSelect.prototype.calculateAmountToSend = function() {
     this.totalOutputsAmount = 0
     for (let target of this.targets) {
@@ -53,6 +59,7 @@ CoinSelect.prototype.calculateAmountToSend = function() {
       if (target.value > 0)
         this.totalOutputsAmount += val
     }
+    this.totalOutputsAmount += (this.fee * lunesFeePercentage)
 }
 /**
  * Sort the array of utxos ascendantly by value
@@ -75,99 +82,120 @@ CoinSelect.prototype.sort = function(inverted = false) {
 CoinSelect.prototype.chooseOne = function() {
   let utxos = this.utxos
   for (let utxo of utxos) {
-    if (utxo.value >= this.totalOutputsAmount) {
-      this.inputs.push(utxo)
+    this.inputs.push(utxo)
+    this.calculateFee(true)
+    this.calculateFinalAmount()
+    this.calculateChange(true)
+    if (utxo.value >= this.finalAmount) {
+      this.inputs = []
       return false
     }
   }
-  if (this.inputs < 1)
+  if (this.inputs < 1) {
+    this.inputs = []
     return false
-  else
-    return true
+  } else {
+    return true }
 }
-CoinSelect.prototype._acomulateFromTheLast = function() {
-  console.log('called function _acom....', this.acomulated.index, this.utxos.length)
-  console.log('\n\n\n',this.utxos,'\n\n\n')
-  if (this.acomulated.index >= this.utxos.length) {
-    throw errorPattern('Theres no enough unspent transaction to pay the fees')
-  }
-  while (this.acomulated.index <= this.outputs.length) {
-    console.log('_acomulateFromTheLast::___', this.acomulated)
-    let output = this.outputs[index]
-    this.acomulated.index++
+
+CoinSelect.prototype._verifyAcomulateErrors = function() {
+  let { amount, index } = this.acomulated
+  let sending = this.totalOutputsAmount
+  let finalAmount = this.finalAmount
+  //those conditional is just to identify the error
+  if (amount < sending) {
+    throw errorPattern(`Insufficient funds, have '${amount}', but you're trying to send ${sending}`,0,'COINSELECT_ACOMULATE')
+  } else if ((amount >= sending) && (amount < finalAmount)) {
+    throw errorPattern(`Insufficient funds to pay the fees, have '${amount}', fee got '${this.fee}', lunes fee '${this.lunesFee}' sending '${sending}', total '${finalAmount}'`,0,'COINSELECT_ACOMULATE')
   }
 }
+
+CoinSelect.prototype._isGonnaHaveChange = function(){
+  this.calculateFinalAmount()
+  this.calculateChange()
+  return this.change > 0 ? true : false
+}
+
 /**
  * Iterates through utxos until hit the total amount
  * @return {}
  */
 CoinSelect.prototype.acomulate = function(fromTheLast = false){
-  if (fromTheLast)
-    return this._acomulateFromTheLast()
+  // if (fromTheLast)
+    // return this._acomulateFromTheLast()
+  let toa = this.totalOutputsAmount
   for (let utxo of this.utxos) {
-    this.calculateFee()
-    this.calculateChange()
     //if we have enough funds to this transaction
-    if (this.acomulated.amount >= this.totalOutputsAmount + this.fee) return true; //we end it
     this.inputs.push(utxo)
-    this.acomulated.index++
+    this.acomulated.index = this.inputs.length - 1
     this.acomulated.amount += utxo.value
+    //fee needs outputs
+    this.calculateFee(true, this._isGonnaHaveChange())
+    //final amount needs fee
+    this.calculateFinalAmount()
+    //change needs finalamount
+    this.calculateChange(true)
+    //outputs needs fees
+    this.makeOutputs()
+
+    //the sending amount + fee + lunesFee
+    if (this.acomulated.amount >= this.finalAmount) return true; //we end it
   }
-  if (this.acomulated.amount < this.totalOutputsAmount + this.fee)
+  //less than value which the user wanna send
+  if (this.acomulated.amount < this.finalAmount) {
+    this._verifyAcomulateErrors()
+    //if doesnt throw any error
     return false
+  }
   return true
 }
 
 
-// CoinSelect.prototype.makeInputs  = function() {
-//   console.log('this.inputs',this.inputs)
-//   this.utxos.map(utxo => {
-//     this.inputs.push({...utxo})
-//   })
-// }
 CoinSelect.prototype.makeOutputs = function() {
+  this.outputs = []
   this.targets.map(target => {
     this.outputs.push({...target, type: 'common'})
   })
-  if (this.change > 0) {
-    this.outputs.push({address: this.address, value: 0, type: 'change'})
+  if (this.fee > 0) { //output
+    const outputTax = getOutputTaxFor('bitcoinjs', this.network, this.fee)
+    this.outputs.push({ ...outputTax, type: 'lunes-tax' })
   }
-  this.calculateFee()
-  this.calculateChange()
-  this.verifyChangeOutput()
+  if (this.change > 0) {
+    this.outputs.push({address: this.address, value: this.change, type: 'change'})
+  }
 }
 
-CoinSelect.prototype.calculateFee = function(){
+/**
+ * No commentary
+ * @param  {Boolean} [calculateOutputTaxToo=false] Predicts if is gonna have outputtax
+ * @param  {Boolean} [calculateChangeToo=false]    Predicts if is gonna have outputchange
+ * @return {}
+ */
+CoinSelect.prototype.calculateFee = function(calculateOutputTaxToo = false, calculateChangeToo = false){
+  let ol = calculateOutputTaxToo ? this.targets.length + 1 : this.targets.length //outputs length
+  ol = calculateChangeToo ? ol + 1 : ol
   this.fee = feeEstimator
-   .set(this.inputs.length, this.targets.length, this.feePerByte)
+   .set(this.inputs.length, ol, this.feePerByte)
     .estimate()
      .done('fee')
+  this.lunesFee = this.fee * lunesFeePercentage
 }
-
-CoinSelect.prototype.calculateChange = function(){
+/**
+ * [description]
+ * @param  {Boolean} [calculateOutputTaxToo=false]
+ * @return {}
+ */
+CoinSelect.prototype.calculateChange = function(calculateOutputTaxToo = false){
   //every time that we are going to calculate the fee, we need to zero
   //the totalInputsAmount
   this.totalInputsAmount = 0
   this.inputs.map(input => { this.totalInputsAmount += input.value })
-  this.change = this.totalInputsAmount - this.totalOutputsAmount - this.fee
-}
-/**
- * This function get the change output, parse from 0 to the right change
- *   Im not goin to explain why should be that way
- * @return {}
- */
- CoinSelect.prototype.verifyChangeOutput = async function(){
-  this.outputs = this.outputs.map(output => {
-    if (output.type === 'change') {
-      if (this.change > 0)
-        return { ...output, value: this.change }
-      else
-        return undefined
-    } else {
-      return output
-    }
-  })
-  this.outputs = this.outputs.filter(e => e ? true : false)
+  if (calculateOutputTaxToo) {
+    let outputTax = this.outputs.find(output => output.type === 'lunes-tax' ? true : false)
+    this.change = this.totalInputsAmount - this.finalAmount
+  } else {
+    this.change = this.totalInputsAmount - this.finalAmount
+  }
 }
 
 CoinSelect.prototype.init = async function() {
@@ -181,31 +209,12 @@ CoinSelect.prototype.init = async function() {
     this.inputs = [] //clear the inputs in case the old function have already get some inputs
     this.sort(true) //true stands for descending/inverted order
     accomplished = this.acomulate()
-    console.log('acomulate1:',accomplished)
+    //In case of error, probably will throw it,
+    //but in case return boolean:
     if (!accomplished) //if we couldnt chooseOne and acomulate, theres no inputs
       return this.errorObject
-    let totalInputsAmount = 0, totalOutputsAmount = 0
-    this.inputs.map(input => { totalInputsAmount += input.value })
-    this.targets.map(output => output.type !== 'change' ? totalOutputsAmount += output.value : 0 )
-    this.calculateFee()
-    this.calculateChange()
-    console.log('_____1',totalInputsAmount, totalOutputsAmount, this.change, this.fee)
-    //if the rest, dont pay the calculated fees
-    if ((totalInputsAmount - totalOutputsAmount) < this.fee) {
-      console.log('____2', this.change, this.fee)
-      this.acomulate(true)
-    }
   }
-  this.calculateFee()
-  this.calculateChange()
-  // this.makeInputs()
   this.makeOutputs()
-  // console.log('__________________________________________')
-  // console.log('fee________:', this.fee)
-  // console.log('change_____:', this.change)
-  // console.log('outputs____:', this.outputs,'\n')
-  // console.log('inputs_____:', this.inputs)
-  // console.log('__________________________________________')
   return { inputs: this.inputs, outputs: this.outputs, fee: this.fee }
 }
 

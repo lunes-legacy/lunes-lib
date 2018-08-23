@@ -1,13 +1,16 @@
 const _ = require('lodash')
 const bitcoinjs = require('bitcoinjs-lib')
-const coinSelect = require('coinselect')
+// let coinSelect = require('coinselect')
 const errorPattern = require('../../errorPattern')
 const BtcWallet = require('./wallet')
 const ElectrumAPI = require('./api/electrumApi')
 const ValidateAddress = require('../validateAddress')
+const axios = require('axios')
 const { getOutputTaxFor } = require('./../../../constants/transactionTaxes.js');
 
 const util = require('util')
+
+const { CoinSelect }   = require('../Utils/btcFamily/CoinSelect.js')
 
 let bitcoinjsnetwork
 let electrumNetwork
@@ -112,72 +115,19 @@ const createTransaction = async (
     // senderAddress
     const fromAddress = keyPair.getAddress()
 
-    // 1. find utxos
-    const utxoResult = await findUTXOs(fromAddress)
-
-    if (utxoResult.length === 0) {
-      throw errorPattern(
-        'Sender has no spendable transactions.',
-        401,
-        'TRANSACTION_EMPTY_UTXO'
-      )
-    }
-
-    const utxos = []
-
-    // 2. convert utxos
-    // TODO: test with unconfirmed utxos
-    utxoResult.forEach(utxo => {
-      if (utxo.height !== 0) {
-        const aux = convertUTXO(utxo)
-        utxos.push(aux)
-      }
-    })
-
-    // address with unconfirmed output
-    if (utxos.length === 0) {
-      throw errorPattern(
-        'Sender balance with not enough confirmations.',
-        401,
-        'TRANSACTION_UNCONFIRMED_BALANCE'
-      )
-    }
-
-    let totalInputs       = 0
-    let totalInputsAmount = 0
-    let fee               = 0
-    for (let utxo of utxos) {
-      if (totalInputsAmount >= transactionAmount) break
-      totalInputs++
-      totalInputsAmount += utxo.value
-    }
-    if (totalInputsAmount < transactionAmount)
-      throw errorPattern(`Insufficient funds, you're trying to send '${transactionAmount}', but you have '${totalInputsAmount}'`,500,'CREATE_TRANSACTION_ERROR')
-    fee = estimateTxSize(totalInputs) * feePerByte
-    const taxOutput = getOutputTaxFor('bitcoinjs',network,fee)
-    console.log('taxOutput',JSON.stringify(taxOutput))
-    console.log('fee______',fee)
-    console.log('totalIA__',totalInputsAmount)
-    console.log('feePerB__',feePerByte)
-    console.log('txAmount_',transactionAmount)
-    // 3. set target and ammount
     const targets = [
       {
         address: toAddress,
         value: parseInt(transactionAmount)
-      },
-      //TODO FIX IT BEFORE UNCOMMENT
-      // {
-      //   address: taxOutput.address,
-      //   value: parseInt(taxOutput.value)
-      // }
+      }
     ]
+    const coinSelect = new CoinSelect(targets, feePerByte, fromAddress, network)
+    let { outputs, inputs, fee } = await coinSelect.init()
 
-    let { inputs, outputs } = coinSelect(utxos, targets, feePerByte)
     // .inputs and .outputs will be undefined if no solution was found
     if (!inputs || !outputs) {
       // throw errorPattern('Balance too small.', 401, 'TRANSACTION_LOW_BALANCE')
-      throw errorPattern(`Insufficient funds, you have '${totalInputsAmount}' and trying to send '${transactionAmount}'`, 401, 'TRANSACTION_LOW_BALANCE')
+      throw errorPattern(`Transaction couldn't be made. Total inputs amount: '${totalInputsAmount}', total outputs amount: '${transactionAmount}'`, 401, 'TRANSACTION_LOW_BALANCE')
     }
 
     // 4. build the transaction
@@ -192,10 +142,16 @@ const createTransaction = async (
 
       txb.addOutput(output.address, output.value)
     })
+
     // 4.2 inputs
     inputs.forEach(input => {
-      txb.addInput(input.txId, input.vout)
+      txb.addInput(input.txid, input.vout)
     })
+    // let tx = txb.buildIncomplete()
+    // console.log('_______________tx_______________')
+    // console.log(tx)
+
+    //return  //TODO JUST REMOVE IT!
 
     // 5. sign
     txb = sign(txb, keyPair)
@@ -221,23 +177,23 @@ const createTransaction = async (
     )
   }
 }
+
 /**
- * This function takes the number of inputs and aply the math to discover the
+ * This function takes the number of inputs and apply the math to discover the
  *   size of an transaction based upon the inputs and outputs value
  * @param  {String|Number} inputs Amounts of inputs in the transaction
  * @return {Number} Returns the size of the transaction
  */
-const estimateTxSize = inputs => {
-  const transactionSize = inputs * 146 + 2 * 34 + 10 + inputs
-  return transactionSize
-}
+// const estimateTxSize = inputs => {
+//   const transactionSize = inputs * 146 + 2 * 34 + 10 + inputs
+//   return transactionSize
+// }
 /**
  * Broadcast the transaction to the lunes-server
- * @param  {[type]}  signedTxHex The hex of the signed transaction
+ * @param  {String}  signedTxHex The hex of the signed transaction
  * @return {Promise}
  */
 const broadcast = async signedTxHex => {
-  const axios = require('axios')
   const endpoint = `${require('../../../constants/api')}/coins/transaction`
 
   let url = `${endpoint}/${electrumNetwork.coinSymbol}/broadcast/${signedTxHex}?testnet=${
@@ -245,40 +201,38 @@ const broadcast = async signedTxHex => {
   }`
 
   const serverResponse = await axios.get(url)
+  .catch(e => {
+    if (e.response.data) {
+      let {message,status,messageKey,logMessage} = e.response.data
+      throw errorPattern(message,status,messageKey,logMessage) }
+    if (e.message && e.status)
+      throw errorPattern(e.messsage || 'Unknown find broadcast tx error', e.status || 500, 'BROADCAST_TRANSACTION_ERROR', e.logMessage || '')
+  })
 
   return serverResponse.data
 }
 
-const findUTXOs = async address => {
-  const axios = require('axios')
-  const endpoint = `${require('../../../constants/api')}/coins/transaction`
+// const findUTXOs = async address => {
+//
+// }
 
-  let url = `${endpoint}/${electrumNetwork.coinSymbol}/findUTXOs/${address}?testnet=${
-    electrumNetwork.testnet
-  }`
-
-  const serverResponse = await axios.get(url)
-
-  return serverResponse.data
-}
-
-const convertUTXO = utxo => {
-  try {
-    const newUtxo = {
-      txId: utxo.tx_hash,
-      vout: utxo.tx_pos,
-      value: utxo.value
-    }
-    return newUtxo
-  } catch (error) {
-    throw errorPattern(
-      error.message || 'Error converting utxos',
-      error.status || 500,
-      error.messageKey || 'CONVERT_UTXOS_ERROR',
-      error.logMessage || error.stack || ''
-    )
-  }
-}
+// const convertUTXO = utxo => {
+//   try {
+//     const newUtxo = {
+//       txId: utxo.tx_hash,
+//       vout: utxo.tx_pos,
+//       value: utxo.value
+//     }
+//     return newUtxo
+//   } catch (error) {
+//     throw errorPattern(
+//       error.message || 'Error converting utxos',
+//       error.status || 500,
+//       error.messageKey || 'CONVERT_UTXOS_ERROR',
+//       error.logMessage || error.stack || ''
+//     )
+//   }
+// }
 
 const sign = (tx, keyPair) => {
   try {
@@ -297,8 +251,8 @@ const sign = (tx, keyPair) => {
 module.exports = {
   startUserTransaction,
   createTransaction,
-  findUTXOs,
+  // findUTXOs,
   broadcast,
-  convertUTXO,
+  // convertUTXO,
   sign
 }
