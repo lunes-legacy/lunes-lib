@@ -1,6 +1,7 @@
 const networks = require('./networks');
 
-const getTaxFrom = (amount) => amount * 0.2
+const lunesFeePercentage = 0.2
+const getTaxFrom = (amount) => amount * lunesFeePercentage
 const ADDRESSES = {
   LUNES:  '37zs8HvLx8p52EiNXyDSCk7hQYtan4fAW6c',
   BTC:    '1MycTYF1haUQZXkK2WVbr9YuJ8ixh2WpQ3',
@@ -31,7 +32,6 @@ const getOutputTaxFor = (lib, network, amount) => {
   testnet = network.testnet
   let symbol = network.coinSymbol
 
-  console.warn('NETWORK_COIN_SYMBOL::', symbol)
   if (testnet) {
     if (!TESTADDRESSES[symbol])
       throw errorPattern(`There's no ${network} address to receive tax`);
@@ -47,5 +47,6 @@ const getOutputTaxFor = (lib, network, amount) => {
 }
 
 module.exports = {
-  getOutputTaxFor
+  getOutputTaxFor,
+  lunesFeePercentage
 }
