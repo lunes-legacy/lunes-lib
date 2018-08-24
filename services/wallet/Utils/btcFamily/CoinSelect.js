@@ -86,8 +86,12 @@ CoinSelect.prototype.chooseOne = function() {
     this.calculateFee(true, this._isGonnaHaveChange())
     this.calculateFinalAmount()
     this.calculateChange(true)
-    if (utxo.value < this.finalAmount)
+    if (utxo.value < this.finalAmount) {
       this.inputs = []
+      continue
+    }
+    if (this.inputs.length > 0)
+      break
   }
   if (this.inputs < 1) {
     this.inputs = []
@@ -203,7 +207,7 @@ CoinSelect.prototype.init = async function() {
     this.sort(true) //true stands for descending/inverted order
     accomplished = this.acomulate()
     //In case of error, probably will throw it,
-    //but in case return boolean:
+    //but in case it return boolean:
     if (!accomplished) //if we couldnt chooseOne and acomulate, theres no inputs
       return this.errorObject
   }
