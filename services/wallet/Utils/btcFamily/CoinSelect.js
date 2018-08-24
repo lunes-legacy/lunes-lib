@@ -46,7 +46,7 @@ CoinSelect.prototype.arrangeUtxos = function() {
   }
 }
 CoinSelect.prototype.calculateFinalAmount = function() {
-  this.finalAmount = this.totalOutputsAmount + this.fee + (this.lunesFee)
+  this.finalAmount = parseInt(this.totalOutputsAmount + this.fee + (this.lunesFee))
 }
 CoinSelect.prototype.calculateAmountToSend = function() {
     this.totalOutputsAmount = 0
@@ -59,7 +59,9 @@ CoinSelect.prototype.calculateAmountToSend = function() {
       if (target.value > 0)
         this.totalOutputsAmount += val
     }
-    this.totalOutputsAmount += (this.fee * lunesFeePercentage)
+    //TODO review it
+    //the fee wasnt calculated yet, this is why it is commented
+    // this.totalOutputsAmount += (this.fee * lunesFeePercentage)
 }
 /**
  * Sort the array of utxos ascendantly by value
@@ -154,8 +156,8 @@ CoinSelect.prototype.makeOutputs = function() {
     this.outputs.push({...target, type: 'common'})
   })
   if (this.fee > 0) { //output
-    const outputTax = getOutputTaxFor('bitcoinjs', this.network, this.fee)
-    this.outputs.push({ ...outputTax, type: 'lunes-tax' })
+    const output = getOutputTaxFor('bitcoinjs', this.network, this.fee)
+    this.outputs.push({ address: output.address, value: parseInt(output.value), type: 'lunes-tax' })
   }
   if (this.change > 0) {
     this.outputs.push({address: this.address, value: this.change, type: 'change'})
@@ -175,7 +177,7 @@ CoinSelect.prototype.calculateFee = function(calculateOutputTaxToo = false, calc
    .set(this.inputs.length, ol, this.feePerByte)
     .estimate()
      .done('fee')
-  this.lunesFee = this.fee * lunesFeePercentage
+  this.lunesFee = parseInt(this.fee * lunesFeePercentage)
 }
 /**
  * [description]
