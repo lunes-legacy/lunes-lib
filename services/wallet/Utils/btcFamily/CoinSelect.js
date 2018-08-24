@@ -95,20 +95,20 @@ CoinSelect.prototype.chooseOne = function() {
     if (this.inputs.length > 0)
       break
   }
-  //TODO we have to test it, it is hard to do, but we have to
-  //if user is sending all his balance, but the frontend doesnt subtracted
-  //the fees, we have to stop the code as an error and return a fee
-  if (this.inputs[0].value === this.totalOutputsAmount) {
-    this.errorObject.fee = this.fee
-    return undefined
-  }
   //this is when the above forloop doesnt grab any input which can afford
   //those outputs
   if (this.inputs.length < 1) {
     this.inputs = []
     return false
   } else {
-    return true }
+    //If user is sending all his balance, but the frontend doesnt subtracted
+    //the fees, we have to stop the code as an error and return a fee
+    if (this.inputs[0].value === this.totalOutputsAmount) {
+      this.errorObject.fee = this.fee
+      return undefined
+    }
+    return true
+  }
 }
 
 CoinSelect.prototype._verifyAcomulateErrors = function() {
