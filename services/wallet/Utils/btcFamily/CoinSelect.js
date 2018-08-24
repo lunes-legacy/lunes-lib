@@ -83,13 +83,11 @@ CoinSelect.prototype.chooseOne = function() {
   let utxos = this.utxos
   for (let utxo of utxos) {
     this.inputs.push(utxo)
-    this.calculateFee(true)
+    this.calculateFee(true, this._isGonnaHaveChange())
     this.calculateFinalAmount()
     this.calculateChange(true)
-    if (utxo.value >= this.finalAmount) {
+    if (utxo.value < this.finalAmount)
       this.inputs = []
-      return false
-    }
   }
   if (this.inputs < 1) {
     this.inputs = []
@@ -125,17 +123,12 @@ CoinSelect.prototype.acomulate = function(fromTheLast = false){
     // return this._acomulateFromTheLast()
   let toa = this.totalOutputsAmount
   for (let utxo of this.utxos) {
-    //if we have enough funds to this transaction
     this.inputs.push(utxo)
     this.acomulated.index = this.inputs.length - 1
     this.acomulated.amount += utxo.value
-    //fee needs outputs
     this.calculateFee(true, this._isGonnaHaveChange())
-    //final amount needs fee
     this.calculateFinalAmount()
-    //change needs finalamount
     this.calculateChange(true)
-    //outputs needs fees
     this.makeOutputs()
 
     //the sending amount + fee + lunesFee
@@ -215,6 +208,7 @@ CoinSelect.prototype.init = async function() {
       return this.errorObject
   }
   this.makeOutputs()
+
   return { inputs: this.inputs, outputs: this.outputs, fee: this.fee }
 }
 
