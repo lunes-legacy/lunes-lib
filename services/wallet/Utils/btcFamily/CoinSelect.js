@@ -95,7 +95,16 @@ CoinSelect.prototype.chooseOne = function() {
     if (this.inputs.length > 0)
       break
   }
-  if (this.inputs < 1) {
+  //TODO we have to test it, it is hard to do, but we have to
+  //if user is sending all his balance, but the frontend doesnt subtracted
+  //the fees, we have to stop the code as an error and return a fee
+  if (this.inputs[0].value === this.totalOutputsAmount) {
+    this.errorObject.fee = this.fee
+    return undefined
+  }
+  //this is when the above forloop doesnt grab any input which can afford
+  //those outputs
+  if (this.inputs.length < 1) {
     this.inputs = []
     return false
   } else {
@@ -104,8 +113,13 @@ CoinSelect.prototype.chooseOne = function() {
 
 CoinSelect.prototype._verifyAcomulateErrors = function() {
   let { amount, index } = this.acomulated
-  let sending = this.totalOutputsAmount
-  let finalAmount = this.finalAmount
+  let sending           = this.totalOutputsAmount
+  let finalAmount       = this.finalAmount
+
+  if (this.acomulated.amount === this.totalOutputsAmount) {
+    this.errorObject.fee = this.fee
+    return true
+  }
   //those conditional is just to identify the error
   if (amount < sending) {
     throw errorPattern(`Insufficient funds, have '${amount}', but you're trying to send ${sending}`,0,'COINSELECT_ACOMULATE')
@@ -204,6 +218,9 @@ CoinSelect.prototype.init = async function() {
   this.sort() //no params passed, doing ascendant
   this.calculateAmountToSend() //stores at totalOutputsAmount
   let accomplished = this.chooseOne()
+  //this is when theres no proper answer, so we just have to return the fees
+  if (accomplished === undefined)
+    return this.errorObject
   if (!accomplished) {
     this.inputs = [] //clear the inputs in case the old function have already get some inputs
     this.sort(true) //true stands for descending/inverted order
