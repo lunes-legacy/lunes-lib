@@ -147,11 +147,6 @@ const createTransaction = async (
     inputs.forEach(input => {
       txb.addInput(input.txid, input.vout)
     })
-    // let tx = txb.buildIncomplete()
-    // console.log('_______________tx_______________')
-    // console.log(tx)
-
-    //return  //TODO JUST REMOVE IT!
 
     // 5. sign
     txb = sign(txb, keyPair)
