@@ -2,8 +2,10 @@ const axios = require('axios')
 const { feeEstimator } = require('./FeeEstimator.js')
 const errorPattern = require('./../../../errorPattern.js')
 const { getOutputTaxFor, lunesFeePercentage } = require('./../../../../constants/transactionTaxes.js')
+const networks = require('./../../../../constants/networks.js')
 
 function CoinSelect(targets, feePerByte, address, network) {
+  // this.network     = this._setNetwork(network)
   this.network     = network
   this.errorObject = {outputs: undefined, inputs: undefined, fee: undefined}
   this.tmpUtxos    = [] //it will comes from the lunes-server ecl
@@ -21,9 +23,27 @@ function CoinSelect(targets, feePerByte, address, network) {
   this.lunesFee    = 0
 }
 
+CoinSelect.prototype._setNetwork = async function(network) {
+  if (!network)
+    throw errorPattern(`Network is a falsy value, got: '${network}'`,500,'COINSELECT_ERROR')
+  if (network.constructor.name === 'String') {
+    if (this.testnet === undefined)
+      throw errorPattern(`You're trying to set a network from a string, at least set the network type`,500,'COINSELECT_ERROR')
+    if (this.testnet === true)
+      network = networks[(network.toUpperCase())+'TESTNET']
+    else
+      network = networks[(network.toUpperCase())]
+  }
+  if (network.constructor.name === 'Object')
+    return network
+  return network
+}
 CoinSelect.prototype.getUtxos = async function() {
   const endpoint = `${require('../../../../constants/api')}/coins/transaction`
-
+  if (!this.network)
+    throw errorPattern(`Network attribute is not defined, got ${this.network}`,500,'COINSELECT_GETUTXOS_ERROR')
+  if (this.network.constructor.name !== 'Object')
+    throw errorPattern(`Network attribute is not an object, got ${this.network}`,500,'COINSELECT_GETUTXOS_ERROR')
   let url = `${endpoint}/${this.network.coinSymbol}/findUTXOs/${this.address}?testnet=${
     this.network.testnet
   }`
