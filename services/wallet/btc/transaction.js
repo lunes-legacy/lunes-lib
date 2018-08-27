@@ -123,12 +123,12 @@ const createTransaction = async (
     ]
     const coinSelect = new CoinSelect(targets, feePerByte, fromAddress, network)
     let { outputs, inputs, fee } = await coinSelect.init()
+      .catch(e => { throw isErrorPattern(e) ? e :
+        errorPattern(e.message||'Unknown error',500,'COINSELECT_ERROR',e) })
 
     // .inputs and .outputs will be undefined if no solution was found
-    if (!inputs || !outputs) {
-      // throw errorPattern('Balance too small.', 401, 'TRANSACTION_LOW_BALANCE')
-      throw errorPattern(`Transaction couldn't be made. Total inputs amount: '${totalInputsAmount}', total outputs amount: '${transactionAmount}'`, 401, 'TRANSACTION_LOW_BALANCE')
-    }
+    if (!inputs || !outputs)
+      throw errorPattern('Balance too small.', 401, 'TRANSACTION_LOW_BALANCE')
 
     // 4. build the transaction
     let txb = new bitcoinjs.TransactionBuilder(bitcoinjsnetwork)
