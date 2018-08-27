@@ -6,6 +6,7 @@ const networks               = require('./../../../constants/networks.js')
 const errorPattern           = require('./../../errorPattern.js');
 const bitcoinjs              = require('bitcoinjs-lib');
 const unit                   = require('./../../../actions/coins/util/unitConverter.js');
+const { feeEstimator }       = require('./../Utils/btcFamily/FeeEstimator.js')
 /*
   params: {
     fee:                estimatedFee (satoshi),
@@ -51,14 +52,17 @@ const estimateFee = async (params) => {
     throw errorPattern(`Not enough number of inputs or outputs`,500,'ESTIMATEFEE_ERROR');
 
 
-  let inputs       = decoded.ins.length;
-  let outputs      = decoded.outs.length + 1; //+ 1 to the output tax <<
-  let inputSize    = 148;
-  let outputSize   = 34;
-  let txSize       = (inputs * inputSize) + (outputs * outputSize) + 10 + (inputs/2); //in bytes
-  let estimatedFee = parseInt(txSize * feePerByte);
-  return estimatedFee;
+  // let inputs       = decoded.ins.length;
+  // let outputs      = decoded.outs.length + 1; //+ 1 to the output tax <<
+  // let inputSize    = 148;
+  // let outputSize   = 34;
+  // let txSize       = (inputs * inputSize) + (outputs * outputSize) + 10 + (inputs/2); //in bytes
+  // let estimatedFee = parseInt(txSize * feePerByte);
+  // return estimatedFee;
+  return feeEstimator
+    .set(decoded.ins.length, decoded.outs.length, feePerByte)
+     .estimate()
+      .done('fee')
 }
 
 module.exports = estimateFee;
-
