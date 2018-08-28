@@ -74,7 +74,7 @@ module.exports = async (transactionData, accessToken) => {
     }
     if (transactionData.network.search(/(usdt)/i) !== -1) {
       return await USDTEstimate(transactionData)
-        .catch(e => { throw isErrorPattern(r) ? r :
+        .catch(e => { throw isErrorPattern(e) ? e :
           errorPattern(e.message||'Unknown error',500,'ESTIMATEFEE_ERROR',e)
         })
         .then(r => {
