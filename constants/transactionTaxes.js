@@ -29,7 +29,7 @@ const getOutputTaxFor = (lib, network, amount) => {
   if (!network)
     throw errorPattern('Network param is missing')
 
-  testnet = network.testnet
+  let testnet = network.testnet
   let symbol = network.coinSymbol
 
   if (testnet) {
