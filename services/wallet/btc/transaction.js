@@ -7,6 +7,7 @@ const ElectrumAPI = require('./api/electrumApi')
 const ValidateAddress = require('../validateAddress')
 const axios = require('axios')
 const { getOutputTaxFor } = require('./../../../constants/transactionTaxes.js');
+const isErrorPattern = require('./../../isErrorPattern.js')
 
 const util = require('util')
 
@@ -197,11 +198,8 @@ const broadcast = async signedTxHex => {
 
   const serverResponse = await axios.get(url)
   .catch(e => {
-    if (e.response.data) {
-      let {message,status,messageKey,logMessage} = e.response.data
-      throw errorPattern(message,status,messageKey,logMessage) }
-    if (e.message && e.status)
-      throw errorPattern(e.messsage || 'Unknown find broadcast tx error', e.status || 500, 'BROADCAST_TRANSACTION_ERROR', e.logMessage || '')
+    throw isErrorPattern(e) ? e :
+      errorPattern(e.message||'UnknownError',500,'BROADCAST_ERROR',e.response||e.data||'')
   })
 
   return serverResponse.data
