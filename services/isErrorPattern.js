@@ -1,3 +1,4 @@
+const errorPattern = require('./errorPattern')
 const isErrorPattern = (err) => {
   let realQtd = Object.keys(errorPattern())
   let qtd = Object.keys(err).reduce((acc, v) =>
