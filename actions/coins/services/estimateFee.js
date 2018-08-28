@@ -67,9 +67,10 @@ const BTCFamilyEstimate = async (data) => {
 }
 module.exports = async (transactionData, accessToken) => {
   try {
-    if (transactionData.network.search(/(btc)|(bch)|(dash)/i) !== -1) {
-      return await BTCFamilyEstimate(transactionData).then(r => {
-        return r
+    if (transactionData.network.search(/(btc)|(bch)|(dash)|(ltc)/i) !== -1) {
+      return await BTCFamilyEstimate(transactionData).catch(e => {
+        throw isErrorPattern(e) ? e :
+          errorPattern(e.message||'Failed on estimate fee for ${transactionData.network}',500,'ESTIMATED_FEE',e)
       })
     }
     if (transactionData.network.search(/(usdt)/i) !== -1) {
