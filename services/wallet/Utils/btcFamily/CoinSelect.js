@@ -149,6 +149,7 @@ CoinSelect.prototype._verifyAcomulateErrors = function() {
 }
 
 CoinSelect.prototype._isGonnaHaveChange = function(){
+  this.calculateFee(true)
   this.calculateFinalAmount()
   this.calculateChange()
   return this.change > 0 ? true : false
@@ -207,6 +208,7 @@ CoinSelect.prototype.makeOutputs = function() {
 CoinSelect.prototype.calculateFee = function(calculateOutputTaxToo = false, calculateChangeToo = false){
   let ol = calculateOutputTaxToo ? this.targets.length + 1 : this.targets.length //outputs length
   ol = calculateChangeToo ? ol + 1 : ol
+  console.warn(`OL ${ol} | tax ${calculateOutputTaxToo} | change ${calculateChangeToo} | ${this.change}`)
   this.fee = feeEstimator
    .set(this.inputs.length, ol, this.feePerByte)
     .estimate()
@@ -224,7 +226,7 @@ CoinSelect.prototype.calculateChange = function(calculateOutputTaxToo = false){
   this.totalInputsAmount = 0
   this.inputs.map(input => { this.totalInputsAmount += input.value })
   if (calculateOutputTaxToo) {
-    let outputTax = this.outputs.find(output => output.type === 'lunes-tax' ? true : false)
+    // let outputTax = this.outputs.find(output => output.type === 'lunes-tax' ? true : false)
     this.change = this.totalInputsAmount - this.finalAmount
   } else {
     this.change = this.totalInputsAmount - this.finalAmount
@@ -232,8 +234,19 @@ CoinSelect.prototype.calculateChange = function(calculateOutputTaxToo = false){
 }
 
 CoinSelect.prototype.init = async function() {
-  await this.getUtxos() //stores at tmpUtxos
-  this.arrangeUtxos() //stores at utxos
+  if (this.test === true) {
+    this.utxos = [
+      { txid:'18110bd42875080d1b3aee060f3bddb6b519b00fb6af66d8ba94133f02f7a185',
+        vout: 1,
+        value: (100000000 - 293898) },
+      { txid:'18110bd42875080d1b3aee060f3bddb6b519b00fb6af66d8ba94133f02f7a185',
+        vout: 1,
+        value: 293898 },
+    ]
+  } else {
+    await this.getUtxos() //stores at tmpUtxos
+    this.arrangeUtxos() //stores at utxos
+  }
   if (this.utxos.length < 1) return this.errorObject
   this.sort() //no params passed, doing ascendant
   this.calculateAmountToSend() //stores at totalOutputsAmount
