@@ -9,8 +9,8 @@
     "axios": "^0.17.1",
     "biggystring": "^3.0.1",
     "bip39": "^2.5.0",
-    "bitcoinjs-lib": "^3.3.2",
     "bitcoincashjs-lib": "git://github.com/bigearth/bitcoincashjs-lib.git#master",
+    "bitcoinjs-lib": "^3.3.2",
     "bitcoinjs-testnets": "^1.0.10",
     "bluebird": "^3.5.1",
     "coinselect": "^3.1.11",
@@ -74,6 +74,10 @@
     {
       "name": "wandyer.silva",
       "email": "wandyer.s@gmail.com"
+    },
+    {
+      "name": "thecodermarcelo",
+      "email": "thecodermarcelo@gmail.com"
     }
   ]
 }
