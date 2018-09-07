@@ -5,7 +5,9 @@ module.exports = {
     testnet: false,
     derivePath: 'm/44\'/0\'/0\'/0',
     gasPrice: 10000000000,
-    gasLimit: 23000,
+    // gasLimit: 23000,
+    // gasLimit: 37393,
+    gasLimit: 21000,
     chainID: 1,
     apiUrl: 'https://api.myetherwallet.com/eth'
   },
@@ -15,7 +17,9 @@ module.exports = {
     testnet: true,
     derivePath: 'm/44\'/0\'/0\'/0',
     gasPrice: 10000000000,
-    gasLimit: 23000,
+    // gasLimit: 23000,
+    // gasLimit: 37393,
+    gasLimit: 21000,
     chainID: 3,
     apiUrl: 'https://api.myetherwallet.com/rop'
   }

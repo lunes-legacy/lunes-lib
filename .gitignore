@@ -8,5 +8,4 @@ appTest.js
 .yarn.lock
 package-lock.json
 test/
-marcelo.js
-marcelo2.js
+marcelo*.js

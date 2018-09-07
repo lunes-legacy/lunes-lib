@@ -5,7 +5,9 @@ const errorPattern = require('../../errorPattern')
 const BtcWallet = require('./wallet')
 const ElectrumAPI = require('./api/electrumApi')
 const ValidateAddress = require('../validateAddress')
-const { getOutputTaxFor } = require('./../../../constants/transactionTaxes.js');
+const { getOutputTaxFor } = require('./../../../constants/transactionTaxes.js')
+const { CoinSelect } = require('./../Utils/btcFamily/CoinSelect.js')
+const { isErrorPattern } = require('./../../isErrorPattern.js')
 
 let bitcoinjsnetwork
 let electrumNetwork
@@ -112,36 +114,7 @@ const createTransaction = async (
     // senderAddress
     const fromAddress = keyPair.getAddress()
 
-    // 1. find utxos
-    const utxoResult = await findUTXOs(fromAddress)
 
-    if (utxoResult.length === 0) {
-      throw errorPattern(
-        'Sender has no spendable transactions.',
-        401,
-        'TRANSACTION_EMPTY_UTXO'
-      )
-    }
-
-    const utxos = []
-
-    // 2. convert utxos
-    // TODO: test with unconfirmed utxos
-    utxoResult.forEach(utxo => {
-      if (utxo.height !== 0) {
-        const aux = convertUTXO(utxo)
-        utxos.push(aux)
-      }
-    })
-
-    // address with unconfirmed output
-    if (utxos.length === 0) {
-      throw errorPattern(
-        'Sender balance with not enough confirmations.',
-        401,
-        'TRANSACTION_UNCONFIRMED_BALANCE'
-      )
-    }
 
     // 3. set target and ammount
     const targets = [
@@ -149,19 +122,17 @@ const createTransaction = async (
         address: toAddress,
         value: transactionAmount
       },
-      //TODO FIX IT BEFORE UNCOMMENT
-      // {
-      //   address: taxOutput.address,
-      //   value: taxOutput.value
-      // }
     ]
 
-    let { inputs, outputs } = coinSelect(utxos, targets, feePerByte)
+    const coinSelect = new CoinSelect(targets, feePerByte, fromAddress, network)
+
+    let { outputs, inputs, fee } = await coinSelect.init()
+      .catch(e => { throw isErrorPattern(e) ? e :
+        errorPattern(e.message||'Unknown error',500,'COINSELECT_ERROR',e) })
 
     // .inputs and .outputs will be undefined if no solution was found
-    if (!inputs || !outputs) {
+    if (!inputs || !outputs)
       throw errorPattern('Balance too small.', 401, 'TRANSACTION_LOW_BALANCE')
-    }
 
     // 4. build the transaction
     let txb = new bitcoinjs.TransactionBuilder(bitcoinjsnetwork)
@@ -178,7 +149,7 @@ const createTransaction = async (
 
     // 4.2 inputs
     inputs.forEach(input => {
-      txb.addInput(input.txId, input.vout)
+      txb.addInput(input.txid, input.vout)
     })
 
     // 5. sign
